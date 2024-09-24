@@ -1,0 +1,39 @@
+{
+  "name": "@1post/core",
+  "version": "0.1.0",
+  "description": "core api",
+  "type": "module",
+  "main": "src/index.ts",
+  "files": [
+    "dist"
+  ],
+  "keywords": [],
+  "author": "Rakesh Potnuru",
+  "license": "ISC",
+  "private": true,
+  "scripts": {
+    "dev": "doppler run -- sh -c 'NODE_ENV=development prisma generate && NODE_ENV=development tsx watch src/index.ts'",
+    "build": "NODE_ENV=production tsc",
+    "start": "NODE_ENV=production node dist/index.js",
+    "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist",
+    "lint": "eslint --ext .ts .",
+    "lint:fix": "eslint --ext .ts . --fix"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.19.1",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@1post/eslint-config": "workspace:^",
+    "@1post/typescript-config": "workspace:*",
+    "@bravo68web/eslint-config": "^1.2.5",
+    "@types/express": "^4.17.21",
+    "@types/node": "^22.5.5",
+    "eslint": "^8.57.0",
+    "prisma": "^5.19.1",
+    "tsx": "^4.19.1",
+    "typescript": "^5.6.2"
+  }
+}

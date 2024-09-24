@@ -1,0 +1,9 @@
+{
+  "extends": "@1post/typescript-config/backend.json",
+  "compilerOptions": {
+    "rootDir": "./src",
+    "outDir": "./dist"
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules", "dist"]
+}

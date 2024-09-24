@@ -1,0 +1,58 @@
+model Post {
+    id            Int        @id @default(autoincrement())
+    createdAt     DateTime   @default(now())
+    updatedAt     DateTime   @updatedAt
+    postType      PostType
+    text          String?    @db.VarChar(4000)
+    imageUrl      String?
+    videoUrl      String?
+    audioUrl      String?
+    userId        Int        @unique
+    user          User       @relation(fields: [userId], references: [id])
+    comments      Comment[]
+    commentCount  Int        @default(0)
+    likes         Like[]
+    likeCount     Int        @default(0)
+    bookmarks     Bookmark[]
+    bookmarkCount Int        @default(0)
+}
+
+enum PostType {
+    TEXT
+    IMAGE
+    VIDEO
+    AUDIO
+}
+
+model Comment {
+    id        Int      @id @default(autoincrement())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    text      String   @db.VarChar(280)
+    userId    Int
+    user      User     @relation(fields: [userId], references: [id])
+    postId    Int
+    post      Post     @relation(fields: [postId], references: [id])
+
+    @@unique([userId, postId])
+}
+
+model Like {
+    id     Int  @id @default(autoincrement())
+    userId Int
+    user   User @relation(fields: [userId], references: [id])
+    postId Int
+    post   Post @relation(fields: [postId], references: [id])
+
+    @@unique([userId, postId])
+}
+
+model Bookmark {
+    id     Int  @id @default(autoincrement())
+    userId Int
+    user   User @relation(fields: [userId], references: [id])
+    postId Int
+    post   Post @relation(fields: [postId], references: [id])
+
+    @@unique([userId, postId])
+}
