@@ -11,6 +11,9 @@ const ZodEnvironmentVariables = z.object({
   NODE_ENV: z.string(),
   PORT: z.string(),
   DATABASE_URL: z.string(),
+  DIRECT_URL: z.string(),
+  CLIENT_ORIGIN_URL: z.string(),
+  SUPABASE_JWT_SECRET: z.string(),
 });
 
 ZodEnvironmentVariables.parse(process.env);

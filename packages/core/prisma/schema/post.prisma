@@ -7,14 +7,18 @@ model Post {
     imageUrl      String?
     videoUrl      String?
     audioUrl      String?
+    isFlagged     Boolean    @default(false)
+    flagReason    String?
     userId        Int        @unique
-    user          User       @relation(fields: [userId], references: [id])
+    user          User       @relation(fields: [userId], references: [id], onDelete: Cascade)
     comments      Comment[]
     commentCount  Int        @default(0)
     likes         Like[]
     likeCount     Int        @default(0)
     bookmarks     Bookmark[]
     bookmarkCount Int        @default(0)
+
+    @@schema("public")
 }
 
 enum PostType {
@@ -22,6 +26,8 @@ enum PostType {
     IMAGE
     VIDEO
     AUDIO
+
+    @@schema("public")
 }
 
 model Comment {
@@ -32,9 +38,10 @@ model Comment {
     userId    Int
     user      User     @relation(fields: [userId], references: [id])
     postId    Int
-    post      Post     @relation(fields: [postId], references: [id])
+    post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
 
     @@unique([userId, postId])
+    @@schema("public")
 }
 
 model Like {
@@ -42,9 +49,10 @@ model Like {
     userId Int
     user   User @relation(fields: [userId], references: [id])
     postId Int
-    post   Post @relation(fields: [postId], references: [id])
+    post   Post @relation(fields: [postId], references: [id], onDelete: Cascade)
 
     @@unique([userId, postId])
+    @@schema("public")
 }
 
 model Bookmark {
@@ -52,7 +60,8 @@ model Bookmark {
     userId Int
     user   User @relation(fields: [userId], references: [id])
     postId Int
-    post   Post @relation(fields: [postId], references: [id])
+    post   Post @relation(fields: [postId], references: [id], onDelete: Cascade)
 
     @@unique([userId, postId])
+    @@schema("public")
 }

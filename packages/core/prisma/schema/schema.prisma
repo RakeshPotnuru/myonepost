@@ -1,9 +1,17 @@
 generator client {
-  provider        = "prisma-client-js"
-  previewFeatures = ["prismaSchemaFolder"]
+    provider        = "prisma-client-js"
+    previewFeatures = ["prismaSchemaFolder", "multiSchema"]
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+    provider  = "postgresql"
+    url       = env("DATABASE_URL")
+    directUrl = env("DIRECT_URL")
+    schemas   = ["public", "auth"]
+}
+
+generator zod {
+    provider         = "zod-prisma-types"
+    createModelTypes = false
+    output           = "../../src/zod"
 }

@@ -2,20 +2,28 @@ model User {
     id                  Int                @id @default(autoincrement())
     createdAt           DateTime           @default(now())
     updatedAt           DateTime           @updatedAt
-    email               String             @unique
+    email               String             @unique /// @zod.string.email()
     username            String             @unique
     displayName         String?
-    isSuspended         Boolean            @default(false)
-    isBanned            Boolean            @default(false)
+    bio                 String?            @db.VarChar(60)
+    avatar              String?
+    link                String?
+    isFlagged           Boolean            @default(false)
+    flagReason          String?
     profileViews        Int                @default(0)
+    nextPostAllowedAt   DateTime?
     post                Post?
     comments            Comment[]
     likes               Like[]
     bookmarks           Bookmark[]
     bookmarksVisibility BookmarkVisibility @default(PRIVATE)
+
+    @@schema("auth")
 }
 
 enum BookmarkVisibility {
     PRIVATE
     PUBLIC
+
+    @@schema("public")
 }
