@@ -10,7 +10,7 @@ if (process.env.NEXT_PUBLIC_SITE_ENV === "production") {
 export const siteConfig = {
   title: "My One Post - Share what matters, without the noise.",
   description:
-    "Share that one thing you want to share with the world. Because sharing too much creates unnecessary noise.",
+    "My One Post is a unique social media platform where users can share a single post and can be updated daily. Simplify your online presence by focusing on what truly matters, without the noise of endless updates.",
   url: defaultUrl,
   theme: {
     color: "#EB5757",
