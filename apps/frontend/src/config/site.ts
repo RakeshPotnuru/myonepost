@@ -13,7 +13,7 @@ export const siteConfig = {
     "My One Post is a unique social media platform where users can share a single post and can be updated daily. Simplify your online presence by focusing on what truly matters, without the noise of endless updates.",
   url: defaultUrl,
   theme: {
-    color: "#EB5757",
+    color: "#2563EB",
   },
   links: {},
   twitter: {

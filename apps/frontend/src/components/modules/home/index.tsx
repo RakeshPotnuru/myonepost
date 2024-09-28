@@ -3,7 +3,7 @@ import Sidebar from "./sidebar";
 
 export default function HomePage() {
   return (
-    <div className="flex h-screen flex-row">
+    <div className="flex flex-row">
       <aside className="basis-1/3">
         <Sidebar />
       </aside>

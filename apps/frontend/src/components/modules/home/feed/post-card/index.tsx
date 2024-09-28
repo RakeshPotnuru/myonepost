@@ -1,19 +1,19 @@
-import Image from "next/image";
-
 import { Icons } from "@/assets/icons";
-import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
   Card,
-  CardContent,
   CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Tooltip } from "@/components/ui/tooltip";
 
+import AudioContent from "./audio-content";
+import ImageContent from "./image-content";
 import TextContent from "./text-content";
+import VideoContent from "./video-content";
 
 export default function PostCard({
   postType,
@@ -27,23 +27,15 @@ export default function PostCard({
       break;
     }
     case "image": {
-      component = (
-        <CardContent className="p-0 pb-4">
-          <AspectRatio
-            ratio={16 / 9}
-            className={"rounded-t-xl bg-[url('https://images.unsplash.com/photo-1727056354046-763e34286a8a?q=80&w=3087&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')] bg-cover bg-center"}
-          >
-            <Image
-              src="https://images.unsplash.com/photo-1727056354046-763e34286a8a?q=80&w=3087&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-              alt="Photo by Drew Beamer"
-              fill
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-              className="h-full w-full rounded-t-xl object-contain backdrop-blur-md"
-              priority={false}
-            />
-          </AspectRatio>
-        </CardContent>
-      );
+      component = <ImageContent />;
+      break;
+    }
+    case "video": {
+      component = <VideoContent />;
+      break;
+    }
+    case "audio": {
+      component = <AudioContent />;
       break;
     }
     default: {
@@ -61,25 +53,33 @@ export default function PostCard({
               <AvatarImage src="https://github.com/rakeshpotnuru.png" />
               <AvatarFallback>RP</AvatarFallback>
             </Avatar>
-            <div className="">
+            <div>
               <CardTitle>Display Name</CardTitle>
               <CardDescription>@username</CardDescription>
             </div>
           </div>
         </CardHeader>
         <CardFooter className="text-muted-foreground">
-          <Button variant={"ghost"} size={"sm"}>
-            <Icons.Like className="mr-1" /> 100k
-          </Button>
-          <Button variant={"ghost"} size={"sm"}>
-            <Icons.Comment className="mr-1" /> 10
-          </Button>
-          <Button variant={"ghost"} size={"sm"}>
-            <Icons.Bookmark className="mr-1" /> 10
-          </Button>
-          <Button variant={"ghost"} size={"iconSm"}>
-            <Icons.Menu />
-          </Button>
+          <Tooltip text="Dislike">
+            <Button variant={"ghost"} size={"sm"}>
+              <Icons.Liked className="mr-1" /> 100k
+            </Button>
+          </Tooltip>
+          <Tooltip text="Comment">
+            <Button variant={"ghost"} size={"sm"}>
+              <Icons.Comment className="mr-1" /> 10
+            </Button>
+          </Tooltip>
+          <Tooltip text="Views">
+            <Button variant={"ghost"} size={"sm"}>
+              <Icons.Views className="mr-1" /> 10
+            </Button>
+          </Tooltip>
+          <Tooltip text="More">
+            <Button variant={"ghost"} size={"iconSm"}>
+              <Icons.Menu />
+            </Button>
+          </Tooltip>
         </CardFooter>
       </div>
     </Card>

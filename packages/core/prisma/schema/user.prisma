@@ -1,24 +1,35 @@
 model User {
+    id         Int        @id @default(autoincrement())
+    createdAt  DateTime   @default(now())
+    updatedAt  DateTime   @updatedAt
+    email      String     @unique /// @zod.string.email()
+    username   String     @unique
+    isFlagged  Boolean    @default(false)
+    flagReason String?
+    profile    Profile?
+    post       Post?
+    comments   Comment[]
+    likes      Like[]
+    bookmarks  Bookmark[]
+
+    @@schema("auth")
+}
+
+model Profile {
     id                  Int                @id @default(autoincrement())
-    createdAt           DateTime           @default(now())
-    updatedAt           DateTime           @updatedAt
-    email               String             @unique /// @zod.string.email()
-    username            String             @unique
+    userId              Int                @unique
     displayName         String?
     bio                 String?            @db.VarChar(60)
     avatar              String?
-    link                String?
-    isFlagged           Boolean            @default(false)
-    flagReason          String?
+    link                String? /// @zod.string.url()
     profileViews        Int                @default(0)
     nextPostAllowedAt   DateTime?
-    post                Post?
-    comments            Comment[]
-    likes               Like[]
-    bookmarks           Bookmark[]
     bookmarksVisibility BookmarkVisibility @default(PRIVATE)
+    postId              Int?
+    user                User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+    isPrivate           Boolean            @default(false)
 
-    @@schema("auth")
+    @@schema("public")
 }
 
 enum BookmarkVisibility {

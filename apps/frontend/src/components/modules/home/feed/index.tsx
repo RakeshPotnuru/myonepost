@@ -12,6 +12,8 @@ export default function Feed() {
       <TabsContent value={FeedType.TRENDING} className="space-y-2 pb-2">
         <PostCard postType="text" />
         <PostCard postType="image" />
+        <PostCard postType="audio" />
+        <PostCard postType="video" />
         <PostCard postType="text" />
         <PostCard postType="image" />
       </TabsContent>
