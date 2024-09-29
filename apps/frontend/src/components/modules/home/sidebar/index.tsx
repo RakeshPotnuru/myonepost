@@ -1,6 +1,9 @@
+import Link from "next/link";
+
 import { Icons } from "@/assets/icons";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
+import Create from "./create";
 import Notifications from "./notifications";
 import SidebarButton from "./sidebar-button";
 
@@ -11,16 +14,19 @@ export default function Sidebar() {
       <p>myonepost</p>
       <div className="flex h-full w-min flex-col items-start justify-between py-4">
         <div className="flex flex-col items-start space-y-2">
+          <Create />
           <Notifications />
-          <SidebarButton
-            name="My Page"
-            icon={
-              <Avatar className="mr-4 h-6 w-6">
-                <AvatarImage src="https://github.com/rakeshpotnuru.png" />
-                <AvatarFallback>RP</AvatarFallback>
-              </Avatar>
-            }
-          />
+          <Link href={"/@username"} className="w-full" passHref>
+            <SidebarButton
+              name="My Page"
+              icon={
+                <Avatar className="mr-4 h-6 w-6">
+                  <AvatarImage src="https://github.com/rakeshpotnuru.png" />
+                  <AvatarFallback>RP</AvatarFallback>
+                </Avatar>
+              }
+            />
+          </Link>
         </div>
         <SidebarButton
           name="Logout"

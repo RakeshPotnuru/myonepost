@@ -1,3 +1,5 @@
+import Footer from "@/components/common/layouts/footer";
+
 import Feed from "./feed";
 import Sidebar from "./sidebar";
 
@@ -10,7 +12,9 @@ export default function HomePage() {
       <div className="basis-1/2">
         <Feed />
       </div>
-      <div className="basis-1/3"></div>
+      <div className="basis-1/3">
+        <Footer />
+      </div>
     </div>
   );
 }

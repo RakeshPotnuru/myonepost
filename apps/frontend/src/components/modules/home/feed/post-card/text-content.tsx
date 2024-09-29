@@ -17,9 +17,9 @@ export default function TextContent() {
       <p>
         {isFullText ? text : shortenText(text, 280)}{" "}
         <Button
-          variant={"link"}
           onClick={() => setIsFullText(!isFullText)}
-          className="h-max p-0"
+          variant={"link"}
+          size={"link"}
         >
           {isFullText ? "Read less" : "Read more"}
         </Button>

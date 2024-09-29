@@ -3,7 +3,7 @@ model Post {
     createdAt    DateTime  @default(now())
     updatedAt    DateTime  @updatedAt
     postType     PostType
-    text         String?   @db.VarChar(4000)
+    text         String?   @db.VarChar(4000) /// @zod.string.max(4000).min(1)
     imageUrl     String?
     videoUrl     String?
     audioUrl     String?
@@ -33,7 +33,7 @@ model Comment {
     id        Int      @id @default(autoincrement())
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
-    text      String   @db.VarChar(280)
+    text      String   @db.VarChar(280) /// @zod.string.max(280).min(1)
     userId    Int
     user      User     @relation(fields: [userId], references: [id])
     postId    Int
