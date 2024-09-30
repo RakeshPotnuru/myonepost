@@ -3,8 +3,13 @@ import Link from "next/link";
 import { format } from "date-fns";
 
 import { Icons } from "@/assets/icons";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
+import { Center } from "@/components/ui/center";
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "@/components/ui/reusables/avatar";
+import { Button } from "@/components/ui/reusables/button";
 import {
   Card,
   CardContent,
@@ -12,8 +17,7 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Center } from "@/components/ui/center";
+} from "@/components/ui/reusables/card";
 
 import ImageContent from "../home/feed/post-card/image-content";
 

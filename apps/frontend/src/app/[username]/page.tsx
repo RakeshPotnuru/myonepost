@@ -17,13 +17,13 @@ export default function Profile({
   }
 
   return (
-    <Fragment>
+    <>
       <ProfilePage />
       <Center>
         <div className="fixed bottom-0">
           <Footer />
         </div>
       </Center>
-    </Fragment>
+    </>
   );
 }

@@ -1,20 +1,17 @@
 import type { Request, Response } from "express";
 
-import { zParse } from "../../middlewares/validate";
-import { UserCreateInputSchema } from "../../zod";
 import UserService from "./user.service";
 
 export default class UserController extends UserService {
-  createUserHandler = async (req: Request, res: Response) => {
+  listUsersHandler = async (_req: Request, res: Response) => {
     try {
-      const input = await zParse(UserCreateInputSchema, req.body);
-      const user = await super.createUser(input);
+      const users = await super.listUsers();
 
-      res.status(201).json(user);
+      res.status(200).json(users);
     } catch (error) {
       console.log(error);
 
-      res.status(500).json({ error: "Error creating user" });
+      res.status(500).json({ error: "Error listing users" });
     }
   };
 }

@@ -1,6 +1,6 @@
 import MuxPlayer from "@mux/mux-player-react";
 
-import { CardContent } from "@/components/ui/card";
+import { CardContent } from "@/components/ui/reusables/card";
 import { siteConfig } from "@/config/site";
 
 export default function VideoContent() {

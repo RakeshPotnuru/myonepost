@@ -1,5 +1,5 @@
 import { Icons } from "@/assets/icons";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/reusables/button";
 import { cn } from "@/utils/cn";
 
 import CreateTextPost from "./text-post";

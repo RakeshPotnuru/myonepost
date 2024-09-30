@@ -1,3 +1,4 @@
+import { BsFillSunFill } from "react-icons/bs";
 import { FaImage, FaLink, FaUpLong, FaVideo } from "react-icons/fa6";
 import { GoBell } from "react-icons/go";
 import { IoMdTrendingUp } from "react-icons/io";
@@ -18,4 +19,5 @@ export const GeneralIcons = {
   AudioPost: MdAudiotrack,
   Link: FaLink,
   Calendar: IoCalendar,
+  Sun: BsFillSunFill,
 };

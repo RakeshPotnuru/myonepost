@@ -1,7 +1,7 @@
 import Image from "next/image";
 
-import { AspectRatio } from "@/components/ui/aspect-ratio";
-import { CardContent } from "@/components/ui/card";
+import { AspectRatio } from "@/components/ui/reusables/aspect-ratio";
+import { CardContent } from "@/components/ui/reusables/card";
 
 export default function ImageContent() {
   return (

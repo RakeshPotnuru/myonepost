@@ -1,6 +1,6 @@
 import { FeedType } from "@1post/core/src/config/constants";
 
-import { Tabs, TabsContent } from "@/components/ui/tabs";
+import { Tabs, TabsContent } from "@/components/ui/reusables/tabs";
 
 import PostCard from "./post-card";
 import FeedTabsList from "./tabs-list";

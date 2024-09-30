@@ -1,12 +1,12 @@
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/reusables/button";
 import {
   Dialog,
   DialogClose,
   DialogContent,
   DialogFooter,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import { Tooltip } from "@/components/ui/tooltip";
+} from "@/components/ui/reusables/dialog";
+import { Tooltip } from "@/components/ui/reusables/tooltip";
 import { cn } from "@/utils/cn";
 
 interface CreateDialogProps extends React.HTMLAttributes<HTMLDialogElement> {

@@ -13,8 +13,8 @@ import {
   FormField,
   FormItem,
   FormMessage,
-} from "@/components/ui/form";
-import { Textarea } from "@/components/ui/textarea";
+} from "@/components/ui/reusables/form";
+import { Textarea } from "@/components/ui/reusables/textarea";
 
 import CreateDialog from "./create-dialog";
 

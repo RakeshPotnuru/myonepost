@@ -1,9 +1,13 @@
 import Link from "next/link";
 
-import { Icons } from "@/assets/icons";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "@/components/ui/reusables/avatar";
 
 import Create from "./create";
+import Logout from "./logout";
 import Notifications from "./notifications";
 import SidebarButton from "./sidebar-button";
 
@@ -28,10 +32,7 @@ export default function Sidebar() {
             />
           </Link>
         </div>
-        <SidebarButton
-          name="Logout"
-          icon={<Icons.Logout className="mr-4 h-6 w-6" />}
-        />
+        <Logout />
       </div>
     </div>
   );

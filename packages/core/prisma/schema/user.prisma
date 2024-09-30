@@ -1,41 +1,27 @@
-model User {
-    id            Int            @id @default(autoincrement())
-    createdAt     DateTime       @default(now())
-    updatedAt     DateTime       @updatedAt
-    email         String         @unique /// @zod.string.email()
-    username      String         @unique
-    isFlagged     Boolean        @default(false)
-    flagReason    String?
-    profile       Profile?
-    post          Post?
-    comments      Comment[]
-    likes         Like[]
-    bookmarks     Bookmark[]
-    notifications Notification[]
-
-    @@schema("auth")
-}
-
 model Profile {
-    id                  Int                @id @default(autoincrement())
-    userId              Int                @unique
-    displayName         String?
+    id                  String             @id @default(uuid()) @db.Uuid
+    createdAt           DateTime           @default(now())
+    updatedAt           DateTime           @updatedAt
+    email               String             @unique /// @zod.string.email()
+    username            String             @unique @db.VarChar(30) /// @zod.string.max(30).min(1)
+    displayName         String?            @db.VarChar(30) /// @zod.string.max(30).min(1)
     bio                 String?            @db.VarChar(60) /// @zod.string.max(60).min(1)
-    avatar              String?
+    avatarUrl           String?
     link                String? /// @zod.string.url()
     profileViews        Int                @default(0)
     nextPostAllowedAt   DateTime?
     bookmarksVisibility BookmarkVisibility @default(PRIVATE)
-    postId              Int?
-    user                User               @relation(fields: [userId], references: [id], onDelete: Cascade)
     isPrivate           Boolean            @default(false)
+    bookmarks           Bookmark[]
+    comments            Comment[]
+    likes               Like[]
+    notifications       Notification[]
+    post                Post?
 
-    @@schema("public")
+    @@map("users")
 }
 
 enum BookmarkVisibility {
     PRIVATE
     PUBLIC
-
-    @@schema("public")
 }

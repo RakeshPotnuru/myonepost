@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 
-import { Button } from "@/components/ui/button";
-import { CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/reusables/button";
+import { CardContent } from "@/components/ui/reusables/card";
 import { shortenText } from "@/utils/text-shortener";
 
 export default function TextContent() {

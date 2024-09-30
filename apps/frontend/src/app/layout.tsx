@@ -1,8 +1,19 @@
+import { Inter } from "next/font/google";
+
 import type { Metadata, Viewport } from "next";
 
 import "@/styles/globals.css";
+import { BreakpointViewer } from "@/components/modules/dev-tools/breakpoint-viewer";
+import { ThemeToggleButton } from "@/components/modules/dev-tools/theme-toggle";
+import { Toaster } from "@/components/ui/reusables/sonner";
 import { siteConfig } from "@/config/site";
 import Providers from "@/lib/providers";
+import { cn } from "@/utils/cn";
+
+const inter = Inter({
+  display: "swap",
+  subsets: ["latin"],
+});
 
 export const metadata: Metadata = {
   title: {
@@ -47,8 +58,17 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={"antialiased"}>
-        <Providers>{children}</Providers>
+      <body className={cn("antialiased", inter.className)}>
+        <Providers>
+          {children}
+          <Toaster />
+          {process.env.NODE_ENV === "development" && (
+            <>
+              <BreakpointViewer />
+              <ThemeToggleButton />
+            </>
+          )}
+        </Providers>
       </body>
     </html>
   );

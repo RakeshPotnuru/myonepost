@@ -1,14 +1,18 @@
 import { Icons } from "@/assets/icons";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "@/components/ui/reusables/avatar";
+import { Button } from "@/components/ui/reusables/button";
 import {
   Card,
   CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Tooltip } from "@/components/ui/tooltip";
+} from "@/components/ui/reusables/card";
+import { Tooltip } from "@/components/ui/reusables/tooltip";
 
 import AudioContent from "./audio-content";
 import ImageContent from "./image-content";

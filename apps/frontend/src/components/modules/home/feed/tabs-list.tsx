@@ -1,7 +1,7 @@
 import { FeedType } from "@1post/core/src/config/constants";
 
 import { Icons } from "@/assets/icons";
-import { TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { TabsList, TabsTrigger } from "@/components/ui/reusables/tabs";
 import { cn } from "@/utils/cn";
 
 export default function FeedTabsList() {
