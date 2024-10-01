@@ -13,6 +13,9 @@ export default function Footer() {
       <Link href={"#"} target="_blank" className="hover:underline">
         Cookie Policy
       </Link>
+      <Link href={"#"} target="_blank" className="hover:underline">
+        Contact Us
+      </Link>
     </footer>
   );
 }

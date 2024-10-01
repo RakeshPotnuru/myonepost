@@ -4,7 +4,17 @@
       "mode": "auto"
     }
   ],
-  "cSpell.words": ["", "myonepost", "SUPABASE"],
+  "cSpell.words": [
+    "",
+    "clsx",
+    "hookform",
+    "lucide",
+    "myonepost",
+    "reusables",
+    "sonner",
+    "SUPABASE",
+    "tanstack"
+  ],
   "[prisma]": {
     "editor.defaultFormatter": "Prisma.prisma"
   }

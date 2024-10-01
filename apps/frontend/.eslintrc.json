@@ -2,7 +2,8 @@
   "extends": [
     "next/core-web-vitals",
     "@bravo68web/eslint-config/typescript-strict",
-    "plugin:jsx-a11y/strict"
+    "plugin:jsx-a11y/strict",
+    "plugin:@tanstack/query/recommended"
   ],
   "parserOptions": {
     "project": "./tsconfig.json"

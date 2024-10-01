@@ -9,7 +9,10 @@ export const siteConfig = {
   theme: {
     color: "#2563EB",
   },
-  links: {},
+  links: {
+    disposableEmailChecker: "https://disposable.debounce.io/?email=",
+    support: "mailto:hello@myonepost.com",
+  },
   twitter: {
     site: "@myonepost",
     creator: "@rakesh_at_tweet",

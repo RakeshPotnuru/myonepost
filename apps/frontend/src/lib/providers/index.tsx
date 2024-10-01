@@ -1,3 +1,4 @@
+import ReactQueryProvider from "./react-query";
 import { ThemeProvider } from "./theme";
 
 export default function Providers({
@@ -5,7 +6,7 @@ export default function Providers({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-      {children}
+      <ReactQueryProvider>{children}</ReactQueryProvider>
     </ThemeProvider>
   );
 }
