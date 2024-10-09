@@ -17,7 +17,13 @@ const isDisposableEmail = async (email: string): Promise<boolean> => {
   }
 };
 
-const signIn = async (email: string) => {
+const signIn = async ({
+  email,
+  captchaToken,
+}: {
+  email: string;
+  captchaToken: string;
+}) => {
   if (await isDisposableEmail(email)) {
     throw new Error("Disposable email addresses are not allowed.");
   }
@@ -26,6 +32,9 @@ const signIn = async (email: string) => {
 
   const { error } = await client.auth.signInWithOtp({
     email,
+    options: {
+      captchaToken,
+    },
   });
 
   if (error) {
@@ -45,13 +54,22 @@ export function useSignIn() {
   });
 }
 
-const verifyOtp = async ({ email, otp }: { email: string; otp: string }) => {
+const verifyOtp = async ({
+  email,
+  otp,
+  captchaToken,
+}: {
+  email: string;
+  otp: string;
+  captchaToken: string;
+}) => {
   const client = createClient();
 
   const { error } = await client.auth.verifyOtp({
     email,
     token: otp,
     type: "email",
+    options: { captchaToken },
   });
 
   if (error) {

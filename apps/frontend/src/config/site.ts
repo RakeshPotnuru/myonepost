@@ -11,7 +11,7 @@ export const siteConfig = {
   },
   links: {
     disposableEmailChecker: "https://disposable.debounce.io/?email=",
-    support: "mailto:hello@myonepost.com",
+    contact: "mailto:hello@myonepost.com",
   },
   twitter: {
     site: "@myonepost",

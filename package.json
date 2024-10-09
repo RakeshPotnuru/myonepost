@@ -1,9 +1,10 @@
 {
-  "name": "myonepost",
+  "name": "1post",
   "private": true,
   "scripts": {
     "build": "turbo build",
     "dev": "turbo dev",
+    "frontend": "turbo dev --filter=@1post/frontend",
     "lint": "turbo lint",
     "lint:fix": "turbo lint -- --fix",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",

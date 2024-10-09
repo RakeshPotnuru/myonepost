@@ -1,9 +1,16 @@
+"use client";
+
 import Link from "next/link";
 
 import { format } from "date-fns";
 
 import { Icons } from "@/assets/icons";
 import { Center } from "@/components/ui/center";
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+} from "@/components/ui/reusables/alert";
 import {
   Avatar,
   AvatarFallback,
@@ -18,15 +25,28 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/reusables/card";
+import type { Tables } from "@/types/database.types";
 
+import { useGetUserPost } from "../common/api/page";
+import { useGetCurrentUserProfile } from "../home/api/user";
+import AudioContent from "../home/feed/post-card/audio-content";
 import ImageContent from "../home/feed/post-card/image-content";
+import TextContent from "../home/feed/post-card/text-content";
+import VideoContent from "../home/feed/post-card/video-content";
+import Create from "../home/sidebar/create";
 
-export default function ProfilePage() {
+interface ProfilePageProps {
+  username: string;
+}
+
+export default function ProfilePage({ username }: Readonly<ProfilePageProps>) {
   return (
     <Center>
       <div className="flex w-1/2 flex-col space-y-4 text-center">
         <p>myonepost</p>
-        <ProfileInfo />
+
+        <ProfileInfo username={username} />
+
         <Link href={"/"} passHref>
           <Button>Explore more posts</Button>
         </Link>
@@ -35,44 +55,133 @@ export default function ProfilePage() {
   );
 }
 
-function ProfileInfo() {
+interface ProfileInfoProps {
+  username: string;
+}
+
+function ProfileInfo({ username }: Readonly<ProfileInfoProps>) {
+  const { data: profile, isFetching: isPostFetching } =
+    useGetUserPost(username);
+  const { data: currentUser, isFetching: isCurrentUserFetching } =
+    useGetCurrentUserProfile();
+
+  if (isPostFetching || isCurrentUserFetching) {
+    return <div>Loading...</div>;
+  }
+
+  if (!profile?.Post[0] && !currentUser) {
+    return (
+      <Center className="flex flex-col gap-4">
+        <p className="text-muted-foreground">
+          This user does not exist or set their profile private.
+        </p>
+        <Link href={"/"} passHref>
+          <Button variant={"outline"} className="w-max">
+            Login to view
+          </Button>
+        </Link>
+      </Center>
+    );
+  }
+
+  if (!profile || !currentUser) {
+    return <div>User not found</div>;
+  }
+
+  const post = profile.Post[0] as Tables<"Post"> | null;
+  console.log(post);
+
+  let postComponent;
+
+  if (!post) {
+    postComponent =
+      currentUser.username === username ? (
+        <Center className="flex flex-col gap-2 p-4">
+          <p>You haven&apos;t created your post yet.</p>
+          <Create />
+        </Center>
+      ) : (
+        <Center className="p-4">
+          <p>User hasn&apos;t posted yet.</p>
+        </Center>
+      );
+  }
+
+  switch (post?.postType) {
+    case "TEXT": {
+      postComponent = <TextContent text={post.text ?? ""} />;
+      break;
+    }
+    case "IMAGE": {
+      postComponent = <ImageContent />;
+      break;
+    }
+    case "VIDEO": {
+      postComponent = <VideoContent />;
+      break;
+    }
+    case "AUDIO": {
+      postComponent = <AudioContent />;
+      break;
+    }
+    default: {
+      break;
+    }
+  }
+
   return (
     <Card className="text-start">
-      <ImageContent />
+      {post?.isFlagged && (
+        <Alert variant="destructive">
+          <Icons.Flag className="h-4 w-4" />
+          <AlertTitle>Your post has been flagged</AlertTitle>
+          <AlertDescription>
+            {post.flagReason ?? "Currently under review"}
+          </AlertDescription>
+        </Alert>
+      )}
+      {postComponent}
+
       <CardHeader className="flex flex-row justify-between">
         <div className="flex flex-row items-center gap-2">
           <Avatar className="h-8 w-8">
-            <AvatarImage src="https://github.com/rakeshpotnuru.png" />
-            <AvatarFallback>RP</AvatarFallback>
+            <AvatarImage src={profile.avatarUrl ?? ""} />
+            <AvatarFallback>{profile.username[0].toUpperCase()}</AvatarFallback>
           </Avatar>
           <div>
-            <CardTitle>Display Name</CardTitle>
-            <CardDescription>@username</CardDescription>
+            {profile.displayName && (
+              <CardTitle>{profile.displayName}</CardTitle>
+            )}
+            <CardDescription>@{profile.username}</CardDescription>
           </div>
         </div>
-        <Button variant={"secondary"}>Edit Profile</Button>
+        {currentUser && currentUser.username === username && (
+          <div>
+            <Button variant={"secondary"}>Edit Profile</Button>{" "}
+            {post && <Button variant={"destructive"}>Delete Post</Button>}
+          </div>
+        )}
       </CardHeader>
-      <CardContent>
-        <p>my bio is 60 characters long</p>
-      </CardContent>
+      {profile.bio && (
+        <CardContent>
+          <p>{profile.bio}</p>
+        </CardContent>
+      )}
       <CardFooter className="flex flex-col items-start space-y-4">
         <div className="flex flex-row items-center gap-4">
-          <Link href={"https://itsrakesh.com"} target="_blank" passHref>
-            <Button variant={"link"} size={"link"}>
-              <Icons.Link className="mr-2" /> itsrakesh.com
-            </Button>
-          </Link>
+          {profile.link && (
+            <Link href={profile.link} target="_blank" passHref>
+              <Button variant={"link"} size={"link"}>
+                <Icons.Link className="mr-2" />{" "}
+                {profile.link.replace(/^\w+:\/\//, "")}
+              </Button>
+            </Link>
+          )}
           <div className="flex flex-row items-center gap-2 text-sm text-muted-foreground">
             <Icons.Calendar />
-            <time dateTime={new Date().toString()}>
-              Joined {format(new Date(), "MMMM, yyyy")}
+            <time dateTime={profile.createdAt.toString()}>
+              Joined {format(profile.createdAt, "MMMM, yyyy")}
             </time>
-          </div>
-        </div>
-        <div>
-          <div className="flex flex-col rounded-lg bg-secondary p-10 text-sm text-secondary-foreground">
-            <span className="text-2xl">12k</span>
-            <span>Profile Views</span>
           </div>
         </div>
       </CardFooter>

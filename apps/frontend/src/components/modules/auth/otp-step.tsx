@@ -1,4 +1,7 @@
+import { useState } from "react";
+
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Turnstile } from "@marsidev/react-turnstile";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -32,10 +35,11 @@ const FormSchema = z.object({
   }),
 });
 
-export default function OtpStep({ email }: OtpStepProps) {
+export default function OtpStep({ email }: Readonly<OtpStepProps>) {
+  const [captchaToken, setCaptchaToken] = useState<string>();
+
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
-    mode: "onBlur",
     defaultValues: {
       pin: "",
     },
@@ -44,10 +48,16 @@ export default function OtpStep({ email }: OtpStepProps) {
   const { mutateAsync, isPending } = useVerifyOtp();
 
   const onSubmit = async (data: z.infer<typeof FormSchema>) => {
+    if (!captchaToken) {
+      toast.error("Please complete the captcha.");
+      return;
+    }
+
     try {
       await mutateAsync({
         email,
         otp: data.pin,
+        captchaToken,
       });
     } catch (error) {
       console.error(error);
@@ -58,10 +68,10 @@ export default function OtpStep({ email }: OtpStepProps) {
   const { mutateAsync: resend, isPending: isResending } = useSignIn();
 
   const handleResend = async () => {
-    if (coolDown > 0) return;
+    if (coolDown > 0 || !captchaToken) return;
 
     try {
-      await resend(email);
+      await resend({ email, captchaToken });
       startCoolDown(60);
     } catch {
       toast.error("Failed to resend OTP. Please try again.");
@@ -69,6 +79,11 @@ export default function OtpStep({ email }: OtpStepProps) {
   };
 
   const isDisabled = isPending || form.formState.isSubmitting;
+
+  const siteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
+  if (!siteKey) {
+    throw new Error("NEXT_PUBLIC_TURNSTILE_SITE_KEY is not set");
+  }
 
   return (
     <Form {...form}>
@@ -110,6 +125,8 @@ export default function OtpStep({ email }: OtpStepProps) {
             </FormItem>
           )}
         />
+        <Turnstile siteKey={siteKey} onSuccess={setCaptchaToken} />
+
         <Button type="submit" disabled={isDisabled} className="w-full">
           Submit
         </Button>

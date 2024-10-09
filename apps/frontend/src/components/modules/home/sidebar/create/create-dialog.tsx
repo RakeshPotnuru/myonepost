@@ -13,6 +13,9 @@ interface CreateDialogProps extends React.HTMLAttributes<HTMLDialogElement> {
   icon: React.ReactNode;
   onConfirm: () => void;
   tooltip: string;
+  isLoading: boolean;
+  isOpen: boolean;
+  setIsOpen: (isOpen: boolean) => void;
 }
 
 export default function CreateDialog({
@@ -21,23 +24,26 @@ export default function CreateDialog({
   icon,
   onConfirm,
   tooltip,
+  isLoading,
+  isOpen,
+  setIsOpen,
 }: Readonly<CreateDialogProps>) {
   return (
-    <Dialog>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <Tooltip text={tooltip} asChild>
         <DialogTrigger asChild>
-          <Button className={cn("p-6 rounded-md", className)}>{icon}</Button>
+          <Button className={cn("p-4 rounded-md", className)}>{icon}</Button>
         </DialogTrigger>
       </Tooltip>
       <DialogContent className="max-w-2xl">
         {children}
         <DialogFooter>
           <DialogClose asChild>
-            <Button type="button" variant="secondary">
+            <Button type="button" variant="secondary" disabled={isLoading}>
               Cancel
             </Button>
           </DialogClose>
-          <Button onClick={onConfirm} type="button">
+          <Button onClick={onConfirm} type="button" disabled={isLoading}>
             Post
           </Button>
         </DialogFooter>

@@ -1,5 +1,5 @@
 {
-  "name": "frontend",
+  "name": "@1post/frontend",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -7,11 +7,13 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "lint:fix": "next lint --fix"
+    "lint:fix": "next lint --fix",
+    "types": "npx supabase gen types --lang=typescript --project-id 'ynlhfadksnbruzkjcisw' --schema public > src/types/database.types.ts"
   },
   "dependencies": {
     "@1post/core": "workspace:^",
     "@hookform/resolvers": "^3.9.0",
+    "@marsidev/react-turnstile": "^1.0.2",
     "@mux/mux-player-react": "^3.0.0",
     "@radix-ui/react-aspect-ratio": "^1.1.0",
     "@radix-ui/react-avatar": "^1.1.0",
@@ -30,6 +32,7 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
+    "immer": "^10.1.1",
     "input-otp": "^1.2.4",
     "lucide-react": "^0.446.0",
     "next": "14.2.13",
@@ -41,7 +44,8 @@
     "sonner": "^1.5.0",
     "tailwind-merge": "^2.5.2",
     "tailwindcss-animate": "^1.0.7",
-    "zod": "^3.23.8"
+    "zod": "^3.23.8",
+    "zustand": "5.0.0-rc.2"
   },
   "devDependencies": {
     "@1post/typescript-config": "workspace:*",
@@ -54,6 +58,7 @@
     "eslint-config-next": "14.2.13",
     "eslint-plugin-jsx-a11y": "^6.10.0",
     "postcss": "^8",
+    "supabase": ">=1.8.1",
     "tailwindcss": "^3.4.1",
     "typescript": "^5"
   }

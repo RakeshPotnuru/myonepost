@@ -1,12 +1,16 @@
 import type { InternalAxiosRequestConfig } from "axios";
 import Axios from "axios";
 
-const authRequestInterceptor = (config: InternalAxiosRequestConfig) => {
-  // const token = getCookie("ps_access_token");
+import { createClient } from "./supabase/client";
 
-  // if (token) {
-  //   config.headers.Authorization = `Bearer ${token}`;
-  // }
+const client = createClient();
+
+const authRequestInterceptor = async (config: InternalAxiosRequestConfig) => {
+  const token = (await client.auth.getSession()).data.session?.access_token;
+
+  if (token) {
+    config.headers.authorization = `Bearer ${token}`;
+  }
 
   return config;
 };

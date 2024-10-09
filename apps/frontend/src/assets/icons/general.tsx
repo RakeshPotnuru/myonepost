@@ -5,7 +5,7 @@ import { IoMdTrendingUp } from "react-icons/io";
 import { IoCalendar, IoText } from "react-icons/io5";
 import { MdAudiotrack } from "react-icons/md";
 import { SiCodefresh } from "react-icons/si";
-import { TbDotsVertical } from "react-icons/tb";
+import { TbDotsVertical, TbFlag3Filled } from "react-icons/tb";
 
 export const GeneralIcons = {
   Trending: IoMdTrendingUp,
@@ -20,4 +20,5 @@ export const GeneralIcons = {
   Link: FaLink,
   Calendar: IoCalendar,
   Sun: BsFillSunFill,
+  Flag: TbFlag3Filled,
 };

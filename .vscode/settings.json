@@ -6,16 +6,21 @@
   ],
   "cSpell.words": [
     "",
+    "CLOUDINARY",
     "clsx",
     "hookform",
+    "immer",
     "lucide",
     "myonepost",
+    "nestjs",
     "reusables",
     "sonner",
     "SUPABASE",
-    "tanstack"
+    "tanstack",
+    "zustand"
   ],
   "[prisma]": {
     "editor.defaultFormatter": "Prisma.prisma"
-  }
+  },
+  "typescript.tsdk": "node_modules/typescript/lib"
 }

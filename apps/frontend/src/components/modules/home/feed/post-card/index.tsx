@@ -27,7 +27,7 @@ export default function PostCard({
   let component = null;
   switch (postType) {
     case "text": {
-      component = <TextContent />;
+      component = <TextContent text={""} />;
       break;
     }
     case "image": {

@@ -1,5 +1,9 @@
+import { useState } from "react";
+
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Turnstile } from "@marsidev/react-turnstile";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 
 import { Button } from "@/components/ui/reusables/button";
@@ -26,7 +30,12 @@ const FormSchema = z.object({
   }),
 });
 
-export default function EmailStep({ setStep, setEmail }: EmailStepProps) {
+export default function EmailStep({
+  setStep,
+  setEmail,
+}: Readonly<EmailStepProps>) {
+  const [captchaToken, setCaptchaToken] = useState<string>();
+
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     mode: "onBlur",
@@ -38,10 +47,19 @@ export default function EmailStep({ setStep, setEmail }: EmailStepProps) {
   const { mutateAsync, isPending } = useSignIn();
 
   const onSubmit = async (data: z.infer<typeof FormSchema>) => {
-    setEmail(data.email);
+    if (!captchaToken) {
+      toast.error("Please complete the captcha.");
+      return;
+    }
+
+    const email = data.email;
+    setEmail(email);
 
     try {
-      await mutateAsync(data.email);
+      await mutateAsync({
+        email,
+        captchaToken,
+      });
       setStep("otp");
     } catch (error) {
       console.error(error);
@@ -49,6 +67,11 @@ export default function EmailStep({ setStep, setEmail }: EmailStepProps) {
   };
 
   const isDisabled = isPending || form.formState.isSubmitting;
+
+  const siteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
+  if (!siteKey) {
+    throw new Error("NEXT_PUBLIC_TURNSTILE_SITE_KEY is not set");
+  }
 
   return (
     <Form {...form}>
@@ -66,6 +89,7 @@ export default function EmailStep({ setStep, setEmail }: EmailStepProps) {
             </FormItem>
           )}
         />
+        <Turnstile siteKey={siteKey} onSuccess={setCaptchaToken} />
         <Button type="submit" className="w-full" disabled={isDisabled}>
           Create account or Login
         </Button>

@@ -1,5 +1,7 @@
 import Link from "next/link";
 
+import { siteConfig } from "@/config/site";
+
 export default function Footer() {
   return (
     <footer className="sticky top-0 flex flex-wrap gap-4 p-6 text-sm text-muted-foreground">
@@ -13,7 +15,11 @@ export default function Footer() {
       <Link href={"#"} target="_blank" className="hover:underline">
         Cookie Policy
       </Link>
-      <Link href={"#"} target="_blank" className="hover:underline">
+      <Link
+        href={siteConfig.links.contact}
+        target="_blank"
+        className="hover:underline"
+      >
         Contact Us
       </Link>
     </footer>

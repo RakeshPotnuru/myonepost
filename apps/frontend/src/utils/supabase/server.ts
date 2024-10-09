@@ -2,6 +2,8 @@ import { cookies } from "next/headers";
 
 import { createServerClient } from "@supabase/ssr";
 
+import type { Database } from "@/types/database.types";
+
 export function createClient() {
   const cookieStore = cookies();
 
@@ -12,7 +14,7 @@ export function createClient() {
     throw new Error("Missing Supabase env variables");
   }
 
-  return createServerClient(
+  return createServerClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
     {

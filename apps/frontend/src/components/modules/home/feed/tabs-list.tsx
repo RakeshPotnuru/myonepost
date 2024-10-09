@@ -1,4 +1,4 @@
-import { FeedType } from "@1post/core/src/config/constants";
+import { FeedType } from "@1post/core/src/common/constants";
 
 import { Icons } from "@/assets/icons";
 import { TabsList, TabsTrigger } from "@/components/ui/reusables/tabs";

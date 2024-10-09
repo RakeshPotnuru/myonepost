@@ -1,4 +1,3 @@
-import { Fragment } from "react";
 import { notFound } from "next/navigation";
 
 import Footer from "@/components/common/layouts/footer";
@@ -12,13 +11,15 @@ export default function Profile({
 }>) {
   const { username } = params;
 
-  if (!decodeURIComponent(username).startsWith("@")) {
+  const decodedUsername = decodeURIComponent(username);
+
+  if (!decodedUsername.startsWith("@")) {
     return notFound();
   }
 
   return (
     <>
-      <ProfilePage />
+      <ProfilePage username={decodedUsername.slice(1)} />
       <Center>
         <div className="fixed bottom-0">
           <Footer />

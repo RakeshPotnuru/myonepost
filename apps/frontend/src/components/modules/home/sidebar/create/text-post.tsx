@@ -1,6 +1,8 @@
 "use client";
 
-import { CONSTANTS } from "@1post/core/src/config/constants";
+import { useState } from "react";
+
+import { CONSTANTS } from "@1post/core/src/common/constants";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -16,16 +18,19 @@ import {
 } from "@/components/ui/reusables/form";
 import { Textarea } from "@/components/ui/reusables/textarea";
 
+import { useCreateTextPost } from "./api/create";
 import CreateDialog from "./create-dialog";
 
 const FormSchema = z.object({
   text: z
     .string()
     .min(1, "Post is too short")
-    .max(CONSTANTS.POST.TEXT_MAX_LENGTH, "Post is too long"),
+    .max(CONSTANTS.POST.TEXT.MAX_LENGTH, "Post is too long"),
 });
 
 export default function CreateTextPost() {
+  const [isOpen, setIsOpen] = useState(false);
+
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     mode: "onBlur",
@@ -33,11 +38,23 @@ export default function CreateTextPost() {
       text: "",
     },
   });
-  const watchText = form.watch("text");
+  const watchText = form.watch("text", "");
 
-  const onSubmit = (data: z.infer<typeof FormSchema>) => {
-    console.log(data);
+  const { mutateAsync, isPending } = useCreateTextPost();
+
+  const onSubmit = async (data: z.infer<typeof FormSchema>) => {
+    try {
+      await mutateAsync(data.text);
+      setIsOpen(false);
+      form.reset({
+        text: "",
+      });
+    } catch {
+      // ignore
+    }
   };
+
+  const isLoading = isPending || form.formState.isSubmitting;
 
   return (
     <CreateDialog
@@ -45,12 +62,16 @@ export default function CreateTextPost() {
       className="bg-chart-1"
       onConfirm={form.handleSubmit(onSubmit)}
       tooltip="Text Post"
+      isLoading={isLoading}
+      isOpen={isOpen}
+      setIsOpen={setIsOpen}
     >
       <Form {...form}>
         <form>
           <FormField
             control={form.control}
             name="text"
+            disabled={isLoading}
             render={({ field }) => (
               <FormItem>
                 <div />
@@ -63,7 +84,7 @@ export default function CreateTextPost() {
                   />
                 </FormControl>
                 <FormDescription>
-                  {watchText.length}/{CONSTANTS.POST.TEXT_MAX_LENGTH}
+                  {watchText.length}/{CONSTANTS.POST.TEXT.MAX_LENGTH}
                 </FormDescription>
                 <FormMessage />
               </FormItem>

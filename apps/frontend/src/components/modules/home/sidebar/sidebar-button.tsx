@@ -1,3 +1,5 @@
+import { forwardRef } from "react";
+
 import { Button } from "@/components/ui/reusables/button";
 
 interface SidebarButtonProps extends React.HTMLAttributes<HTMLButtonElement> {
@@ -5,19 +7,21 @@ interface SidebarButtonProps extends React.HTMLAttributes<HTMLButtonElement> {
   icon: React.ReactNode;
 }
 
-export default function SidebarButton({
-  name,
-  icon,
-  ...props
-}: Readonly<SidebarButtonProps>) {
-  return (
-    <Button
-      variant={"ghost"}
-      className="w-full justify-start text-base font-semibold"
-      {...props}
-    >
-      {icon}
-      {name}
-    </Button>
-  );
-}
+const SideBarButton = forwardRef<HTMLButtonElement, SidebarButtonProps>(
+  ({ name, icon, ...props }, ref) => {
+    return (
+      <Button
+        ref={ref}
+        variant={"ghost"}
+        className="w-full justify-start text-base font-semibold"
+        {...props}
+      >
+        {icon}
+        {name}
+      </Button>
+    );
+  },
+);
+SideBarButton.displayName = "SideBarButton";
+
+export default SideBarButton;
