@@ -1,7 +1,7 @@
 const POST = {
   TEXT: { MAX_LENGTH: 4000 },
   COMMENT: { MAX_LENGTH: 280 },
-  NEXT_POST_ALLOWED_AT: 24 * 60 * 60 * 1000,
+  NEXT_POST_ALLOWED_AT: 24 * 60 * 60 * 1000, // 24 hours
 };
 
 const USER = {
@@ -15,11 +15,27 @@ const USER = {
     MAX_LENGTH: 30,
   },
   AVATAR_MAX_SIZE: 2 * 1024 * 1024, // 2MB
+  POST_IMAGE_MAX_SIZE: 5 * 1024 * 1024, // 5MB
+  POST_VIDEO_MAX_SIZE: 50 * 1024 * 1024, // 50MB
+};
+
+const WEIGHTS = {
+  LIKE: 1,
+  COMMENT: 3,
+  VIEW: 0.5,
+  POST_TYPE_MULTIPLIER: {
+    TEXT: 1,
+    IMAGE: 1.2,
+    VIDEO: 1.5,
+    AUDIO: 1.3,
+  },
+  SUBSCRIBER_BONUS: 0.1,
 };
 
 export const CONSTANTS = {
   POST,
   USER,
+  WEIGHTS,
 };
 
 export enum FeedType {

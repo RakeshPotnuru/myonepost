@@ -1,8 +1,4 @@
-import {
-  ForbiddenException,
-  Injectable,
-  NotFoundException,
-} from "@nestjs/common";
+import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { Prisma } from "@prisma/client";
 import { PrismaService } from "src/prisma/prisma.service";
 
@@ -10,22 +6,31 @@ import { PrismaService } from "src/prisma/prisma.service";
 export class UserService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async getPage(username: string, isAuthenticated: boolean) {
-    const user = await this.prisma.user.findUnique({
+  async getPage(username: string, isAuthenticated: boolean, userId?: string) {
+    const page = await this.prisma.user.findUnique({
       where: {
         username,
       },
+      include: {
+        post: true,
+      },
     });
 
-    if (!user) {
-      throw new NotFoundException("User not found");
+    if (!page) {
+      throw new HttpException("Page not found", HttpStatus.NOT_FOUND);
     }
 
-    if (user.isPrivate && !isAuthenticated) {
-      throw new NotFoundException("User not found");
+    // If the page is private and the user is not authenticated
+    if (page.isPrivate && !isAuthenticated && page.post.status !== "APPROVED") {
+      throw new HttpException("Page not found", HttpStatus.NOT_FOUND);
     }
 
-    return user;
+    // If not the owner and the post is not approved
+    if (userId !== page.id && page.post.status !== "APPROVED") {
+      page.post = null;
+    }
+
+    return page;
   }
 
   async update(id: string, updateUserDto: Prisma.UserUpdateInput) {
@@ -39,10 +44,13 @@ export class UserService {
     } catch (error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError) {
         if (error.code === "P2025") {
-          throw new NotFoundException("User not found");
+          throw new HttpException("User not found", HttpStatus.NOT_FOUND);
         }
         if (error.code === "P2002") {
-          throw new ForbiddenException("Username already exists");
+          throw new HttpException(
+            "Username already taken",
+            HttpStatus.CONFLICT,
+          );
         }
       }
 

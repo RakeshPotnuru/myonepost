@@ -16,9 +16,9 @@ This Turborepo includes the following packages/apps:
 
 ### Apps and Packages
 
-- `frontend`: a [Next.js](https://nextjs.org/) app
-- `@1post/typescript-config`: `tsconfig.json`s used throughout the monorepo
+- `@1post/frontend`: a [Next.js](https://nextjs.org/) app
 - `@1post/core`: backend api
+- `@1post/typescript-config`: `tsconfig.json`s used throughout the monorepo
 
 Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
 

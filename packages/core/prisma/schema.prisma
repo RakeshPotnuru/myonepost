@@ -68,11 +68,12 @@ model Post {
   likeCount    Int        @default(0) @map("like_count")
   status       PostStatus @default(PENDING)
 
-  userId   String     @unique @map("user_id") @db.Uuid
-  user     User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  likes    PostLike[]
-  comments Comment[]
-  reports  Report[]
+  userId    String     @unique @map("user_id") @db.Uuid
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  likes     PostLike[]
+  comments  Comment[]
+  reports   Report[]
+  postScore PostScore?
 
   @@map("posts")
 }
@@ -205,4 +206,17 @@ enum ReportReason {
   PRIVACY // Violation of privacy rights
   CHILD_EXPLOITATION // Content depicting or promoting child exploitation
   OTHER // For other reasons not listed above
+}
+
+model PostScore {
+  id        String   @id @default(uuid()) @db.Uuid
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  score Float
+
+  postId String @unique @map("post_id") @db.Uuid
+  post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@index([postId])
+  @@map("post_scores")
 }

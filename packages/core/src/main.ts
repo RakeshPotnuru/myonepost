@@ -19,7 +19,6 @@ async function bootstrap() {
       .setTitle("My One Post")
       .setDescription("")
       .setVersion("1.0")
-      .addTag("1post")
       .addBearerAuth()
       .addSecurityRequirements("bearer")
       .build();

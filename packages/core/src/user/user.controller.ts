@@ -10,7 +10,7 @@ import {
   UploadedFile,
   UseGuards,
 } from "@nestjs/common";
-import { ApiOperation } from "@nestjs/swagger";
+import { ApiOperation, ApiTags } from "@nestjs/swagger";
 import { User } from "@prisma/client";
 import { GetUser } from "src/auth/decorator";
 import { JwtGuard, PageGuard } from "src/auth/guard";
@@ -20,6 +20,7 @@ import { avatarValidators } from "./avatarValidators";
 import { UpdateUserDto, UpdateUsernameDto } from "./dto";
 import { UserService } from "./user.service";
 
+@ApiTags("User")
 @Controller("user")
 export class UserController {
   constructor(
@@ -35,15 +36,15 @@ export class UserController {
     return user;
   }
 
-  @ApiOperation({ summary: "Get user page (profile + post)" })
+  @ApiOperation({ summary: "Get a user page (profile + post)" })
   @HttpCode(HttpStatus.OK)
   @UseGuards(PageGuard)
   @Get(":username")
-  getPage(@Param("username") username: string, @GetUser() user: User) {
-    return this.userService.getPage(username, !!user);
+  getPage(@Param("username") username: string, @GetUser("id") userId: string) {
+    return this.userService.getPage(username, !!userId, userId);
   }
 
-  @ApiOperation({ summary: "Update user" })
+  @ApiOperation({ summary: "Update current user" })
   @HttpCode(HttpStatus.OK)
   @UseGuards(JwtGuard)
   @Patch()
@@ -51,7 +52,7 @@ export class UserController {
     this.userService.update(id, updateUserDto);
   }
 
-  @ApiOperation({ summary: "Update username" })
+  @ApiOperation({ summary: "Update current user username" })
   @HttpCode(HttpStatus.OK)
   @UseGuards(JwtGuard)
   @Patch("username")
@@ -62,7 +63,7 @@ export class UserController {
     this.userService.update(id, updateUsernameDto);
   }
 
-  @ApiOperation({ summary: "Upload and update avatar" })
+  @ApiOperation({ summary: "Upload and update current user avatar" })
   @ApiFileUpload({ allowedTypes: ["image/png", "image/jpeg", "images/jpg"] })
   @UseGuards(JwtGuard)
   @Post("avatar")
