@@ -13,7 +13,7 @@ export class PostService {
     private readonly mux: MuxService,
   ) {}
 
-  async createPost(
+  async create(
     createPostDto: Omit<Prisma.PostCreateInput, "user">,
     user: User,
   ) {
@@ -28,60 +28,86 @@ export class PostService {
       new Date().getTime() + 24 * 60 * 60 * 1000,
     ); // next post after 24 hours
 
-    await this.removePost(user.id);
+    await this.remove(user.id);
 
-    return (
-      await this.prisma.$transaction(async (tx) => {
-        // Create new post
-        tx.post.create({
-          data: {
-            ...createPostDto,
-            user: {
-              connect: { id: user.id },
+    try {
+      return (
+        await this.prisma.$transaction([
+          this.prisma.post.create({
+            data: {
+              ...createPostDto,
+              user: {
+                connect: { id: user.id },
+              },
             },
-          },
-          select: { id: true },
-        });
-
-        // Update user's nextPostAllowedAt
-        tx.user.update({
-          where: { id: user.id },
-          data: { nextPostAllowedAt },
-          select: { id: true },
-        });
-      })
-    )[1];
-  }
-
-  async updatePost(userId: string, updatePostDto: Prisma.PostUpdateInput) {
-    this.prisma.post.update({
-      where: { userId },
-      data: updatePostDto,
-    });
-  }
-
-  async removePost(userId: string) {
-    const post = await this.prisma.post.findUnique({
-      where: { userId },
-    });
-
-    if (!post) {
-      return;
-    }
-
-    if (post.postType === "IMAGE" && post.mediaUrl) {
-      await this.cloudinary.deleteImage(
-        `${CONSTANTS.ASSET_FOLDERS.POSTS}/${userId}`,
+            select: { id: true },
+          }),
+          this.prisma.user.update({
+            where: { id: user.id },
+            data: { nextPostAllowedAt },
+            select: { id: true },
+          }),
+        ])
+      )[1];
+    } catch {
+      throw new HttpException(
+        "Something went wrong. Please try again later.",
+        HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
+  }
 
-    if (post.postType === "VIDEO" && post.mediaUrl) {
-      await this.mux.video.assets.delete(post.mediaUrl);
+  async update(userId: string, updatePostDto: Prisma.PostUpdateInput) {
+    try {
+      await this.prisma.post.update({
+        where: { userId },
+        data: updatePostDto,
+      });
+    } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        if (error.code === "P2025") {
+          throw new HttpException("Post not found", HttpStatus.NOT_FOUND);
+        }
+      }
+
+      throw new HttpException(
+        "Something went wrong. Please try again later.",
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
+  }
 
-    return await this.prisma.post.delete({
-      where: { userId },
-      select: { id: true },
-    });
+  async remove(userId: string) {
+    try {
+      const post = await this.prisma.post.findUnique({
+        where: { userId },
+      });
+
+      if (!post) {
+        return;
+      }
+
+      if (post.postType === "IMAGE" && post.mediaUrl) {
+        await this.cloudinary.deleteImage(
+          `${CONSTANTS.ASSET_FOLDERS.POSTS}/${userId}`,
+        );
+      }
+
+      if (post.postType === "VIDEO" && post.mediaData.asset_id) {
+        await this.mux.video.assets.delete(post.mediaData.asset_id);
+      }
+
+      await this.prisma.post.delete({
+        where: { userId },
+        select: { id: true },
+      });
+
+      return { success: true };
+    } catch {
+      throw new HttpException(
+        "Something went wrong. Please try again later.",
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 }

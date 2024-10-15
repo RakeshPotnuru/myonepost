@@ -49,7 +49,7 @@ export class PostController {
     @GetUser() user: User,
     @Body() createTextPostDto: CreateTextPostDto,
   ) {
-    return this.postService.createPost(
+    return this.postService.create(
       {
         postType: "TEXT",
         text: createTextPostDto.text,
@@ -83,7 +83,7 @@ export class PostController {
 
     const mediaUrl = result.secure_url;
 
-    return await this.postService.createPost(
+    return await this.postService.create(
       {
         postType: "IMAGE",
         mediaUrl,
@@ -113,7 +113,7 @@ export class PostController {
       },
     });
 
-    await this.postService.createPost(
+    await this.postService.create(
       {
         postType: "VIDEO",
         status: "PENDING",
@@ -124,38 +124,43 @@ export class PostController {
     return { url };
   }
 
+  @ApiOperation({ summary: "Mux webhook" })
+  @HttpCode(HttpStatus.OK)
   @Post("mux-webhook")
-  async muxWebhook(@RawBody() body: string, @Headers() headers: HeadersLike) {
+  muxWebhook(
+    @RawBody() rawBody: string,
+    @Body() body: string,
+    @Headers() headers: HeadersLike,
+  ) {
     try {
       this.mux.webhooks.verifySignature(
-        body,
+        rawBody.toString(),
         headers,
         this.config.get("MUX_WEBHOOK_SECRET"),
       );
-    } catch {
-      throw new HttpException("Invalid signature", HttpStatus.FORBIDDEN);
+    } catch (error) {
+      throw new HttpException(error, HttpStatus.FORBIDDEN);
     }
 
     const { type: eventType, data: eventData } =
       body as unknown as UnwrapWebhookEvent;
 
     if (eventType === "video.asset.ready") {
-      console.log("Video asset ready", eventData);
-
-      await this.postService.updatePost(eventData.passthrough, {
+      this.postService.update(eventData.passthrough, {
         status: "APPROVED",
         mediaUrl: eventData.playback_ids[0].id,
+        mediaData: { asset_id: eventData.id },
       });
     }
 
     return { success: true };
   }
 
-  @ApiOperation({ summary: "Delete current user post" })
+  @ApiOperation({ summary: "Delete current user post including related media" })
   @HttpCode(HttpStatus.CREATED)
   @UseGuards(JwtGuard)
   @Delete()
   remove(@GetUser("id") userId: string) {
-    return this.postService.removePost(userId);
+    return this.postService.remove(userId);
   }
 }

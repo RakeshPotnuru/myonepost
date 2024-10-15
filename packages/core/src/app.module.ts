@@ -9,6 +9,10 @@ import { MuxModule } from "./mux/mux.module";
 import { PostModule } from "./post/post.module";
 import { PrismaModule } from "./prisma/prisma.module";
 import { UserModule } from "./user/user.module";
+import { CommentModule } from "./comment/comment.module";
+import { SubscribeModule } from "./subscribe/subscribe.module";
+import { LikeModule } from "./like/like.module";
+import { NotificationModule } from "./notification/notification.module";
 
 @Module({
   imports: [
@@ -24,6 +28,10 @@ import { UserModule } from "./user/user.module";
     FeedModule,
     PostModule,
     MuxModule,
+    CommentModule,
+    SubscribeModule,
+    LikeModule,
+    NotificationModule,
   ],
   providers: [JwtStrategy],
 })

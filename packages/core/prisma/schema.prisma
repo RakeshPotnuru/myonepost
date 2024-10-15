@@ -8,6 +8,10 @@ generator client {
   provider = "prisma-client-js"
 }
 
+generator json {
+  provider = "prisma-json-types-generator"
+}
+
 datasource db {
   provider  = "postgresql"
   url       = env("DATABASE_URL")
@@ -28,6 +32,7 @@ model User {
   nextPostAllowedAt DateTime? @map("next_post_allowed_at") @db.Timestamptz(3)
   isPrivate         Boolean   @default(false) @map("is_private")
   subscriberCount   Int       @default(0) @map("subscriber_count")
+  subscriptionCount Int       @default(0) @map("subscription_count")
 
   subscribers    Subscriber[]   @relation("UserSubscribers")
   subscribedTo   Subscriber[]   @relation("UserSubscribedTo")
@@ -63,6 +68,8 @@ model Post {
   postType     PostType   @map("post_type")
   text         String?    @db.VarChar(4000)
   mediaUrl     String?    @map("media_url")
+  /// [MediaDataType]
+  mediaData    Json?      @map("media_data") @db.JsonB
   mediaCaption String?    @map("media_caption") @db.VarChar(150)
   commentCount Int        @default(0) @map("comment_count")
   likeCount    Int        @default(0) @map("like_count")
@@ -88,7 +95,8 @@ enum PostType {
 enum PostStatus {
   PENDING // draft/processing
   APPROVED // posted
-  REJECTED // flagged
+  FLAGGED // in review
+  REJECTED // not approved
 }
 
 model PostLike {
