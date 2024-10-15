@@ -34,4 +34,14 @@ export class CloudinaryService {
         .end(file.buffer);
     });
   }
+
+  async deleteImage(publicId: string) {
+    try {
+      return cloudinary.uploader.destroy(publicId);
+    } catch (error) {
+      console.log(error);
+
+      throw error;
+    }
+  }
 }

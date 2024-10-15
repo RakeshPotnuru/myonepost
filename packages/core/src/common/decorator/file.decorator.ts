@@ -1,7 +1,7 @@
 import { applyDecorators, UseInterceptors } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { MulterOptions } from "@nestjs/platform-express/multer/interfaces/multer-options.interface";
-import { ApiBody, ApiConsumes } from "@nestjs/swagger";
+import { ApiConsumes } from "@nestjs/swagger";
 
 export function ApiFileUpload({
   fieldName = "file",
@@ -26,16 +26,5 @@ export function ApiFileUpload({
       } as MulterOptions),
     ),
     ApiConsumes("multipart/form-data"),
-    ApiBody({
-      schema: {
-        type: "object",
-        properties: {
-          [fieldName]: {
-            type: "string",
-            format: "binary",
-          },
-        },
-      },
-    }),
   );
 }

@@ -5,6 +5,8 @@ import { JwtStrategy } from "./auth/strategy";
 import { CloudinaryModule } from "./cloudinary/cloudinary.module";
 import { validationSchema } from "./env.validation";
 import { FeedModule } from "./feed/feed.module";
+import { MuxModule } from "./mux/mux.module";
+import { PostModule } from "./post/post.module";
 import { PrismaModule } from "./prisma/prisma.module";
 import { UserModule } from "./user/user.module";
 
@@ -13,13 +15,15 @@ import { UserModule } from "./user/user.module";
     ConfigModule.forRoot({
       isGlobal: true,
       cache: true,
-      validationSchema,
+      validate: validationSchema.parse,
     }),
     ScheduleModule.forRoot(),
     PrismaModule,
     UserModule,
     CloudinaryModule,
     FeedModule,
+    PostModule,
+    MuxModule,
   ],
   providers: [JwtStrategy],
 })

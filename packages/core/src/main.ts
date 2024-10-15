@@ -3,6 +3,7 @@ import { ConfigService } from "@nestjs/config";
 import { NestFactory } from "@nestjs/core";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import { AppModule } from "./app.module";
+import { Env } from "./env.validation";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -12,9 +13,9 @@ async function bootstrap() {
     }),
   );
 
-  const configService = app.get(ConfigService);
+  const configService = app.get(ConfigService<Env>);
 
-  if (configService.get<string>("NODE_ENV") !== "production") {
+  if (configService.get<Env["NODE_ENV"]>("NODE_ENV") !== "production") {
     const config = new DocumentBuilder()
       .setTitle("My One Post")
       .setDescription("")

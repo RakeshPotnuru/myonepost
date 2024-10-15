@@ -1,34 +1,59 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
-import { Prisma } from "@prisma/client";
+import { Prisma, User } from "@prisma/client";
 import { PrismaService } from "src/prisma/prisma.service";
 
 @Injectable()
 export class UserService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async getPage(username: string, isAuthenticated: boolean, userId?: string) {
+  async getPage(username: string, user: User) {
     const page = await this.prisma.user.findUnique({
       where: {
         username,
       },
-      include: {
-        post: true,
+      select: {
+        id: true,
+        createdAt: true,
+        updatedAt: true,
+        username: true,
+        displayName: true,
+        bio: true,
+        avatarUrl: true,
+        url: true,
+        subscriberCount: true,
+        email: user.username === username,
+        isPrivate: true,
+        nextPostAllowedAt: user.username === username,
+        post: {
+          select: {
+            id: true,
+            createdAt: true,
+            updatedAt: true,
+            postType: true,
+            text: true,
+            mediaUrl: true,
+            mediaCaption: true,
+            commentCount: true,
+            likeCount: true,
+            status: user.username === username,
+          },
+          where: {
+            OR: [
+              { status: "APPROVED" },
+              {
+                userId: user.id,
+              },
+            ],
+          },
+        },
       },
     });
 
-    if (!page) {
+    if (!page || (page.isPrivate && !user)) {
       throw new HttpException("Page not found", HttpStatus.NOT_FOUND);
     }
 
-    // If the page is private and the user is not authenticated
-    if (page.isPrivate && !isAuthenticated && page.post.status !== "APPROVED") {
-      throw new HttpException("Page not found", HttpStatus.NOT_FOUND);
-    }
-
-    // If not the owner and the post is not approved
-    if (userId !== page.id && page.post.status !== "APPROVED") {
-      page.post = null;
-    }
+    if (user.username !== username) delete page.isPrivate;
 
     return page;
   }

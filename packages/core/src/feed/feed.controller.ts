@@ -8,18 +8,27 @@ export class FeedController {
   constructor(private readonly feedService: FeedService) {}
 
   @Cron(CronExpression.EVERY_HOUR)
-  async updateTrendingScores() {
+  async updatePostsScore() {
     const posts = await this.feedService.getPosts();
 
     for (const post of posts) {
-      const score =
+      const engagementScore =
         post.likeCount * CONSTANTS.WEIGHTS.LIKE +
         post.commentCount * CONSTANTS.WEIGHTS.COMMENT;
+
       const postTypeMultiplier =
         CONSTANTS.WEIGHTS.POST_TYPE_MULTIPLIER[post.postType];
-      const trendingScore = score * postTypeMultiplier;
 
-      await this.feedService.updateTrendingScore(post.id, trendingScore);
+      const hoursSinceCreation = Math.floor(
+        (new Date().getTime() - post.createdAt.getTime()) / (60 * 60 * 1000),
+      );
+
+      const timeScore =
+        1 / (1 + CONSTANTS.WEIGHTS.TIME_DECAY_FACTOR * hoursSinceCreation);
+
+      const totalScore = engagementScore * postTypeMultiplier * timeScore;
+
+      await this.feedService.updatePostScore(post.id, totalScore);
     }
   }
 }

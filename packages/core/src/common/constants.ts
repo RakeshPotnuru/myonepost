@@ -2,6 +2,11 @@ const POST = {
   TEXT: { MAX_LENGTH: 4000 },
   COMMENT: { MAX_LENGTH: 280 },
   NEXT_POST_ALLOWED_AT: 24 * 60 * 60 * 1000, // 24 hours
+  POST_IMAGE_MAX_SIZE: 5 * 1024 * 1024, // 5MB
+  POST_VIDEO_MAX_SIZE: 50 * 1024 * 1024, // 50MB
+  POST_MEDIA_CAPTION: {
+    MAX_LENGTH: 150,
+  },
 };
 
 const USER = {
@@ -15,8 +20,6 @@ const USER = {
     MAX_LENGTH: 30,
   },
   AVATAR_MAX_SIZE: 2 * 1024 * 1024, // 2MB
-  POST_IMAGE_MAX_SIZE: 5 * 1024 * 1024, // 5MB
-  POST_VIDEO_MAX_SIZE: 50 * 1024 * 1024, // 50MB
 };
 
 const WEIGHTS = {
@@ -30,12 +33,19 @@ const WEIGHTS = {
     AUDIO: 1.3,
   },
   SUBSCRIBER_BONUS: 0.1,
+  TIME_DECAY_FACTOR: 0.01,
+};
+
+const ASSET_FOLDERS = {
+  POSTS: "posts",
+  AVATARS: "avatars",
 };
 
 export const CONSTANTS = {
   POST,
   USER,
   WEIGHTS,
+  ASSET_FOLDERS,
 };
 
 export enum FeedType {

@@ -8,7 +8,7 @@ export class FeedService {
   async getPosts() {
     const cutoffDate = new Date(new Date().getTime() - 24 * 60 * 60 * 1000); // Last 24 hours
 
-    return this.prisma.post.findMany({
+    return await this.prisma.post.findMany({
       where: {
         status: "APPROVED",
         createdAt: {
@@ -28,8 +28,8 @@ export class FeedService {
     });
   }
 
-  async updateTrendingScore(postId: string, score: number) {
-    await this.prisma.trendingScore.upsert({
+  async updatePostScore(postId: string, score: number) {
+    await this.prisma.postScore.upsert({
       where: { postId },
       update: { score },
       create: { postId, score },

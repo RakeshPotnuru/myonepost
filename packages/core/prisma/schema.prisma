@@ -63,7 +63,7 @@ model Post {
   postType     PostType   @map("post_type")
   text         String?    @db.VarChar(4000)
   mediaUrl     String?    @map("media_url")
-  mediaCaption String?    @map("media_caption")
+  mediaCaption String?    @map("media_caption") @db.VarChar(150)
   commentCount Int        @default(0) @map("comment_count")
   likeCount    Int        @default(0) @map("like_count")
   status       PostStatus @default(PENDING)

@@ -10,14 +10,15 @@ import {
   UploadedFile,
   UseGuards,
 } from "@nestjs/common";
-import { ApiOperation, ApiTags } from "@nestjs/swagger";
+import { ApiBody, ApiOperation, ApiTags } from "@nestjs/swagger";
 import { User } from "@prisma/client";
 import { GetUser } from "src/auth/decorator";
 import { JwtGuard, PageGuard } from "src/auth/guard";
 import { CloudinaryService } from "src/cloudinary/cloudinary.service";
+import { CONSTANTS } from "src/common/constants";
 import { ApiFileUpload } from "src/common/decorator";
 import { avatarValidators } from "./avatarValidators";
-import { UpdateUserDto, UpdateUsernameDto } from "./dto";
+import { UpdateAvatarDto, UpdateUserDto, UpdateUsernameDto } from "./dto";
 import { UserService } from "./user.service";
 
 @ApiTags("User")
@@ -25,7 +26,7 @@ import { UserService } from "./user.service";
 export class UserController {
   constructor(
     private readonly userService: UserService,
-    private readonly cloudinaryService: CloudinaryService,
+    private readonly cloudinary: CloudinaryService,
   ) {}
 
   @ApiOperation({ summary: "Get current user" })
@@ -40,8 +41,8 @@ export class UserController {
   @HttpCode(HttpStatus.OK)
   @UseGuards(PageGuard)
   @Get(":username")
-  getPage(@Param("username") username: string, @GetUser("id") userId: string) {
-    return this.userService.getPage(username, !!userId, userId);
+  getPage(@Param("username") username: string, @GetUser() user: User) {
+    return this.userService.getPage(username, user);
   }
 
   @ApiOperation({ summary: "Update current user" })
@@ -64,7 +65,11 @@ export class UserController {
   }
 
   @ApiOperation({ summary: "Upload and update current user avatar" })
+  @HttpCode(HttpStatus.OK)
   @ApiFileUpload({ allowedTypes: ["image/png", "image/jpeg", "images/jpg"] })
+  @ApiBody({
+    type: UpdateAvatarDto,
+  })
   @UseGuards(JwtGuard)
   @Post("avatar")
   async updateAvatar(
@@ -72,9 +77,9 @@ export class UserController {
     @UploadedFile(avatarValidators)
     file: Express.Multer.File,
   ) {
-    const result = await this.cloudinaryService.uploadImage(
+    const result = await this.cloudinary.uploadImage(
       file,
-      "avatars",
+      CONSTANTS.ASSET_FOLDERS.AVATARS,
       userId,
     );
 
