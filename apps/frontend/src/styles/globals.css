@@ -73,9 +73,3 @@
     @apply bg-background text-foreground;
   }
 }
-
-mux-player {
-  aspect-ratio: 16 / 9;
-  overflow: hidden;
-  border-radius: 0.75rem 0.75rem 0 0;
-}

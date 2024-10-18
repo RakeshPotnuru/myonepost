@@ -20,10 +20,10 @@ export default function FeedTabsList() {
         Fresh <Icons.Fresh className="ml-2" />
       </TabsTrigger>
       <TabsTrigger
-        value={FeedType.POPULAR}
+        value={FeedType.SUBSCRIBED}
         className={cn("data-[state=active]:rounded-br-xl", triggerClassName)}
       >
-        Popular <Icons.Popular className="ml-2" />
+        Subscribed <Icons.Subscribed className="ml-2" />
       </TabsTrigger>
     </TabsList>
   );

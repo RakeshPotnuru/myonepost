@@ -7,14 +7,17 @@ import {
 import { Button } from "@/components/ui/reusables/button";
 import {
   Card,
+  CardContent,
   CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/reusables/card";
 import { Tooltip } from "@/components/ui/reusables/tooltip";
+import { cn } from "@/utils/cn";
 
 import AudioContent from "./audio-content";
+import Comments from "./comment";
 import ImageContent from "./image-content";
 import TextContent from "./text-content";
 import VideoContent from "./video-content";
@@ -25,9 +28,16 @@ export default function PostCard({
   postType: "text" | "image" | "video" | "audio";
 }>) {
   let component = null;
+
   switch (postType) {
     case "text": {
-      component = <TextContent text={""} />;
+      component = (
+        <TextContent
+          text={
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Distinctio ratione cum hic, officiis excepturi dolorum. Nam nemo consectetur, quo libero ipsum iusto alias quod qui neque doloribus eaque sequi maxime!"
+          }
+        />
+      );
       break;
     }
     case "image": {
@@ -49,7 +59,13 @@ export default function PostCard({
 
   return (
     <Card>
-      {component}
+      <CardContent
+        className={cn("p-0 pb-4", {
+          "p-4": postType === "text",
+        })}
+      >
+        {component}
+      </CardContent>
       <div className="flex flex-row justify-between *:p-4 *:pt-0">
         <CardHeader>
           <div className="flex flex-row items-center gap-2">
@@ -69,16 +85,11 @@ export default function PostCard({
               <Icons.Liked className="mr-1" /> 100k
             </Button>
           </Tooltip>
-          <Tooltip text="Comment">
+          <Comments>
             <Button variant={"ghost"} size={"sm"}>
               <Icons.Comment className="mr-1" /> 10
             </Button>
-          </Tooltip>
-          <Tooltip text="Views">
-            <Button variant={"ghost"} size={"sm"}>
-              <Icons.Views className="mr-1" /> 10
-            </Button>
-          </Tooltip>
+          </Comments>
           <Tooltip text="More">
             <Button variant={"ghost"} size={"iconSm"}>
               <Icons.Menu />

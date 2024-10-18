@@ -4,15 +4,15 @@ import { useEffect } from "react";
 
 import Footer from "@/components/common/layouts/footer";
 import useUserStore from "@/lib/store/user";
+import client from "@/utils/api-client";
 
-import { useGetCurrentUserProfile } from "./api/user";
 import Feed from "./feed";
 import Sidebar from "./sidebar";
 
 export default function HomePage() {
   const { setUser } = useUserStore();
 
-  const { data } = useGetCurrentUserProfile();
+  const { data } = client.useQuery("get", "/user/me");
 
   useEffect(() => {
     if (data) {

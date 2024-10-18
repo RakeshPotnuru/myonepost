@@ -13,6 +13,7 @@ import { GetUser } from "src/auth/decorator";
 import { JwtGuard } from "src/auth/guard";
 import { CreateSubscribeDto } from "./dto";
 import { SubscribeService } from "./subscribe.service";
+import { User } from "@prisma/client";
 
 @ApiTags("Subscribe")
 @Controller("subscribe")
@@ -23,19 +24,19 @@ export class SubscribeController {
   @UseGuards(JwtGuard)
   @Post()
   subscribe(
-    @GetUser("id") userId: string,
+    @GetUser() user: User,
     @Body() createSubscribeDto: CreateSubscribeDto,
   ) {
     const { subscribedToId } = createSubscribeDto;
 
-    if (userId === subscribedToId) {
+    if (user.id === subscribedToId) {
       throw new HttpException(
         "You cannot subscribe to yourself",
         HttpStatus.BAD_REQUEST,
       );
     }
 
-    return this.subscribeService.subscribe(userId, subscribedToId);
+    return this.subscribeService.subscribe(user, subscribedToId);
   }
 
   @ApiOperation({ summary: "Unsubscribe from a user" })

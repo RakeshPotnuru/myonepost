@@ -1,14 +1,18 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
-import { Prisma } from "@prisma/client";
+import { Prisma, User } from "@prisma/client";
+import { NotificationService } from "src/notification/notification.service";
 import { PrismaService } from "src/prisma/prisma.service";
 
 @Injectable()
 export class LikeService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly notify: NotificationService,
+  ) {}
 
-  async likePost(userId: string, postId: string) {
+  async likePost(user: User, postId: string) {
     try {
-      await this.prisma.$transaction([
+      const { "1": post } = await this.prisma.$transaction([
         this.prisma.postLike.create({
           data: {
             post: {
@@ -18,7 +22,7 @@ export class LikeService {
             },
             user: {
               connect: {
-                id: userId,
+                id: user.id,
               },
             },
           },
@@ -27,9 +31,15 @@ export class LikeService {
         this.prisma.post.update({
           where: { id: postId },
           data: { likeCount: { increment: 1 } },
-          select: { id: true },
+          include: { user: { select: { id: true } } },
         }),
       ]);
+
+      await this.notify.create(
+        post.user.id,
+        "NEW_POST_LIKE",
+        `@${user.username} has liked your post`,
+      );
 
       return { success: true };
     } catch (error) {
@@ -79,9 +89,9 @@ export class LikeService {
     }
   }
 
-  async likeComment(userId: string, commentId: string) {
+  async likeComment(user: User, commentId: string) {
     try {
-      await this.prisma.$transaction([
+      const { "1": comment } = await this.prisma.$transaction([
         this.prisma.commentLike.create({
           data: {
             comment: {
@@ -91,7 +101,7 @@ export class LikeService {
             },
             user: {
               connect: {
-                id: userId,
+                id: user.id,
               },
             },
           },
@@ -100,9 +110,20 @@ export class LikeService {
         this.prisma.comment.update({
           where: { id: commentId },
           data: { likeCount: { increment: 1 } },
-          select: { id: true },
+          select: {
+            text: true,
+            userId: true,
+          },
         }),
       ]);
+
+      if (comment.userId !== user.id) {
+        await this.notify.create(
+          comment.userId,
+          "NEW_COMMENT_LIKE",
+          `@${user.username} has liked your comment: ${comment.text.slice(0, 50)}`,
+        );
+      }
 
       return { success: true };
     } catch (error) {

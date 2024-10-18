@@ -1,17 +1,21 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
-import { Prisma } from "@prisma/client";
+import { Prisma, User } from "@prisma/client";
+import { NotificationService } from "src/notification/notification.service";
 import { PrismaService } from "src/prisma/prisma.service";
 import { CreateCommentDto } from "./dto";
 
 @Injectable()
 export class CommentService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly notify: NotificationService,
+  ) {}
 
-  async create(userId: string, createCommentDto: CreateCommentDto) {
+  async create(user: User, createCommentDto: CreateCommentDto) {
     const { text, postId } = createCommentDto;
 
     try {
-      return await this.prisma.$transaction([
+      const { "1": post } = await this.prisma.$transaction([
         this.prisma.comment.create({
           data: {
             text,
@@ -19,7 +23,7 @@ export class CommentService {
               connect: { id: postId },
             },
             user: {
-              connect: { id: userId },
+              connect: { id: user.id },
             },
           },
           select: { id: true },
@@ -27,9 +31,19 @@ export class CommentService {
         this.prisma.post.update({
           where: { id: postId },
           data: { commentCount: { increment: 1 } },
-          select: { id: true },
+          select: { userId: true },
         }),
-      ])[0];
+      ]);
+
+      if (post.userId !== user.id) {
+        await this.notify.create(
+          post.userId,
+          "NEW_COMMENT",
+          `@${user.username} commented on your post`,
+        );
+      }
+
+      return { success: true };
     } catch (error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError) {
         if (error.code === "P2002") {

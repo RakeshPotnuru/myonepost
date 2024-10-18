@@ -11,6 +11,7 @@ import { GetUser } from "src/auth/decorator";
 import { JwtGuard } from "src/auth/guard";
 import { CommentService } from "./comment.service";
 import { CreateCommentDto } from "./dto";
+import { User } from "@prisma/client";
 
 @ApiTags("Comment")
 @Controller("comment")
@@ -20,11 +21,8 @@ export class CommentController {
   @ApiOperation({ summary: "Create comment" })
   @UseGuards(JwtGuard)
   @Post()
-  create(
-    @GetUser("id") userId: string,
-    @Body() createCommentDto: CreateCommentDto,
-  ) {
-    return this.commentService.create(userId, createCommentDto);
+  create(@GetUser() user: User, @Body() createCommentDto: CreateCommentDto) {
+    return this.commentService.create(user, createCommentDto);
   }
 
   @ApiOperation({ summary: "Delete comment" })

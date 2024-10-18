@@ -1,13 +1,15 @@
-import MuxPlayer from "@mux/mux-player-react";
+import MuxPlayer from "@mux/mux-player-react/lazy";
 
-import { CardContent } from "@/components/ui/reusables/card";
 import { siteConfig } from "@/config/site";
+import { cn } from "@/utils/cn";
 
-export default function VideoContent() {
+interface VideoContentProps extends React.HTMLAttributes<HTMLSlotElement> {}
+
+export default function VideoContent({ ...props }: VideoContentProps) {
   return (
-    <CardContent className="p-0 pb-4">
+    <slot onClick={(e) => e.stopPropagation()} {...props}>
       <MuxPlayer
-        playbackId="EcHgOK9coz5K4rjSwOkoE7Y7O01201YMIC200RI6lNxnhs"
+        playbackId="DS00Spx1CV902MCtPj5WknGlR102V5HFkDe"
         metadata={{
           video_id: "video-id-54321",
           video_title: "Test video title",
@@ -16,7 +18,12 @@ export default function VideoContent() {
         maxResolution="720p"
         muted
         accentColor={siteConfig.theme.color}
+        title="Test video title"
+        className={cn(
+          "aspect-video rounded-t-xl overflow-hidden shadow-xl",
+          props.className,
+        )}
       />
-    </CardContent>
+    </slot>
   );
 }

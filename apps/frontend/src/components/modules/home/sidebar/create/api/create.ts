@@ -1,7 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 
-import { axios } from "@/utils/axios";
+import { axios } from "@/utils/api-client";
 
 const createTextPost = async (text: string) => {
   try {

@@ -7,6 +7,7 @@ import {
   UseGuards,
 } from "@nestjs/common";
 import { ApiOperation, ApiTags } from "@nestjs/swagger";
+import { User } from "@prisma/client";
 import { GetUser } from "src/auth/decorator";
 import { JwtGuard } from "src/auth/guard";
 import { CreateCommentLikeDto, CreatePostLikeDto } from "./dto/create-like.dto";
@@ -21,20 +22,20 @@ export class LikeController {
   @UseGuards(JwtGuard)
   @Post("post")
   likePost(
-    @GetUser("id") userId: string,
+    @GetUser() user: User,
     @Body() createPostLikeDto: CreatePostLikeDto,
   ) {
-    return this.likeService.likePost(userId, createPostLikeDto.postId);
+    return this.likeService.likePost(user, createPostLikeDto.postId);
   }
 
   @ApiOperation({ summary: "Like a comment" })
   @UseGuards(JwtGuard)
   @Post("comment")
   likeComment(
-    @GetUser("id") userId: string,
+    @GetUser() user: User,
     @Body() createCommentLikeDto: CreateCommentLikeDto,
   ) {
-    return this.likeService.likeComment(userId, createCommentLikeDto.commentId);
+    return this.likeService.likeComment(user, createCommentLikeDto.commentId);
   }
 
   @ApiOperation({ summary: "Unlike a post" })

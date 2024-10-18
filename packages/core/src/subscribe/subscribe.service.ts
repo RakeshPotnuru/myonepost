@@ -1,12 +1,16 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
-import { Prisma } from "@prisma/client";
+import { Prisma, User } from "@prisma/client";
+import { NotificationService } from "src/notification/notification.service";
 import { PrismaService } from "src/prisma/prisma.service";
 
 @Injectable()
 export class SubscribeService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly notify: NotificationService,
+  ) {}
 
-  async subscribe(userId: string, subscribedToId: string) {
+  async subscribe(user: User, subscribedToId: string) {
     try {
       await this.prisma.$transaction([
         this.prisma.subscriber.create({
@@ -18,7 +22,7 @@ export class SubscribeService {
             },
             user: {
               connect: {
-                id: userId,
+                id: user.id,
               },
             },
           },
@@ -30,11 +34,17 @@ export class SubscribeService {
           select: { id: true },
         }),
         this.prisma.user.update({
-          where: { id: userId },
+          where: { id: user.id },
           data: { subscriptionCount: { increment: 1 } },
           select: { id: true },
         }),
       ]);
+
+      await this.notify.create(
+        subscribedToId,
+        "NEW_SUBSCRIBER",
+        `@${user.username} has subscribed to you`,
+      );
 
       return { success: true };
     } catch (error) {
