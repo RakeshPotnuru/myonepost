@@ -7,17 +7,16 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/reusables/sheet";
-
-import SidebarButton from "./sidebar-button";
+import { SidebarMenuButton } from "@/components/ui/reusables/sidebar";
 
 export default function Notifications() {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <SidebarButton
-          name="Notifications"
-          icon={<Icons.Notification className="mr-4 h-6 w-6" />}
-        />
+        <SidebarMenuButton size={"lg"} tooltip={"Notification"}>
+          <Icons.Notification />
+          <span>Notifications</span>
+        </SidebarMenuButton>
       </SheetTrigger>
       <SheetContent>
         <SheetHeader>

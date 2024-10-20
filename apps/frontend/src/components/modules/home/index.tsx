@@ -3,11 +3,12 @@
 import { useEffect } from "react";
 
 import Footer from "@/components/common/layouts/footer";
+import { SidebarProvider } from "@/components/ui/reusables/sidebar";
 import useUserStore from "@/lib/store/user";
 import client from "@/utils/api-client";
 
 import Feed from "./feed";
-import Sidebar from "./sidebar";
+import AppSidebar from "./sidebar";
 
 export default function HomePage() {
   const { setUser } = useUserStore();
@@ -21,16 +22,16 @@ export default function HomePage() {
   }, [data, setUser]);
 
   return (
-    <div className="flex flex-row">
-      <aside className="basis-1/3">
-        <Sidebar />
-      </aside>
-      <div className="basis-1/2">
-        <Feed />
+    <SidebarProvider>
+      <AppSidebar />
+      <div className="flex flex-row justify-end">
+        <div className="basis-2/3 px-20">
+          <Feed />
+        </div>
+        <div className="basis-1/3">
+          <Footer />
+        </div>
       </div>
-      <div className="basis-1/3">
-        <Footer />
-      </div>
-    </div>
+    </SidebarProvider>
   );
 }
