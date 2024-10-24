@@ -3,19 +3,20 @@
 import {
   Sidebar,
   SidebarContent,
+  SidebarFooter,
   SidebarMenu,
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/reusables/sidebar";
 import { cn } from "@/utils/cn";
 
+import Create from "./create";
 import Logo from "./logo";
 import MoreActions from "./more-actions";
 import Notifications from "./notifications";
 import Profile from "./profile";
 
 export default function AppSidebar() {
-  // const { user } = useUserStore();
   const { state } = useSidebar();
 
   return (
@@ -40,7 +41,12 @@ export default function AppSidebar() {
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarContent>
-      <MoreActions />
+      <SidebarFooter>
+        <SidebarMenu>
+          <Create />
+          <MoreActions />
+        </SidebarMenu>
+      </SidebarFooter>
     </Sidebar>
   );
 }

@@ -32,10 +32,13 @@ export default function CreateDialog({
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <Tooltip text={tooltip} asChild>
         <DialogTrigger asChild>
-          <Button className={cn("p-4 rounded-md", className)}>{icon}</Button>
+          <Button className={cn("p-3 rounded-sm", className)}>{icon}</Button>
         </DialogTrigger>
       </Tooltip>
-      <DialogContent className="max-w-2xl">
+      <DialogContent
+        className="max-w-2xl"
+        onCloseAutoFocus={(e) => e.preventDefault()}
+      >
         {children}
         <DialogFooter>
           <DialogClose asChild>

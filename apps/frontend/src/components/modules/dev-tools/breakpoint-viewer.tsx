@@ -2,7 +2,7 @@ export function BreakpointViewer() {
   return (
     <div
       title="Current breakpoint"
-      className="fixed bottom-3 right-28 z-50 rounded-full bg-primary p-1.5 px-2 text-primary-foreground"
+      className="fixed bottom-3 right-28 z-[9999] rounded-full bg-primary p-1.5 px-2 text-primary-foreground"
     >
       <span className="inline-block sm:hidden">XS</span>
       <span className="hidden sm:inline-block md:hidden">SM</span>

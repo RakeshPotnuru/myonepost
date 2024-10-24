@@ -9,8 +9,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/reusables/dropdown-menu";
 import {
-  SidebarFooter,
-  SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/reusables/sidebar";
@@ -32,39 +30,36 @@ export default function MoreActions() {
   const { theme, setTheme } = useTheme();
 
   return (
-    <SidebarFooter>
-      <SidebarMenu>
-        <SidebarMenuItem>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <SidebarMenuButton
-                size={"lg"}
-                className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
-              >
-                <Icons.More />
-                <span>More</span>
-              </SidebarMenuButton>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent
-              className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
-              side="bottom"
-              align="end"
-              sideOffset={4}
-            >
-              <DropdownMenuItem
-                onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-              >
-                <Icons.Sun />
-                Toggle Appearance
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={handleSignOut}>
-                <Icons.Logout />
-                Log out
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </SidebarMenuItem>
-      </SidebarMenu>
-    </SidebarFooter>
+    <SidebarMenuItem>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <SidebarMenuButton
+            size={"lg"}
+            className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+            tooltip={"More"}
+          >
+            <Icons.More />
+            <span>More</span>
+          </SidebarMenuButton>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent
+          className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
+          side="bottom"
+          align="end"
+          sideOffset={4}
+        >
+          <DropdownMenuItem
+            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+          >
+            <Icons.Sun />
+            Toggle Appearance
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={handleSignOut}>
+            <Icons.Logout />
+            Log out
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </SidebarMenuItem>
   );
 }

@@ -11,15 +11,16 @@ import Feed from "./feed";
 import AppSidebar from "./sidebar";
 
 export default function HomePage() {
-  const { setUser } = useUserStore();
+  const { setUser, setIsLoading } = useUserStore();
 
   const { data } = client.useQuery("get", "/user/me");
 
   useEffect(() => {
     if (data) {
       setUser(data);
+      setIsLoading(false);
     }
-  }, [data, setUser]);
+  }, [data, setUser, setIsLoading]);
 
   return (
     <SidebarProvider>
