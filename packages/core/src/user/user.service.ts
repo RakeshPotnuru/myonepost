@@ -6,6 +6,22 @@ import { PrismaService } from "src/prisma/prisma.service";
 export class UserService {
   constructor(private readonly prisma: PrismaService) {}
 
+  async me(userId: string) {
+    const user = await this.prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+    });
+
+    delete user.email;
+
+    if (!user) {
+      throw new HttpException("User not found", HttpStatus.NOT_FOUND);
+    }
+
+    return user;
+  }
+
   async getPage(username: string, user: User) {
     const page = await this.prisma.user.findUnique({
       where: {

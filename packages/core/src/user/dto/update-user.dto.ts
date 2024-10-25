@@ -1,3 +1,4 @@
+import { CONSTANTS } from "@1post/shared";
 import { ApiProperty } from "@nestjs/swagger";
 import {
   IsBoolean,
@@ -6,7 +7,6 @@ import {
   IsUrl,
   Length,
 } from "class-validator";
-import { CONSTANTS } from "src/common/constants";
 
 export class UpdateUserDto {
   @ApiProperty()

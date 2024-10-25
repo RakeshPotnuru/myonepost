@@ -2,38 +2,11 @@
 
 import Link from "next/link";
 
-import { format } from "date-fns";
-
-import { Icons } from "@/assets/icons";
 import { Center } from "@/components/ui/center";
-import {
-  Alert,
-  AlertDescription,
-  AlertTitle,
-} from "@/components/ui/reusables/alert";
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "@/components/ui/reusables/avatar";
 import { Button } from "@/components/ui/reusables/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/reusables/card";
-import type { Tables } from "@/types/database.types";
 
 import { useGetUserPost } from "../common/api/page";
 import { useGetCurrentUserProfile } from "../home/api/user";
-import AudioContent from "../home/feed/post-card/audio-content";
-import ImageContent from "../home/feed/post-card/image-content";
-import TextContent from "../home/feed/post-card/text-content";
-import VideoContent from "../home/feed/post-card/video-content";
-import Create from "../home/sidebar/create";
 
 interface ProfilePageProps {
   username: string;
@@ -88,103 +61,103 @@ function ProfileInfo({ username }: Readonly<ProfileInfoProps>) {
     return <div>User not found</div>;
   }
 
-  const post = profile.Post[0] as Tables<"Post"> | null;
-  console.log(post);
+  // const post = profile.Post[0] as Tables<"Post"> | null;
+  // console.log(post);
 
-  let postComponent;
+  // let postComponent;
 
-  if (!post) {
-    postComponent =
-      currentUser.username === username ? (
-        <Center className="flex flex-col gap-2 p-4">
-          <p>You haven&apos;t created your post yet.</p>
-          <Create />
-        </Center>
-      ) : (
-        <Center className="p-4">
-          <p>User hasn&apos;t posted yet.</p>
-        </Center>
-      );
-  }
+  // if (!post) {
+  //   postComponent =
+  //     currentUser.username === username ? (
+  //       <Center className="flex flex-col gap-2 p-4">
+  //         <p>You haven&apos;t created your post yet.</p>
+  //         <Create />
+  //       </Center>
+  //     ) : (
+  //       <Center className="p-4">
+  //         <p>User hasn&apos;t posted yet.</p>
+  //       </Center>
+  //     );
+  // }
 
-  switch (post?.postType) {
-    case "TEXT": {
-      postComponent = <TextContent text={post.text ?? ""} />;
-      break;
-    }
-    case "IMAGE": {
-      postComponent = <ImageContent />;
-      break;
-    }
-    case "VIDEO": {
-      postComponent = <VideoContent />;
-      break;
-    }
-    case "AUDIO": {
-      postComponent = <AudioContent />;
-      break;
-    }
-    default: {
-      break;
-    }
-  }
+  // switch (post?.postType) {
+  //   case "TEXT": {
+  //     postComponent = <TextContent text={post.text ?? ""} />;
+  //     break;
+  //   }
+  //   case "IMAGE": {
+  //     postComponent = <ImageContent />;
+  //     break;
+  //   }
+  //   case "VIDEO": {
+  //     postComponent = <VideoContent />;
+  //     break;
+  //   }
+  //   case "AUDIO": {
+  //     postComponent = <AudioContent />;
+  //     break;
+  //   }
+  //   default: {
+  //     break;
+  //   }
+  // }
 
-  return (
-    <Card className="text-start">
-      {post?.isFlagged && (
-        <Alert variant="destructive">
-          <Icons.Flag className="h-4 w-4" />
-          <AlertTitle>Your post has been flagged</AlertTitle>
-          <AlertDescription>
-            {post.flagReason ?? "Currently under review"}
-          </AlertDescription>
-        </Alert>
-      )}
-      {postComponent}
-
-      <CardHeader className="flex flex-row justify-between">
-        <div className="flex flex-row items-center gap-2">
-          <Avatar className="h-8 w-8">
-            <AvatarImage src={profile.avatarUrl ?? ""} />
-            <AvatarFallback>{profile.username[0].toUpperCase()}</AvatarFallback>
-          </Avatar>
-          <div>
-            {profile.displayName && (
-              <CardTitle>{profile.displayName}</CardTitle>
-            )}
-            <CardDescription>@{profile.username}</CardDescription>
-          </div>
-        </div>
-        {currentUser && currentUser.username === username && (
-          <div>
-            <Button variant={"secondary"}>Edit Profile</Button>{" "}
-            {post && <Button variant={"destructive"}>Delete Post</Button>}
-          </div>
-        )}
-      </CardHeader>
-      {profile.bio && (
-        <CardContent>
-          <p>{profile.bio}</p>
-        </CardContent>
-      )}
-      <CardFooter className="flex flex-col items-start space-y-4">
-        <div className="flex flex-row items-center gap-4">
-          {profile.link && (
-            <Link href={profile.link} target="_blank" passHref>
-              <Button variant={"link"} size={"link"}>
-                <Icons.Link className="mr-2" />{" "}
-                {profile.link.replace(/^\w+:\/\//, "")}
-              </Button>
-            </Link>
-          )}
-          <div className="flex flex-row items-center gap-2 text-sm text-muted-foreground">
-            <Icons.Calendar />
-            <time dateTime={profile.createdAt.toString()}>
-              Joined {format(profile.createdAt, "MMMM, yyyy")}
-            </time>
-          </div>
-        </div>
-      </CardFooter>
-    </Card>
-  );
+  // return (
+  //   <Card className="text-start">
+  //     {post?.isFlagged && (
+  //       <Alert variant="destructive">
+  //         <Icons.Flag className="h-4 w-4" />
+  //         <AlertTitle>Your post has been flagged</AlertTitle>
+  //         <AlertDescription>
+  //           {post.flagReason ?? "Currently under review"}
+  //         </AlertDescription>
+  //       </Alert>
+  //     )}
+  //     {postComponent}
+  //     <CardHeader className="flex flex-row justify-between">
+  //       <div className="flex flex-row items-center gap-2">
+  //         <Avatar className="h-8 w-8">
+  //           <AvatarImage src={profile.avatarUrl ?? ""} />
+  //           <AvatarFallback>{profile.username[0].toUpperCase()}</AvatarFallback>
+  //         </Avatar>
+  //         <div>
+  //           {profile.displayName && (
+  //             <CardTitle>{profile.displayName}</CardTitle>
+  //           )}
+  //           <CardDescription>@{profile.username}</CardDescription>
+  //         </div>
+  //       </div>
+  //       {currentUser && currentUser.username === username && (
+  //         <div>
+  //           <Button variant={"secondary"}>Edit users</Button>{" "}
+  //           {post && <Button variant={"destructive"}>Delete Post</Button>}
+  //         </div>
+  //       )}
+  //     </CardHeader>
+  //     {profile.bio && (
+  //       <CardContent>
+  //         <p>{profile.bio}</p>
+  //       </CardContent>
+  //     )}
+  //     <CardFooter className="flex flex-col items-start space-y-4">
+  //       <div className="flex flex-row items-center gap-4">
+  //         {profile.link && (
+  //           <Link href={profile.link} target="_blank" passHref>
+  //             <Button variant={"link"} size={"link"}>
+  //               <Icons.Link className="mr-2" />{" "}
+  //               {profile.link.replace(/^\w+:\/\//, "")}
+  //             </Button>
+  //           </Link>
+  //         )}
+  //         <div className="flex flex-row items-center gap-2 text-sm text-muted-foreground">
+  //           <Icons.Calendar />
+  //           <time dateTime={profile.createdAt.toString()}>
+  //             Joined {format(profile.createdAt, "MMMM, yyyy")}
+  //           </time>
+  //         </div>
+  //       </div>
+  //     </CardFooter>
+  //   </Card>
+  // );
+  return <div></div>;
 }

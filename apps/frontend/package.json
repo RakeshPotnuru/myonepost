@@ -7,12 +7,11 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "lint:fix": "next lint --fix",
-    "types": "npx supabase gen types --lang=typescript --project-id 'ynlhfadksnbruzkjcisw' --schema public > src/types/database.types.ts"
+    "lint:fix": "next lint --fix"
   },
   "dependencies": {
     "@1post/client-sdk": "workspace:*",
-    "@1post/core": "workspace:^",
+    "@1post/shared": "workspace:^",
     "@hookform/resolvers": "^3.9.0",
     "@marsidev/react-turnstile": "^1.0.2",
     "@mux/mux-player-react": "^3.0.0",
@@ -32,6 +31,7 @@
     "@supabase/supabase-js": "^2.45.4",
     "@tanstack/react-query": "^5.56.2",
     "axios": "^1.7.7",
+    "browser-image-compression": "^2.0.2",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
@@ -43,6 +43,7 @@
     "openapi-react-query": "^0.2.0",
     "react": "^18",
     "react-dom": "^18",
+    "react-dropzone": "^14.2.10",
     "react-hook-form": "^7.53.0",
     "react-icons": "^5.3.0",
     "sonner": "^1.5.0",
@@ -53,7 +54,6 @@
     "zustand": "5.0.0-rc.2"
   },
   "devDependencies": {
-    "@1post/typescript-config": "workspace:*",
     "@tanstack/eslint-plugin-query": "^5.58.1",
     "@tanstack/react-query-devtools": "^5.58.0",
     "@types/node": "^20",

@@ -1,0 +1,10 @@
+{
+  "name": "@1post/shared",
+  "version": "1.0.0",
+  "description": "",
+  "author": "Rakesh Potnuru",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc --build"
+  }
+}

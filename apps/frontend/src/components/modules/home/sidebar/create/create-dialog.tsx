@@ -1,3 +1,4 @@
+import { ButtonLoader } from "@/components/ui/loaders/button-loader";
 import { Button } from "@/components/ui/reusables/button";
 import {
   Dialog,
@@ -11,7 +12,7 @@ import { cn } from "@/utils/cn";
 
 interface CreateDialogProps extends React.HTMLAttributes<HTMLDialogElement> {
   icon: React.ReactNode;
-  onConfirm: () => void;
+  onConfirm?: () => void;
   tooltip: string;
   isLoading: boolean;
   isOpen: boolean;
@@ -47,6 +48,7 @@ export default function CreateDialog({
             </Button>
           </DialogClose>
           <Button onClick={onConfirm} type="button" disabled={isLoading}>
+            <ButtonLoader isLoading={isLoading} />
             Post
           </Button>
         </DialogFooter>

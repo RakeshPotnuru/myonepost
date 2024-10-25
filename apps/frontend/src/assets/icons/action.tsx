@@ -2,6 +2,7 @@ import { FaBookmark, FaRegBookmark, FaRegComment } from "react-icons/fa6";
 import { FcLike } from "react-icons/fc";
 import { IoIosPower } from "react-icons/io";
 import { MdFavoriteBorder } from "react-icons/md";
+import { RxCross2 } from "react-icons/rx";
 import { TbSquareRoundedPlus } from "react-icons/tb";
 
 export const ActionIcons = {
@@ -12,4 +13,5 @@ export const ActionIcons = {
   Bookmarked: FaBookmark,
   Logout: IoIosPower,
   Plus: TbSquareRoundedPlus,
+  Close: RxCross2,
 };

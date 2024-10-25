@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-import { CONSTANTS } from "@1post/core/src/common/constants";
+import { CONSTANTS } from "@1post/shared";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/reusables/form";
 import { Textarea } from "@/components/ui/reusables/textarea";
 
-import { useCreateTextPost } from "./api/create";
+import { useCreateImagePost } from "./api/create";
 import CreateDialog from "./create-dialog";
 
 const FormSchema = z.object({
@@ -40,7 +40,7 @@ export default function CreateAudioPost() {
   });
   const watchText = form.watch("text", "");
 
-  const { mutateAsync, isPending } = useCreateTextPost();
+  const { mutateAsync, isPending } = useCreateImagePost();
 
   const onSubmit = async (data: z.infer<typeof FormSchema>) => {
     try {
@@ -58,7 +58,7 @@ export default function CreateAudioPost() {
 
   return (
     <CreateDialog
-      icon={<Icons.TextPost className="size-4" />}
+      icon={<Icons.AudioPost className="size-4" />}
       className="bg-chart-4"
       onConfirm={form.handleSubmit(onSubmit)}
       tooltip="Audio Post"

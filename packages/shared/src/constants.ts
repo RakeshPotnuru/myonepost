@@ -2,8 +2,13 @@ const POST = {
   TEXT: { MAX_LENGTH: 4000 },
   COMMENT: { MAX_LENGTH: 280 },
   NEXT_POST_ALLOWED_AT: 24 * 60 * 60 * 1000, // 24 hours
-  POST_IMAGE_MAX_SIZE: 5 * 1024 * 1024, // 5MB
-  POST_VIDEO_MAX_SIZE: 50 * 1024 * 1024, // 50MB
+  IMAGE_POST: {
+    MAX_SIZE: 5 * 1024 * 1024, // 5MB
+    ACCEPTED_MIME_TYPES: ["image/jpeg", "image/jpg", "image/png", "image/gif"],
+  },
+  VIDEO_POST: {
+    MAX_SIZE: 50 * 1024 * 1024, // 50MB
+  },
   POST_MEDIA_CAPTION: {
     MAX_LENGTH: 150,
   },

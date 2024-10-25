@@ -3,19 +3,22 @@ import { toast } from "sonner";
 
 import { axios } from "@/utils/api-client";
 
-const createTextPost = async (text: string) => {
+const createImagePost = async (data: FormData) => {
   try {
-    await axios.post("/post/create/text", {
-      text,
+    await axios.post("/post/image", data, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
     });
-  } catch {
+  } catch (error) {
+    console.trace(error);
     throw new Error("Something went wrong");
   }
 };
 
-export function useCreateTextPost() {
+export function useCreateImagePost() {
   return useMutation({
-    mutationFn: createTextPost,
+    mutationFn: createImagePost,
     onError: (error) => {
       toast.error(error.message);
     },

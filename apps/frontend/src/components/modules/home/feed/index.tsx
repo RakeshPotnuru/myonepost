@@ -1,4 +1,4 @@
-import { FeedType } from "@1post/core/src/common/constants";
+import { FeedType } from "@1post/shared";
 
 import { Tabs, TabsContent } from "@/components/ui/reusables/tabs";
 

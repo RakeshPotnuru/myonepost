@@ -1,6 +1,6 @@
+import { CONSTANTS } from "@1post/shared";
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { NotificationType } from "@prisma/client";
-import { CONSTANTS } from "src/common/constants";
 import { PrismaService } from "src/prisma/prisma.service";
 
 @Injectable()

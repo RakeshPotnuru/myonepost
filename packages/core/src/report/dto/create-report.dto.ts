@@ -1,7 +1,7 @@
+import { CONSTANTS } from "@1post/shared";
 import { ApiProperty } from "@nestjs/swagger";
 import { ReportReason, ReportType } from "@prisma/client";
 import { IsEnum, IsOptional, IsString, IsUUID, Length } from "class-validator";
-import { CONSTANTS } from "src/common/constants";
 
 export class CreateReportDto {
   @ApiProperty()

@@ -4,312 +4,469 @@ export type Json =
   | boolean
   | null
   | { [key: string]: Json | undefined }
-  | Json[]
+  | Json[];
 
 export type Database = {
   public: {
     Tables: {
       _prisma_migrations: {
         Row: {
-          applied_steps_count: number
-          checksum: string
-          finished_at: string | null
-          id: string
-          logs: string | null
-          migration_name: string
-          rolled_back_at: string | null
-          started_at: string
-        }
+          applied_steps_count: number;
+          checksum: string;
+          finished_at: string | null;
+          id: string;
+          logs: string | null;
+          migration_name: string;
+          rolled_back_at: string | null;
+          started_at: string;
+        };
         Insert: {
-          applied_steps_count?: number
-          checksum: string
-          finished_at?: string | null
-          id: string
-          logs?: string | null
-          migration_name: string
-          rolled_back_at?: string | null
-          started_at?: string
-        }
+          applied_steps_count?: number;
+          checksum: string;
+          finished_at?: string | null;
+          id: string;
+          logs?: string | null;
+          migration_name: string;
+          rolled_back_at?: string | null;
+          started_at?: string;
+        };
         Update: {
-          applied_steps_count?: number
-          checksum?: string
-          finished_at?: string | null
-          id?: string
-          logs?: string | null
-          migration_name?: string
-          rolled_back_at?: string | null
-          started_at?: string
-        }
-        Relationships: []
-      }
-      Bookmark: {
+          applied_steps_count?: number;
+          checksum?: string;
+          finished_at?: string | null;
+          id?: string;
+          logs?: string | null;
+          migration_name?: string;
+          rolled_back_at?: string | null;
+          started_at?: string;
+        };
+        Relationships: [];
+      };
+      comment_likes: {
         Row: {
-          id: string
-          postId: string
-          profileId: string
-        }
+          comment_id: string;
+          created_at: string;
+          id: string;
+          user_id: string;
+        };
         Insert: {
-          id: string
-          postId: string
-          profileId: string
-        }
+          comment_id: string;
+          created_at?: string;
+          id: string;
+          user_id: string;
+        };
         Update: {
-          id?: string
-          postId?: string
-          profileId?: string
-        }
+          comment_id?: string;
+          created_at?: string;
+          id?: string;
+          user_id?: string;
+        };
         Relationships: [
           {
-            foreignKeyName: "Bookmark_postId_fkey"
-            columns: ["postId"]
-            isOneToOne: false
-            referencedRelation: "Post"
-            referencedColumns: ["id"]
+            foreignKeyName: "comment_likes_comment_id_fkey";
+            columns: ["comment_id"];
+            isOneToOne: false;
+            referencedRelation: "comments";
+            referencedColumns: ["id"];
           },
           {
-            foreignKeyName: "Bookmark_profileId_fkey"
-            columns: ["profileId"]
-            isOneToOne: false
-            referencedRelation: "Profile"
-            referencedColumns: ["id"]
+            foreignKeyName: "comment_likes_user_id_fkey";
+            columns: ["user_id"];
+            isOneToOne: false;
+            referencedRelation: "users";
+            referencedColumns: ["id"];
           },
-        ]
-      }
-      Comment: {
+        ];
+      };
+      comments: {
         Row: {
-          createdAt: string
-          id: string
-          postId: string
-          profileId: string
-          text: string
-          updatedAt: string
-        }
+          created_at: string;
+          id: string;
+          like_count: number;
+          post_id: string;
+          text: string;
+          updated_at: string;
+          user_id: string;
+        };
         Insert: {
-          createdAt?: string
-          id: string
-          postId: string
-          profileId: string
-          text: string
-          updatedAt: string
-        }
+          created_at?: string;
+          id: string;
+          like_count?: number;
+          post_id: string;
+          text: string;
+          updated_at: string;
+          user_id: string;
+        };
         Update: {
-          createdAt?: string
-          id?: string
-          postId?: string
-          profileId?: string
-          text?: string
-          updatedAt?: string
-        }
+          created_at?: string;
+          id?: string;
+          like_count?: number;
+          post_id?: string;
+          text?: string;
+          updated_at?: string;
+          user_id?: string;
+        };
         Relationships: [
           {
-            foreignKeyName: "Comment_postId_fkey"
-            columns: ["postId"]
-            isOneToOne: false
-            referencedRelation: "Post"
-            referencedColumns: ["id"]
+            foreignKeyName: "comments_post_id_fkey";
+            columns: ["post_id"];
+            isOneToOne: false;
+            referencedRelation: "posts";
+            referencedColumns: ["id"];
           },
           {
-            foreignKeyName: "Comment_profileId_fkey"
-            columns: ["profileId"]
-            isOneToOne: false
-            referencedRelation: "Profile"
-            referencedColumns: ["id"]
+            foreignKeyName: "comments_user_id_fkey";
+            columns: ["user_id"];
+            isOneToOne: false;
+            referencedRelation: "users";
+            referencedColumns: ["id"];
           },
-        ]
-      }
-      Like: {
+        ];
+      };
+      notifications: {
         Row: {
-          id: string
-          postId: string
-          profileId: string
-        }
+          content: string;
+          created_at: string;
+          id: string;
+          is_read: boolean;
+          type: Database["public"]["Enums"]["NotificationType"];
+          user_id: string;
+        };
         Insert: {
-          id: string
-          postId: string
-          profileId: string
-        }
+          content: string;
+          created_at?: string;
+          id: string;
+          is_read?: boolean;
+          type: Database["public"]["Enums"]["NotificationType"];
+          user_id: string;
+        };
         Update: {
-          id?: string
-          postId?: string
-          profileId?: string
-        }
+          content?: string;
+          created_at?: string;
+          id?: string;
+          is_read?: boolean;
+          type?: Database["public"]["Enums"]["NotificationType"];
+          user_id?: string;
+        };
         Relationships: [
           {
-            foreignKeyName: "Like_postId_fkey"
-            columns: ["postId"]
-            isOneToOne: false
-            referencedRelation: "Post"
-            referencedColumns: ["id"]
+            foreignKeyName: "notifications_user_id_fkey";
+            columns: ["user_id"];
+            isOneToOne: false;
+            referencedRelation: "users";
+            referencedColumns: ["id"];
           },
-          {
-            foreignKeyName: "Like_profileId_fkey"
-            columns: ["profileId"]
-            isOneToOne: false
-            referencedRelation: "Profile"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      Notification: {
+        ];
+      };
+      post_likes: {
         Row: {
-          createdAt: string
-          id: string
-          profileId: string
-          read: boolean
-          type: string
-          updatedAt: string
-        }
+          created_at: string;
+          id: string;
+          post_id: string;
+          user_id: string;
+        };
         Insert: {
-          createdAt?: string
-          id: string
-          profileId: string
-          read?: boolean
-          type: string
-          updatedAt: string
-        }
+          created_at?: string;
+          id: string;
+          post_id: string;
+          user_id: string;
+        };
         Update: {
-          createdAt?: string
-          id?: string
-          profileId?: string
-          read?: boolean
-          type?: string
-          updatedAt?: string
-        }
+          created_at?: string;
+          id?: string;
+          post_id?: string;
+          user_id?: string;
+        };
         Relationships: [
           {
-            foreignKeyName: "Notification_profileId_fkey"
-            columns: ["profileId"]
-            isOneToOne: false
-            referencedRelation: "Profile"
-            referencedColumns: ["id"]
+            foreignKeyName: "post_likes_post_id_fkey";
+            columns: ["post_id"];
+            isOneToOne: false;
+            referencedRelation: "posts";
+            referencedColumns: ["id"];
           },
-        ]
-      }
-      Post: {
+          {
+            foreignKeyName: "post_likes_user_id_fkey";
+            columns: ["user_id"];
+            isOneToOne: false;
+            referencedRelation: "users";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      post_scores: {
         Row: {
-          audioUrl: string | null
-          commentCount: number
-          createdAt: string
-          flagReason: string | null
-          id: string
-          imageUrl: string | null
-          isFlagged: boolean
-          likeCount: number
-          postType: Database["public"]["Enums"]["PostType"]
-          profileId: string
-          text: string | null
-          updatedAt: string
-          videoUrl: string | null
-          viewCount: number
-        }
+          id: string;
+          post_id: string;
+          score: number;
+          updated_at: string;
+        };
         Insert: {
-          audioUrl?: string | null
-          commentCount?: number
-          createdAt?: string
-          flagReason?: string | null
-          id: string
-          imageUrl?: string | null
-          isFlagged?: boolean
-          likeCount?: number
-          postType: Database["public"]["Enums"]["PostType"]
-          profileId: string
-          text?: string | null
-          updatedAt: string
-          videoUrl?: string | null
-          viewCount?: number
-        }
+          id: string;
+          post_id: string;
+          score: number;
+          updated_at: string;
+        };
         Update: {
-          audioUrl?: string | null
-          commentCount?: number
-          createdAt?: string
-          flagReason?: string | null
-          id?: string
-          imageUrl?: string | null
-          isFlagged?: boolean
-          likeCount?: number
-          postType?: Database["public"]["Enums"]["PostType"]
-          profileId?: string
-          text?: string | null
-          updatedAt?: string
-          videoUrl?: string | null
-          viewCount?: number
-        }
+          id?: string;
+          post_id?: string;
+          score?: number;
+          updated_at?: string;
+        };
         Relationships: [
           {
-            foreignKeyName: "Post_profileId_fkey"
-            columns: ["profileId"]
-            isOneToOne: false
-            referencedRelation: "Profile"
-            referencedColumns: ["id"]
+            foreignKeyName: "post_scores_post_id_fkey";
+            columns: ["post_id"];
+            isOneToOne: false;
+            referencedRelation: "posts";
+            referencedColumns: ["id"];
           },
-        ]
-      }
-      Profile: {
+        ];
+      };
+      posts: {
         Row: {
-          avatarUrl: string | null
-          bio: string | null
-          bookmarksVisibility: Database["public"]["Enums"]["BookmarkVisibility"]
-          createdAt: string
-          displayName: string | null
-          email: string
-          id: string
-          isPrivate: boolean
-          link: string | null
-          nextPostAllowedAt: string | null
-          profileViews: number
-          updatedAt: string
-          username: string
-        }
+          comment_count: number;
+          created_at: string;
+          id: string;
+          like_count: number;
+          media_caption: string | null;
+          media_data: Json | null;
+          media_url: string | null;
+          post_type: Database["public"]["Enums"]["PostType"];
+          status: Database["public"]["Enums"]["PostStatus"];
+          text: string | null;
+          updated_at: string;
+          user_id: string;
+        };
         Insert: {
-          avatarUrl?: string | null
-          bio?: string | null
-          bookmarksVisibility?: Database["public"]["Enums"]["BookmarkVisibility"]
-          createdAt?: string
-          displayName?: string | null
-          email: string
-          id: string
-          isPrivate?: boolean
-          link?: string | null
-          nextPostAllowedAt?: string | null
-          profileViews?: number
-          updatedAt: string
-          username: string
-        }
+          comment_count?: number;
+          created_at?: string;
+          id: string;
+          like_count?: number;
+          media_caption?: string | null;
+          media_data?: Json | null;
+          media_url?: string | null;
+          post_type: Database["public"]["Enums"]["PostType"];
+          status?: Database["public"]["Enums"]["PostStatus"];
+          text?: string | null;
+          updated_at: string;
+          user_id: string;
+        };
         Update: {
-          avatarUrl?: string | null
-          bio?: string | null
-          bookmarksVisibility?: Database["public"]["Enums"]["BookmarkVisibility"]
-          createdAt?: string
-          displayName?: string | null
-          email?: string
-          id?: string
-          isPrivate?: boolean
-          link?: string | null
-          nextPostAllowedAt?: string | null
-          profileViews?: number
-          updatedAt?: string
-          username?: string
-        }
-        Relationships: []
-      }
-    }
+          comment_count?: number;
+          created_at?: string;
+          id?: string;
+          like_count?: number;
+          media_caption?: string | null;
+          media_data?: Json | null;
+          media_url?: string | null;
+          post_type?: Database["public"]["Enums"]["PostType"];
+          status?: Database["public"]["Enums"]["PostStatus"];
+          text?: string | null;
+          updated_at?: string;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "posts_user_id_fkey";
+            columns: ["user_id"];
+            isOneToOne: false;
+            referencedRelation: "users";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      reports: {
+        Row: {
+          comment_id: string | null;
+          created_at: string;
+          description: string | null;
+          id: string;
+          post_id: string | null;
+          reason: Database["public"]["Enums"]["ReportReason"];
+          report_type: Database["public"]["Enums"]["ReportType"];
+          reported_by_id: string;
+          reported_user_id: string;
+          status: Database["public"]["Enums"]["ReportStatus"];
+          updated_at: string;
+        };
+        Insert: {
+          comment_id?: string | null;
+          created_at?: string;
+          description?: string | null;
+          id: string;
+          post_id?: string | null;
+          reason: Database["public"]["Enums"]["ReportReason"];
+          report_type: Database["public"]["Enums"]["ReportType"];
+          reported_by_id: string;
+          reported_user_id: string;
+          status?: Database["public"]["Enums"]["ReportStatus"];
+          updated_at: string;
+        };
+        Update: {
+          comment_id?: string | null;
+          created_at?: string;
+          description?: string | null;
+          id?: string;
+          post_id?: string | null;
+          reason?: Database["public"]["Enums"]["ReportReason"];
+          report_type?: Database["public"]["Enums"]["ReportType"];
+          reported_by_id?: string;
+          reported_user_id?: string;
+          status?: Database["public"]["Enums"]["ReportStatus"];
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "reports_comment_id_fkey";
+            columns: ["comment_id"];
+            isOneToOne: false;
+            referencedRelation: "comments";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "reports_post_id_fkey";
+            columns: ["post_id"];
+            isOneToOne: false;
+            referencedRelation: "posts";
+            referencedColumns: ["user_id"];
+          },
+          {
+            foreignKeyName: "reports_reported_by_id_fkey";
+            columns: ["reported_by_id"];
+            isOneToOne: false;
+            referencedRelation: "users";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "reports_reported_user_id_fkey";
+            columns: ["reported_user_id"];
+            isOneToOne: false;
+            referencedRelation: "users";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      subscribers: {
+        Row: {
+          created_at: string;
+          id: string;
+          subscribed_to_id: string;
+          user_id: string;
+        };
+        Insert: {
+          created_at?: string;
+          id: string;
+          subscribed_to_id: string;
+          user_id: string;
+        };
+        Update: {
+          created_at?: string;
+          id?: string;
+          subscribed_to_id?: string;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "subscribers_subscribed_to_id_fkey";
+            columns: ["subscribed_to_id"];
+            isOneToOne: false;
+            referencedRelation: "users";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "subscribers_user_id_fkey";
+            columns: ["user_id"];
+            isOneToOne: false;
+            referencedRelation: "users";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      users: {
+        Row: {
+          avatar_url: string | null;
+          bio: string | null;
+          created_at: string;
+          display_name: string | null;
+          email: string;
+          id: string;
+          is_private: boolean;
+          next_post_allowed_at: string | null;
+          subscriber_count: number;
+          subscription_count: number;
+          updated_at: string;
+          url: string | null;
+          username: string;
+        };
+        Insert: {
+          avatar_url?: string | null;
+          bio?: string | null;
+          created_at?: string;
+          display_name?: string | null;
+          email: string;
+          id: string;
+          is_private?: boolean;
+          next_post_allowed_at?: string | null;
+          subscriber_count?: number;
+          subscription_count?: number;
+          updated_at: string;
+          url?: string | null;
+          username: string;
+        };
+        Update: {
+          avatar_url?: string | null;
+          bio?: string | null;
+          created_at?: string;
+          display_name?: string | null;
+          email?: string;
+          id?: string;
+          is_private?: boolean;
+          next_post_allowed_at?: string | null;
+          subscriber_count?: number;
+          subscription_count?: number;
+          updated_at?: string;
+          url?: string | null;
+          username?: string;
+        };
+        Relationships: [];
+      };
+    };
     Views: {
-      [_ in never]: never
-    }
+      [_ in never]: never;
+    };
     Functions: {
-      [_ in never]: never
-    }
+      [_ in never]: never;
+    };
     Enums: {
-      BookmarkVisibility: "PRIVATE" | "PUBLIC"
-      PostType: "TEXT" | "IMAGE" | "VIDEO" | "AUDIO"
-    }
+      NotificationType:
+        | "NEW_POST_LIKE"
+        | "NEW_COMMENT_LIKE"
+        | "NEW_COMMENT"
+        | "NEW_SUBSCRIBER";
+      PostStatus: "PENDING" | "APPROVED" | "REJECTED" | "FLAGGED";
+      PostType: "TEXT" | "IMAGE" | "VIDEO" | "AUDIO";
+      ReportReason:
+        | "INAPPROPRIATE_CONTENT"
+        | "HARASSMENT"
+        | "SPAM"
+        | "FALSE_INFORMATION"
+        | "HATE_SPEECH"
+        | "VIOLENCE"
+        | "COPYRIGHT_VIOLATION"
+        | "PRIVACY"
+        | "CHILD_EXPLOITATION"
+        | "OTHER";
+      ReportStatus: "PENDING" | "UNDER_REVIEW" | "RESOLVED" | "DISMISSED";
+      ReportType: "USER" | "POST" | "COMMENT";
+    };
     CompositeTypes: {
-      [_ in never]: never
-    }
-  }
-}
+      [_ in never]: never;
+    };
+  };
+};
 
-type PublicSchema = Database[Extract<keyof Database, "public">]
+type PublicSchema = Database[Extract<keyof Database, "public">];
 
 export type Tables<
   PublicTableNameOrOptions extends
@@ -322,7 +479,7 @@ export type Tables<
 > = PublicTableNameOrOptions extends { schema: keyof Database }
   ? (Database[PublicTableNameOrOptions["schema"]]["Tables"] &
       Database[PublicTableNameOrOptions["schema"]]["Views"])[TableName] extends {
-      Row: infer R
+      Row: infer R;
     }
     ? R
     : never
@@ -330,11 +487,11 @@ export type Tables<
         PublicSchema["Views"])
     ? (PublicSchema["Tables"] &
         PublicSchema["Views"])[PublicTableNameOrOptions] extends {
-        Row: infer R
+        Row: infer R;
       }
       ? R
       : never
-    : never
+    : never;
 
 export type TablesInsert<
   PublicTableNameOrOptions extends
@@ -345,17 +502,17 @@ export type TablesInsert<
     : never = never,
 > = PublicTableNameOrOptions extends { schema: keyof Database }
   ? Database[PublicTableNameOrOptions["schema"]]["Tables"][TableName] extends {
-      Insert: infer I
+      Insert: infer I;
     }
     ? I
     : never
   : PublicTableNameOrOptions extends keyof PublicSchema["Tables"]
     ? PublicSchema["Tables"][PublicTableNameOrOptions] extends {
-        Insert: infer I
+        Insert: infer I;
       }
       ? I
       : never
-    : never
+    : never;
 
 export type TablesUpdate<
   PublicTableNameOrOptions extends
@@ -366,17 +523,17 @@ export type TablesUpdate<
     : never = never,
 > = PublicTableNameOrOptions extends { schema: keyof Database }
   ? Database[PublicTableNameOrOptions["schema"]]["Tables"][TableName] extends {
-      Update: infer U
+      Update: infer U;
     }
     ? U
     : never
   : PublicTableNameOrOptions extends keyof PublicSchema["Tables"]
     ? PublicSchema["Tables"][PublicTableNameOrOptions] extends {
-        Update: infer U
+        Update: infer U;
       }
       ? U
       : never
-    : never
+    : never;
 
 export type Enums<
   PublicEnumNameOrOptions extends
@@ -389,4 +546,19 @@ export type Enums<
   ? Database[PublicEnumNameOrOptions["schema"]]["Enums"][EnumName]
   : PublicEnumNameOrOptions extends keyof PublicSchema["Enums"]
     ? PublicSchema["Enums"][PublicEnumNameOrOptions]
-    : never
+    : never;
+
+export type CompositeTypes<
+  PublicCompositeTypeNameOrOptions extends
+    | keyof PublicSchema["CompositeTypes"]
+    | { schema: keyof Database },
+  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
+    schema: keyof Database;
+  }
+    ? keyof Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
+    : never = never,
+> = PublicCompositeTypeNameOrOptions extends { schema: keyof Database }
+  ? Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
+  : PublicCompositeTypeNameOrOptions extends keyof PublicSchema["CompositeTypes"]
+    ? PublicSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
+    : never;

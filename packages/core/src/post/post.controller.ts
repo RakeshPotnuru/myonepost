@@ -1,3 +1,4 @@
+import { CONSTANTS } from "@1post/shared";
 import { HeadersLike } from "@mux/mux-node/core";
 import { UnwrapWebhookEvent } from "@mux/mux-node/resources";
 import {
@@ -19,7 +20,6 @@ import { User } from "@prisma/client";
 import { GetUser } from "src/auth/decorator";
 import { JwtGuard } from "src/auth/guard";
 import { CloudinaryService } from "src/cloudinary/cloudinary.service";
-import { CONSTANTS } from "src/common/constants";
 import { ApiFileUpload } from "src/common/decorator";
 import { Env } from "src/env.validation";
 import { MuxService } from "src/mux/mux.service";
@@ -49,6 +49,13 @@ export class PostController {
     @GetUser() user: User,
     @Body() createTextPostDto: CreateTextPostDto,
   ) {
+    if (user.nextPostAllowedAt && user.nextPostAllowedAt > new Date()) {
+      throw new HttpException(
+        "Next post is not allowed yet",
+        HttpStatus.FORBIDDEN,
+      );
+    }
+
     return this.postService.create(
       {
         postType: "TEXT",
@@ -75,6 +82,13 @@ export class PostController {
     @UploadedFile(imagePostValidators)
     file: Express.Multer.File,
   ) {
+    if (user.nextPostAllowedAt && user.nextPostAllowedAt > new Date()) {
+      throw new HttpException(
+        "Next post is not allowed yet",
+        HttpStatus.FORBIDDEN,
+      );
+    }
+
     const result = await this.cloudinary.uploadImage(
       file,
       CONSTANTS.ASSET_FOLDERS.POSTS,
@@ -101,6 +115,13 @@ export class PostController {
     @GetUser() user: User,
     @Body() createVideoPostDto: CreateVideoPostDto,
   ) {
+    if (user.nextPostAllowedAt && user.nextPostAllowedAt > new Date()) {
+      throw new HttpException(
+        "Next post is not allowed yet",
+        HttpStatus.FORBIDDEN,
+      );
+    }
+
     const { url } = await this.mux.video.uploads.create({
       cors_origin:
         this.config.get<Env["NODE_ENV"]>("NODE_ENV") === "development"

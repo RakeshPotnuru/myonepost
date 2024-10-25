@@ -1,5 +1,5 @@
+import { CONSTANTS } from "@1post/shared";
 import { HttpStatus, ParseFilePipeBuilder } from "@nestjs/common";
-import { CONSTANTS } from "src/common/constants";
 
 export const avatarValidators = new ParseFilePipeBuilder()
   .addFileTypeValidator({

@@ -6,7 +6,7 @@ const client = createClient();
 
 const fetchUserPost = async (username: string) => {
   const { data } = await client
-    .from("Profile")
+    .from("users")
     .select(
       `
       *,

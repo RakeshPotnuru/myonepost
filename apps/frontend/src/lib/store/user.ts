@@ -1,17 +1,31 @@
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 
-import type { Tables } from "@/types/database.types";
+interface User {
+  id: string;
+  createdAt: Date;
+  updatedAt: Date;
+  email: string;
+  username: string;
+  displayName: string;
+  bio: null;
+  avatarUrl: string;
+  url: null;
+  nextPostAllowedAt: Date;
+  isPrivate: boolean;
+  subscriberCount: number;
+  subscriptionCount: number;
+}
 
 interface IUserState {
-  user: Tables<"Profile"> | null;
-  setUser: (user: Tables<"Profile"> | null) => void;
+  user: User | null;
+  setUser: (user: User | null) => void;
   isLoading: boolean;
   setIsLoading: (isLoading: boolean) => void;
 }
 
 interface IUserActions {
-  updateUser: (user: Tables<"Profile">) => void;
+  updateUser: (user: User) => void;
 }
 
 const useUserStore = create<IUserState & IUserActions>()(

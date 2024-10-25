@@ -1,7 +1,7 @@
+import { CONSTANTS } from "@1post/shared";
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { Prisma, User } from "@prisma/client";
 import { CloudinaryService } from "src/cloudinary/cloudinary.service";
-import { CONSTANTS } from "src/common/constants";
 import { MuxService } from "src/mux/mux.service";
 import { PrismaService } from "src/prisma/prisma.service";
 
@@ -17,13 +17,6 @@ export class PostService {
     createPostDto: Omit<Prisma.PostCreateInput, "user">,
     user: User,
   ) {
-    if (user.nextPostAllowedAt && user.nextPostAllowedAt > new Date()) {
-      throw new HttpException(
-        "Next post is not allowed yet",
-        HttpStatus.FORBIDDEN,
-      );
-    }
-
     const nextPostAllowedAt = new Date(
       new Date().getTime() + 24 * 60 * 60 * 1000,
     ); // next post after 24 hours
@@ -49,7 +42,9 @@ export class PostService {
           }),
         ])
       )[1];
-    } catch {
+    } catch (error) {
+      console.log(error);
+
       throw new HttpException(
         "Something went wrong. Please try again later.",
         HttpStatus.INTERNAL_SERVER_ERROR,

@@ -1,6 +1,6 @@
+import { CONSTANTS } from "@1post/shared";
 import { Controller } from "@nestjs/common";
 import { Cron, CronExpression } from "@nestjs/schedule";
-import { CONSTANTS } from "src/common/constants";
 import { FeedService } from "./feed.service";
 
 @Controller()

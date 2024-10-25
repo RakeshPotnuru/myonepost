@@ -1,3 +1,4 @@
+import { CONSTANTS } from "@1post/shared";
 import {
   Body,
   Controller,
@@ -15,7 +16,6 @@ import { User } from "@prisma/client";
 import { GetUser } from "src/auth/decorator";
 import { JwtGuard, PageGuard } from "src/auth/guard";
 import { CloudinaryService } from "src/cloudinary/cloudinary.service";
-import { CONSTANTS } from "src/common/constants";
 import { ApiFileUpload } from "src/common/decorator";
 import { avatarValidators } from "./avatarValidators";
 import { UpdateAvatarDto, UpdateUserDto, UpdateUsernameDto } from "./dto";
@@ -33,8 +33,8 @@ export class UserController {
   @HttpCode(HttpStatus.OK)
   @UseGuards(JwtGuard)
   @Get("me")
-  me(@GetUser() user: User) {
-    return user;
+  me(@GetUser("id") userId: string) {
+    return this.userService.me(userId);
   }
 
   @ApiOperation({ summary: "Get a user page (profile + post)" })
@@ -125,7 +125,7 @@ export default class PostController extends PostService {
       });
 
       if (!profile) {
-        return res.status(404).json({ error: "Profile not found" });
+        return res.status(404).json({ error: "users not found" });
       }
 
       if (profile.nextPostAllowedAt && profile.nextPostAllowedAt > new Date()) {

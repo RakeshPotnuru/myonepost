@@ -2,9 +2,10 @@
 
 import { useState } from "react";
 
-import { CONSTANTS } from "@1post/core/src/common/constants";
+import { CONSTANTS } from "@1post/shared";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 
 import { Icons } from "@/assets/icons";
@@ -17,8 +18,9 @@ import {
   FormMessage,
 } from "@/components/ui/reusables/form";
 import { Textarea } from "@/components/ui/reusables/textarea";
+import { queryClient } from "@/lib/providers/react-query";
+import client from "@/utils/api-client";
 
-import { useCreateTextPost } from "./api/create";
 import CreateDialog from "./create-dialog";
 
 const FormSchema = z.object({
@@ -40,15 +42,20 @@ export default function CreateTextPost() {
   });
   const watchText = form.watch("text", "");
 
-  const { mutateAsync, isPending } = useCreateTextPost();
+  const { mutateAsync, isPending } = client.useMutation("post", "/post/text", {
+    onError: () => {
+      toast.error("Something went wrong. Please try again later.");
+    },
+  });
 
   const onSubmit = async (data: z.infer<typeof FormSchema>) => {
     try {
-      await mutateAsync(data.text);
+      await mutateAsync({ body: { text: data.text } });
       setIsOpen(false);
       form.reset({
         text: "",
       });
+      await queryClient.invalidateQueries();
     } catch {
       // ignore
     }

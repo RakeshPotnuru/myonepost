@@ -18,7 +18,8 @@ This Turborepo includes the following packages/apps:
 
 - `@1post/frontend`: a [Next.js](https://nextjs.org/) app
 - `@1post/core`: backend api
-- `@1post/typescript-config`: `tsconfig.json`s used throughout the monorepo
+- `@1post/shared`: shared code between the frontend and backend
+- `@1post/client-sdk`: Client SDK generated from OpenAPI spec
 
 Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
 

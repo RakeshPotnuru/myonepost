@@ -5,7 +5,10 @@ import { cn } from "@/utils/cn";
 
 interface AudioContentProps extends React.HTMLAttributes<HTMLSlotElement> {}
 
-export default function AudioContent({ ...props }: AudioContentProps) {
+export default function AudioContent({
+  className,
+  ...props
+}: AudioContentProps) {
   return (
     <slot onClick={(e) => e.stopPropagation()} {...props}>
       <MuxPlayer
@@ -19,10 +22,7 @@ export default function AudioContent({ ...props }: AudioContentProps) {
         muted
         accentColor={siteConfig.theme.color}
         title="Test video title"
-        className={cn(
-          "aspect-video rounded-t-xl overflow-hidden",
-          props.className,
-        )}
+        className={cn("aspect-video rounded-t-xl overflow-hidden", className)}
       />
     </slot>
   );

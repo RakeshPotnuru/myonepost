@@ -5,7 +5,10 @@ import { cn } from "@/utils/cn";
 
 interface VideoContentProps extends React.HTMLAttributes<HTMLSlotElement> {}
 
-export default function VideoContent({ ...props }: VideoContentProps) {
+export default function VideoContent({
+  className,
+  ...props
+}: VideoContentProps) {
   return (
     <slot onClick={(e) => e.stopPropagation()} {...props}>
       <MuxPlayer
@@ -21,7 +24,7 @@ export default function VideoContent({ ...props }: VideoContentProps) {
         title="Test video title"
         className={cn(
           "aspect-video rounded-t-xl overflow-hidden shadow-xl",
-          props.className,
+          className,
         )}
       />
     </slot>
