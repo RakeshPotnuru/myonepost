@@ -4,7 +4,7 @@ import { ReportReason, ReportType } from "@prisma/client";
 import { IsEnum, IsOptional, IsString, IsUUID, Length } from "class-validator";
 
 export class CreateReportDto {
-  @ApiProperty()
+  @ApiProperty({ required: false })
   @IsString()
   @IsOptional()
   @Length(
@@ -25,12 +25,12 @@ export class CreateReportDto {
   @IsUUID()
   reportedUserId: string;
 
-  @ApiProperty()
+  @ApiProperty({ required: false })
   @IsUUID()
   @IsOptional()
   postId?: string;
 
-  @ApiProperty()
+  @ApiProperty({ required: false })
   @IsUUID()
   @IsOptional()
   commentId?: string;

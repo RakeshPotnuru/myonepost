@@ -15,7 +15,9 @@ import {
 } from "@/components/ui/reusables/form";
 import { Input } from "@/components/ui/reusables/input";
 
-export default function CaptionForm({ isDisabled }: { isDisabled: boolean }) {
+export default function CaptionForm({
+  isDisabled,
+}: Readonly<{ isDisabled: boolean }>) {
   const { form, watchCaption } = useCaptionForm();
 
   return (

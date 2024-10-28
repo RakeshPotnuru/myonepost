@@ -88,7 +88,7 @@ export class PostService {
         );
       }
 
-      if (post.postType === "VIDEO" && post.mediaData.asset_id) {
+      if (post.postType === "VIDEO" && post.mediaData?.asset_id) {
         await this.mux.video.assets.delete(post.mediaData.asset_id);
       }
 
@@ -98,7 +98,9 @@ export class PostService {
       });
 
       return { success: true };
-    } catch {
+    } catch (error) {
+      console.log(error);
+
       throw new HttpException(
         "Something went wrong. Please try again later.",
         HttpStatus.INTERNAL_SERVER_ERROR,

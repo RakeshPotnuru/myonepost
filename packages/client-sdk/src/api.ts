@@ -349,10 +349,10 @@ export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
         UpdateUserDto: {
-            bio: string;
-            displayName: string;
-            isPrivate: boolean;
-            url: string;
+            bio?: string;
+            displayName?: string;
+            isPrivate?: boolean;
+            url?: string;
         };
         UpdateUsernameDto: {
             username: string;
@@ -365,12 +365,12 @@ export interface components {
             text: string;
         };
         CreateImagePostDto: {
-            mediaCaption: string;
+            mediaCaption?: string;
             /** Format: binary */
             file: string;
         };
         CreateVideoPostDto: {
-            mediaCaption: string;
+            mediaCaption?: string;
         };
         CreateCommentDto: {
             text: string;
@@ -386,12 +386,12 @@ export interface components {
             commentId: string;
         };
         CreateReportDto: {
-            description: string;
+            description?: string;
             reason: string;
             reportType: string;
             reportedUserId: string;
-            postId: string;
-            commentId: string;
+            postId?: string;
+            commentId?: string;
         };
     };
     responses: never;

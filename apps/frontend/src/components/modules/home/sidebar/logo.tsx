@@ -47,7 +47,7 @@ export default function Logo() {
                 />
               )
             )}
-          </Link>{" "}
+          </Link>
         </SidebarMenuItem>
       </SidebarMenu>
     </SidebarHeader>

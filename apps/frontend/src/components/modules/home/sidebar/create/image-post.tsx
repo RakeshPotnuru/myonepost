@@ -17,13 +17,14 @@ import { mimeToExtensions } from "@/utils/mime-to-extensions";
 import { shortenText } from "@/utils/text-shortener";
 
 import { useCreateImagePost } from "./api/create";
-import type { CaptionFormSchema} from "./caption-form";
+import type { CaptionFormSchema } from "./caption-form";
 import CaptionForm, { useCaptionForm } from "./caption-form";
 import CreateDialog from "./create-dialog";
 import Dropzone from "./dropzone";
 
 export default function CreateImagePost() {
   const [isOpen, setIsOpen] = useState(false);
+  const [isCompressing, setIsCompressing] = useState(false);
 
   const { mutateAsync, isPending } = useCreateImagePost();
 
@@ -35,6 +36,7 @@ export default function CreateImagePost() {
     }
 
     try {
+      setIsCompressing(true);
       const options: Options = {
         maxSizeMB: CONSTANTS.POST.IMAGE_POST.MAX_SIZE,
         useWebWorker: true,
@@ -55,6 +57,8 @@ export default function CreateImagePost() {
     } catch {
       toast.error("Failed to process image");
       return;
+    } finally {
+      setIsCompressing(false);
     }
 
     try {
@@ -81,7 +85,7 @@ export default function CreateImagePost() {
     [setFile],
   );
 
-  const isDisabled = isPending || form.formState.isSubmitting;
+  const isDisabled = isPending || form.formState.isSubmitting || isCompressing;
 
   const {
     getRootProps,
@@ -112,6 +116,7 @@ export default function CreateImagePost() {
         isDragActive={isDragActive}
         isDragReject={isDragReject}
         isDragAccept={isDragAccept}
+        file={file}
       >
         {file ? (
           <div className="flex flex-col items-center space-y-4">

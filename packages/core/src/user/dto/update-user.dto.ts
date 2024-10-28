@@ -9,13 +9,13 @@ import {
 } from "class-validator";
 
 export class UpdateUserDto {
-  @ApiProperty()
+  @ApiProperty({ required: false })
   @IsOptional()
   @IsString()
   @Length(0, CONSTANTS.USER.BIO.MAX_LENGTH)
   bio?: string;
 
-  @ApiProperty()
+  @ApiProperty({ required: false })
   @IsOptional()
   @IsString()
   @Length(
@@ -24,12 +24,12 @@ export class UpdateUserDto {
   )
   displayName?: string;
 
-  @ApiProperty()
+  @ApiProperty({ required: false })
   @IsOptional()
   @IsBoolean()
   isPrivate?: boolean;
 
-  @ApiProperty()
+  @ApiProperty({ required: false })
   @IsOptional()
   @IsUrl()
   url?: string;

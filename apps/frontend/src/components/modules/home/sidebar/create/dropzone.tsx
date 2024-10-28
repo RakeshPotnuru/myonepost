@@ -2,7 +2,9 @@ import type { DropzoneState } from "react-dropzone/.";
 
 import { cn } from "@/utils/cn";
 
-interface DropzoneProps extends React.HTMLAttributes<HTMLDivElement> {}
+interface DropzoneProps extends React.HTMLAttributes<HTMLDivElement> {
+  file?: File;
+}
 
 export default function Dropzone({
   getRootProps,
@@ -11,6 +13,7 @@ export default function Dropzone({
   isDragAccept,
   isDragReject,
   children,
+  file,
 }: DropzoneProps &
   Pick<
     DropzoneState,
@@ -27,7 +30,7 @@ export default function Dropzone({
         {
           "border-primary": isDragActive,
           "border-destructive": isDragReject,
-          "border-success": isDragAccept,
+          "border-success": isDragAccept || file,
         },
       )}
       {...getRootProps()}

@@ -39,6 +39,11 @@ export default function CreateDialog({
       <DialogContent
         className="max-w-2xl"
         onCloseAutoFocus={(e) => e.preventDefault()}
+        onInteractOutside={(e) => {
+          e.preventDefault();
+        }}
+        hideClose
+        aria-describedby="undefined"
       >
         {children}
         <DialogFooter>

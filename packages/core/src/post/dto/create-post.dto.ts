@@ -10,7 +10,9 @@ export class CreateTextPostDto {
 }
 
 export class CreateImagePostDto {
-  @ApiProperty()
+  @ApiProperty({
+    required: false,
+  })
   @IsString()
   @Length(0, CONSTANTS.POST.POST_MEDIA_CAPTION.MAX_LENGTH)
   @IsOptional()
@@ -21,7 +23,9 @@ export class CreateImagePostDto {
 }
 
 export class CreateVideoPostDto {
-  @ApiProperty()
+  @ApiProperty({
+    required: false,
+  })
   @IsString()
   @Length(0, CONSTANTS.POST.POST_MEDIA_CAPTION.MAX_LENGTH)
   @IsOptional()

@@ -8,6 +8,8 @@ const POST = {
   },
   VIDEO_POST: {
     MAX_SIZE: 50 * 1024 * 1024, // 50MB
+    ACCEPTED_MIME_TYPES: ["video/mp4"],
+    MAX_DURATION: 60, // seconds
   },
   POST_MEDIA_CAPTION: {
     MAX_LENGTH: 150,
