@@ -24,6 +24,7 @@ import { ApiFileUpload } from "src/common/decorator";
 import { Env } from "src/env.validation";
 import { MuxService } from "src/mux/mux.service";
 import {
+  CreateAudioPostDto,
   CreateImagePostDto,
   CreateTextPostDto,
   CreateVideoPostDto,
@@ -49,12 +50,7 @@ export class PostController {
     @GetUser() user: User,
     @Body() createTextPostDto: CreateTextPostDto,
   ) {
-    if (user.nextPostAllowedAt && user.nextPostAllowedAt > new Date()) {
-      throw new HttpException(
-        "Next post is not allowed yet",
-        HttpStatus.FORBIDDEN,
-      );
-    }
+    this.postService.canPost(user);
 
     return this.postService.create(
       {
@@ -82,12 +78,7 @@ export class PostController {
     @UploadedFile(imagePostValidators)
     file: Express.Multer.File,
   ) {
-    if (user.nextPostAllowedAt && user.nextPostAllowedAt > new Date()) {
-      throw new HttpException(
-        "Next post is not allowed yet",
-        HttpStatus.FORBIDDEN,
-      );
-    }
+    this.postService.canPost(user);
 
     const result = await this.cloudinary.uploadImage(
       file,
@@ -108,31 +99,16 @@ export class PostController {
     );
   }
 
-  @ApiOperation({ summary: "Create mux upload url" })
+  @ApiOperation({ summary: "Create mux video upload url" })
   @UseGuards(JwtGuard)
   @Post("video")
   async createVideoPost(
     @GetUser() user: User,
     @Body() createVideoPostDto: CreateVideoPostDto,
   ) {
-    if (user.nextPostAllowedAt && user.nextPostAllowedAt > new Date()) {
-      throw new HttpException(
-        "Next post is not allowed yet",
-        HttpStatus.FORBIDDEN,
-      );
-    }
+    this.postService.canPost(user);
 
-    const { url } = await this.mux.video.uploads.create({
-      cors_origin:
-        this.config.get<Env["NODE_ENV"]>("NODE_ENV") === "development"
-          ? "*"
-          : this.config.get<string>("CLIENT_URL"),
-      new_asset_settings: {
-        playback_policy: ["public"],
-        encoding_tier: "baseline",
-        passthrough: user.id,
-      },
-    });
+    const { url } = await this.postService.createUploadUrl(user.id);
 
     await this.postService.create(
       {
@@ -142,6 +118,30 @@ export class PostController {
       },
       user,
     );
+
+    return { url };
+  }
+
+  @ApiOperation({ summary: "Create mux audio upload url" })
+  @UseGuards(JwtGuard)
+  @Post("audio")
+  async createAudioPost(
+    @GetUser() user: User,
+    @Body() createAudioPostDto: CreateAudioPostDto,
+  ) {
+    this.postService.canPost(user);
+
+    const { url } = await this.postService.createUploadUrl(user.id);
+
+    await this.postService.create(
+      {
+        postType: "AUDIO",
+        status: "PENDING",
+        mediaCaption: createAudioPostDto.mediaCaption,
+      },
+      user,
+    );
+
     return { url };
   }
 

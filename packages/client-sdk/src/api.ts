@@ -132,8 +132,25 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Create mux upload url */
+        /** Create mux video upload url */
         post: operations["PostController_createVideoPost"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/post/audio": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Create mux audio upload url */
+        post: operations["PostController_createAudioPost"];
         delete?: never;
         options?: never;
         head?: never;
@@ -372,6 +389,9 @@ export interface components {
         CreateVideoPostDto: {
             mediaCaption?: string;
         };
+        CreateAudioPostDto: {
+            mediaCaption?: string;
+        };
         CreateCommentDto: {
             text: string;
             postId: string;
@@ -553,6 +573,27 @@ export interface operations {
         requestBody: {
             content: {
                 "application/json": components["schemas"]["CreateVideoPostDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    PostController_createAudioPost: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateAudioPostDto"];
             };
         };
         responses: {

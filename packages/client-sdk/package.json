@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "generate": "openapi-typescript http://localhost:4000/docs-json -o ./src/api.ts"
+    "gen": "openapi-typescript http://localhost:4000/docs-json -o ./src/api.ts"
   },
   "devDependencies": {
     "openapi-typescript": "^7.4.1",

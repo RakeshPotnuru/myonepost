@@ -1,7 +1,9 @@
 import { CONSTANTS } from "@1post/shared";
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
 import { Prisma, User } from "@prisma/client";
 import { CloudinaryService } from "src/cloudinary/cloudinary.service";
+import { Env } from "src/env.validation";
 import { MuxService } from "src/mux/mux.service";
 import { PrismaService } from "src/prisma/prisma.service";
 
@@ -11,6 +13,7 @@ export class PostService {
     private readonly prisma: PrismaService,
     private readonly cloudinary: CloudinaryService,
     private readonly mux: MuxService,
+    private readonly config: ConfigService<Env>,
   ) {}
 
   async create(
@@ -88,8 +91,15 @@ export class PostService {
         );
       }
 
-      if (post.postType === "VIDEO" && post.mediaData?.asset_id) {
-        await this.mux.video.assets.delete(post.mediaData.asset_id);
+      if (
+        (post.postType === "VIDEO" || post.postType === "AUDIO") &&
+        post.mediaData?.asset_id
+      ) {
+        await this.mux.video.assets
+          .delete(post.mediaData.asset_id)
+          .catch(() => {
+            // ignore
+          });
       }
 
       await this.prisma.post.delete({
@@ -106,5 +116,39 @@ export class PostService {
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
+  }
+
+  canPost(user: User) {
+    if (user.nextPostAllowedAt && user.nextPostAllowedAt > new Date()) {
+      throw new HttpException(
+        "Next post is not allowed yet",
+        HttpStatus.FORBIDDEN,
+      );
+    }
+
+    return true;
+  }
+
+  async createUploadUrl(userId: string) {
+    return await this.mux.video.uploads
+      .create({
+        cors_origin:
+          this.config.get<Env["NODE_ENV"]>("NODE_ENV") === "development"
+            ? "*"
+            : this.config.get<string>("CLIENT_URL"),
+        new_asset_settings: {
+          playback_policy: ["public"],
+          encoding_tier: "baseline",
+          passthrough: userId,
+        },
+      })
+      .catch((error) => {
+        console.error("Mux upload creation failed:", error);
+
+        throw new HttpException(
+          "Something went wrong. Please try again later.",
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
+      });
   }
 }

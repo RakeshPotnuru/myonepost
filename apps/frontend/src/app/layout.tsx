@@ -77,7 +77,7 @@ export default function RootLayout({
       <body className={cn("antialiased", inter.className)}>
         <Providers>
           {children}
-          <Toaster richColors />
+          <Toaster />
           {process.env.NODE_ENV === "development" && (
             <>
               <BreakpointViewer />

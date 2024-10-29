@@ -11,6 +11,16 @@ const POST = {
     ACCEPTED_MIME_TYPES: ["video/mp4"],
     MAX_DURATION: 60, // seconds
   },
+  AUDIO_POST: {
+    ACCEPTED_MIME_TYPES: [
+      "audio/wav",
+      "audio/flac",
+      "audio/aac",
+      "audio/mp3",
+      "audio/opus",
+      "audio/ogg",
+    ],
+  },
   POST_MEDIA_CAPTION: {
     MAX_LENGTH: 150,
   },

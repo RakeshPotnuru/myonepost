@@ -33,7 +33,9 @@ export class CreateVideoPostDto {
 }
 
 export class CreateAudioPostDto {
-  @ApiProperty()
+  @ApiProperty({
+    required: false,
+  })
   @IsString()
   @Length(0, CONSTANTS.POST.POST_MEDIA_CAPTION.MAX_LENGTH)
   @IsOptional()

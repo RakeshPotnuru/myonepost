@@ -5,6 +5,8 @@ import {
   DialogClose,
   DialogContent,
   DialogFooter,
+  DialogHeader,
+  DialogTitle,
   DialogTrigger,
 } from "@/components/ui/reusables/dialog";
 import { Tooltip } from "@/components/ui/reusables/tooltip";
@@ -45,6 +47,11 @@ export default function CreateDialog({
         hideClose
         aria-describedby="undefined"
       >
+        <DialogHeader>
+          <DialogTitle className={cn("p-2 rounded-sm w-max", className)}>
+            {icon}
+          </DialogTitle>
+        </DialogHeader>
         {children}
         <DialogFooter>
           <DialogClose asChild>

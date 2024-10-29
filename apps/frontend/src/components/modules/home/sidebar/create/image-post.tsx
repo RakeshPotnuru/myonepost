@@ -142,7 +142,9 @@ export default function CreateImagePost() {
             </div>
           </div>
         ) : (
-          <p className="text-muted-foreground">Drag & drop the image here</p>
+          <p className="text-muted-foreground">
+            Drag & drop the image here or click to choose
+          </p>
         )}
       </Dropzone>
 

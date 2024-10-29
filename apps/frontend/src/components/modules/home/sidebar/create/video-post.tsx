@@ -3,6 +3,7 @@
 import { memo, useCallback, useState } from "react";
 
 import { CONSTANTS } from "@1post/shared";
+import MuxPlayer from "@mux/mux-player-react/lazy";
 import * as UpChunk from "@mux/upchunk";
 import { useDropzone } from "react-dropzone";
 import { toast } from "sonner";
@@ -11,6 +12,7 @@ import type { z } from "zod";
 import { Icons } from "@/assets/icons";
 import { Button } from "@/components/ui/reusables/button";
 import { Progress } from "@/components/ui/reusables/progress";
+import { siteConfig } from "@/config/site";
 import { queryClient } from "@/lib/providers/react-query";
 import client from "@/utils/api-client";
 import { mimeToExtensions } from "@/utils/mime-to-extensions";
@@ -35,11 +37,11 @@ const MemoizedDropzoneContent = memo(
   }) =>
     file ? (
       <div className="flex w-full flex-col items-center space-y-4">
-        {/* <video
-            src={URL.createObjectURL(file)}
-            controls
-            className="h-auto w-full"
-          /> */}
+        <MuxPlayer
+          src={URL.createObjectURL(file)}
+          accentColor={siteConfig.theme.color}
+          className="aspect-video"
+        />
         <div className="flex flex-row items-center">
           <p className="text-sm font-medium">{shortenText(file.name, 20)}</p>
           <Button
@@ -62,7 +64,9 @@ const MemoizedDropzoneContent = memo(
         )}
       </div>
     ) : (
-      <p className="text-muted-foreground">Drag & drop the video here</p>
+      <p className="text-muted-foreground">
+        Drag & drop the video here or click to choose (60 seconds or less)
+      </p>
     ),
 );
 MemoizedDropzoneContent.displayName = "DropzoneContent";
