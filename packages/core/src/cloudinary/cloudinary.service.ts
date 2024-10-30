@@ -37,7 +37,7 @@ export class CloudinaryService {
 
   async deleteImage(publicId: string) {
     try {
-      return cloudinary.uploader.destroy(publicId);
+      return await cloudinary.uploader.destroy(publicId);
     } catch (error) {
       console.log(error);
 

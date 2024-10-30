@@ -5,15 +5,15 @@ import { useEffect } from "react";
 import Footer from "@/components/common/layouts/footer";
 import { SidebarProvider } from "@/components/ui/reusables/sidebar";
 import useUserStore from "@/lib/store/user";
-import client from "@/utils/api-client";
 
+import { useGetMe } from "./api/user";
 import Feed from "./feed";
 import AppSidebar from "./sidebar";
 
 export default function HomePage() {
   const { setUser, setIsLoading } = useUserStore();
 
-  const { data } = client.useQuery("get", "/user/me");
+  const { data } = useGetMe();
 
   useEffect(() => {
     if (data) {

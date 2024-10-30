@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 
-interface User {
+export interface User {
   id: string;
   createdAt: Date;
   updatedAt: Date;

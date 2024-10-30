@@ -34,6 +34,7 @@ fetchClient.use(authMiddleware);
 const client = createClient(fetchClient);
 
 export default client;
+export { fetchClient };
 
 async function authRequestInterceptor(config: InternalAxiosRequestConfig) {
   const token = await getAccessToken();

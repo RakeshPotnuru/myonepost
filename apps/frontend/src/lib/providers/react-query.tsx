@@ -27,3 +27,7 @@ export default function ReactQueryProvider({
     </QueryClientProvider>
   );
 }
+
+export const queryKeys = {
+  getMe: "getMe",
+} as const;

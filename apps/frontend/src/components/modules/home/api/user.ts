@@ -1,25 +1,16 @@
 import { useQuery } from "@tanstack/react-query";
 
-// const supabase = createClient();
+import { queryKeys } from "@/lib/providers/react-query";
+import type { User } from "@/lib/store/user";
+import { fetchClient } from "@/utils/api-client";
 
-const fetchCurrentUserProfile = () => {
-  // const currentUserId = (await supabase.auth.getUser()).data.user?.id;
-  // if (!currentUserId) {
-  //   return null;
-  // }
-  // const { data } = await client
-  //   .from("users")
-  //   .select("*")
-  //   .eq("id", currentUserId)
-  //   .limit(1)
-  //   .single();
-  // const { data } = await fetchClient.GET("/user/me");
-  // return null;
+const fetchMe = async (): Promise<User | null> => {
+  return (await fetchClient.GET("/user/me")).data as unknown as User | null;
 };
 
-export function useGetCurrentUserProfile() {
+export function useGetMe() {
   return useQuery({
-    queryKey: ["profile"],
-    queryFn: fetchCurrentUserProfile,
+    queryKey: [queryKeys.getMe],
+    queryFn: fetchMe,
   });
 }

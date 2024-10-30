@@ -65,4 +65,26 @@ export class NotificationService {
       );
     }
   }
+
+  async get(userId: string) {
+    try {
+      const notifications = await this.prisma.notification.findMany({
+        where: {
+          userId,
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+      });
+
+      return notifications;
+    } catch (error) {
+      console.error("Error getting notifications:", error);
+
+      throw new HttpException(
+        "Something went wrong. Please try again later.",
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
 }

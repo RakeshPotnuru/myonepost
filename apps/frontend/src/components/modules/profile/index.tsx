@@ -6,7 +6,7 @@ import { Center } from "@/components/ui/center";
 import { Button } from "@/components/ui/reusables/button";
 
 import { useGetUserPost } from "../common/api/page";
-import { useGetCurrentUserProfile } from "../home/api/user";
+import { useGetMe } from "../home/api/user";
 
 interface ProfilePageProps {
   username: string;
@@ -35,8 +35,7 @@ interface ProfileInfoProps {
 function ProfileInfo({ username }: Readonly<ProfileInfoProps>) {
   const { data: profile, isFetching: isPostFetching } =
     useGetUserPost(username);
-  const { data: currentUser, isFetching: isCurrentUserFetching } =
-    useGetCurrentUserProfile();
+  const { data: currentUser, isFetching: isCurrentUserFetching } = useGetMe();
 
   if (isPostFetching || isCurrentUserFetching) {
     return <div>Loading...</div>;
