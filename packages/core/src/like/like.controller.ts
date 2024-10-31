@@ -1,3 +1,4 @@
+import { User } from "@1post/shared";
 import {
   Body,
   Controller,
@@ -7,7 +8,6 @@ import {
   UseGuards,
 } from "@nestjs/common";
 import { ApiOperation, ApiTags } from "@nestjs/swagger";
-import { User } from "@prisma/client";
 import { GetUser } from "src/auth/decorator";
 import { JwtGuard } from "src/auth/guard";
 import { CreateCommentLikeDto, CreatePostLikeDto } from "./dto/create-like.dto";

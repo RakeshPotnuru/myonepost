@@ -1,4 +1,4 @@
-import { CONSTANTS } from "@1post/shared";
+import { CONSTANTS, User } from "@1post/shared";
 import {
   Body,
   Controller,
@@ -12,7 +12,6 @@ import {
   UseGuards,
 } from "@nestjs/common";
 import { ApiBody, ApiOperation, ApiTags } from "@nestjs/swagger";
-import { User } from "@prisma/client";
 import { GetUser } from "src/auth/decorator";
 import { JwtGuard, PageGuard } from "src/auth/guard";
 import { CloudinaryService } from "src/cloudinary/cloudinary.service";

@@ -1,31 +1,18 @@
+import type { User } from "@1post/shared";
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 
-export interface User {
-  id: string;
-  createdAt: Date;
-  updatedAt: Date;
-  email: string;
-  username: string;
-  displayName: string;
-  bio: null;
-  avatarUrl: string;
-  url: null;
-  nextPostAllowedAt: Date;
-  isPrivate: boolean;
-  subscriberCount: number;
-  subscriptionCount: number;
-}
+export type MeResponse = Omit<User, "email">;
 
 interface IUserState {
-  user: User | null;
-  setUser: (user: User | null) => void;
+  user: MeResponse | null;
+  setUser: (user: MeResponse | null) => void;
   isLoading: boolean;
   setIsLoading: (isLoading: boolean) => void;
 }
 
 interface IUserActions {
-  updateUser: (user: User) => void;
+  updateUser: (user: MeResponse) => void;
 }
 
 const useUserStore = create<IUserState & IUserActions>()(

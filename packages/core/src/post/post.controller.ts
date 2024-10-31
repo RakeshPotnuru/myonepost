@@ -1,4 +1,4 @@
-import { CONSTANTS } from "@1post/shared";
+import { CONSTANTS, User } from "@1post/shared";
 import { HeadersLike } from "@mux/mux-node/core";
 import { UnwrapWebhookEvent } from "@mux/mux-node/resources";
 import {
@@ -16,7 +16,6 @@ import {
 } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { ApiBody, ApiOperation, ApiTags } from "@nestjs/swagger";
-import { User } from "@prisma/client";
 import { GetUser } from "src/auth/decorator";
 import { JwtGuard } from "src/auth/guard";
 import { CloudinaryService } from "src/cloudinary/cloudinary.service";

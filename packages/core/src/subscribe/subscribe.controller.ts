@@ -1,3 +1,4 @@
+import { User } from "@1post/shared";
 import {
   Body,
   Controller,
@@ -13,7 +14,6 @@ import { GetUser } from "src/auth/decorator";
 import { JwtGuard } from "src/auth/guard";
 import { CreateSubscribeDto } from "./dto";
 import { SubscribeService } from "./subscribe.service";
-import { User } from "@prisma/client";
 
 @ApiTags("Subscribe")
 @Controller("subscribe")

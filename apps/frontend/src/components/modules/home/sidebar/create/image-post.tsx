@@ -12,7 +12,7 @@ import type { z } from "zod";
 
 import { Icons } from "@/assets/icons";
 import { Button } from "@/components/ui/reusables/button";
-import { queryClient } from "@/lib/providers/react-query";
+import { queryClient, queryKeys } from "@/lib/providers/react-query";
 import { mimeToExtensions } from "@/utils/mime-to-extensions";
 import { shortenText } from "@/utils/text-shortener";
 
@@ -72,7 +72,7 @@ export default function CreateImagePost() {
       form.reset({
         caption: "",
       });
-      await queryClient.invalidateQueries();
+      await queryClient.invalidateQueries({ queryKey: [queryKeys.me] });
     } catch {
       // ignore
     }

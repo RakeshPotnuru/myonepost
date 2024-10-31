@@ -29,5 +29,6 @@ export default function ReactQueryProvider({
 }
 
 export const queryKeys = {
-  getMe: "getMe",
+  me: "me",
+  notifications: "notifications",
 } as const;

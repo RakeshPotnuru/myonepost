@@ -18,7 +18,7 @@ import {
   FormMessage,
 } from "@/components/ui/reusables/form";
 import { Textarea } from "@/components/ui/reusables/textarea";
-import { queryClient } from "@/lib/providers/react-query";
+import { queryClient, queryKeys } from "@/lib/providers/react-query";
 import client from "@/utils/api-client";
 
 import CreateDialog from "./create-dialog";
@@ -35,7 +35,6 @@ export default function CreateTextPost() {
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
-    mode: "onBlur",
     defaultValues: {
       text: "",
     },
@@ -55,7 +54,7 @@ export default function CreateTextPost() {
       form.reset({
         text: "",
       });
-      await queryClient.invalidateQueries();
+      await queryClient.invalidateQueries({ queryKey: [queryKeys.me] });
     } catch {
       // ignore
     }

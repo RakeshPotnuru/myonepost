@@ -13,7 +13,7 @@ import { Icons } from "@/assets/icons";
 import { Button } from "@/components/ui/reusables/button";
 import { Progress } from "@/components/ui/reusables/progress";
 import { siteConfig } from "@/config/site";
-import { queryClient } from "@/lib/providers/react-query";
+import { queryClient, queryKeys } from "@/lib/providers/react-query";
 import client from "@/utils/api-client";
 import { mimeToExtensions } from "@/utils/mime-to-extensions";
 import { shortenText } from "@/utils/text-shortener";
@@ -117,7 +117,7 @@ export default function CreateAudioPost() {
           setFile(undefined);
           setProgress(0);
           form.reset({ caption: "" });
-          await queryClient.invalidateQueries();
+          await queryClient.invalidateQueries({ queryKey: [queryKeys.me] });
         });
       } catch {
         // ignore

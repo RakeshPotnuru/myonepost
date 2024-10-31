@@ -1,3 +1,4 @@
+import { User } from "@1post/shared";
 import {
   Body,
   Controller,
@@ -11,7 +12,6 @@ import { GetUser } from "src/auth/decorator";
 import { JwtGuard } from "src/auth/guard";
 import { CommentService } from "./comment.service";
 import { CreateCommentDto } from "./dto";
-import { User } from "@prisma/client";
 
 @ApiTags("Comment")
 @Controller("comment")

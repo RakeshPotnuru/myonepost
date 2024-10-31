@@ -1,7 +1,6 @@
-import { CONSTANTS } from "@1post/shared";
+import { CONSTANTS, Prisma, User } from "@1post/shared";
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
-import { Prisma, User } from "@prisma/client";
 import { CloudinaryService } from "src/cloudinary/cloudinary.service";
 import { Env } from "src/env.validation";
 import { MuxService } from "src/mux/mux.service";
