@@ -14,7 +14,7 @@ import Create from "./create";
 import Logo from "./logo";
 import MoreActions from "./more-actions";
 import Notifications from "./notifications";
-import Profile from "./profile";
+import YourPage from "./your-page";
 
 export default function AppSidebar() {
   const { state } = useSidebar();
@@ -37,7 +37,7 @@ export default function AppSidebar() {
             <Notifications />
           </SidebarMenuItem>
           <SidebarMenuItem>
-            <Profile />
+            <YourPage />
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarContent>

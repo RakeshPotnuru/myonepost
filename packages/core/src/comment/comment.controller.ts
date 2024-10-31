@@ -1,4 +1,4 @@
-import { User } from "@1post/shared";
+import { users } from "@1post/shared";
 import {
   Body,
   Controller,
@@ -21,7 +21,7 @@ export class CommentController {
   @ApiOperation({ summary: "Create comment" })
   @UseGuards(JwtGuard)
   @Post()
-  create(@GetUser() user: User, @Body() createCommentDto: CreateCommentDto) {
+  create(@GetUser() user: users, @Body() createCommentDto: CreateCommentDto) {
     return this.commentService.create(user, createCommentDto);
   }
 

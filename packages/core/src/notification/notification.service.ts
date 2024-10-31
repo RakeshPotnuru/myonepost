@@ -8,7 +8,7 @@ export class NotificationService {
 
   async create(userId: string, type: NotificationType, content: string) {
     try {
-      await this.prisma.notification.create({
+      await this.prisma.notifications.create({
         data: {
           user: {
             connect: {
@@ -30,9 +30,9 @@ export class NotificationService {
     ); // last 7 days
 
     try {
-      await this.prisma.notification.deleteMany({
+      await this.prisma.notifications.deleteMany({
         where: {
-          createdAt: {
+          created_at: {
             lte: cutoffDate,
           },
         },
@@ -44,42 +44,20 @@ export class NotificationService {
 
   async markAsRead(notificationIds: string[], userId: string) {
     try {
-      await this.prisma.notification.updateMany({
+      await this.prisma.notifications.updateMany({
         where: {
           id: {
             in: notificationIds,
           },
-          userId,
+          user_id: userId,
         },
         data: {
-          isRead: true,
+          is_read: true,
         },
       });
 
       return { success: true };
     } catch {
-      throw new HttpException(
-        "Something went wrong. Please try again later.",
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
-  }
-
-  async get(userId: string) {
-    try {
-      const notifications = await this.prisma.notification.findMany({
-        where: {
-          userId,
-        },
-        orderBy: {
-          createdAt: "desc",
-        },
-      });
-
-      return notifications;
-    } catch (error) {
-      console.error("Error getting notifications:", error);
-
       throw new HttpException(
         "Something went wrong. Please try again later.",
         HttpStatus.INTERNAL_SERVER_ERROR,

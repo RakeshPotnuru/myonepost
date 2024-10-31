@@ -18,71 +18,66 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
-model User {
-  id        String   @id @default(uuid()) @db.Uuid
-  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
-  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+model users {
+  id         String   @id @default(uuid()) @db.Uuid
+  created_at DateTime @default(now()) @db.Timestamptz(3)
+  updated_at DateTime @updatedAt @db.Timestamptz(3)
 
-  email             String    @unique
-  username          String    @unique @db.VarChar(30)
-  displayName       String?   @map("display_name") @db.VarChar(30)
-  bio               String?   @db.VarChar(150)
-  avatarUrl         String?   @map("avatar_url")
-  url               String?
-  nextPostAllowedAt DateTime? @map("next_post_allowed_at") @db.Timestamptz(3)
-  isPrivate         Boolean   @default(false) @map("is_private")
-  subscriberCount   Int       @default(0) @map("subscriber_count")
-  subscriptionCount Int       @default(0) @map("subscription_count")
+  email                String    @unique
+  username             String    @unique @db.VarChar(30)
+  display_name         String?   @db.VarChar(30)
+  bio                  String?   @db.VarChar(150)
+  avatar_url           String?
+  url                  String?
+  next_post_allowed_at DateTime? @db.Timestamptz(3)
+  is_private           Boolean   @default(false)
+  subscriber_count     Int       @default(0)
+  subscription_count   Int       @default(0)
 
-  subscribers    Subscriber[]   @relation("UserSubscribers")
-  subscribedTo   Subscriber[]   @relation("UserSubscribedTo")
-  post           Post?
-  likes          PostLike[]
-  comments       Comment[]
-  commentLikes   CommentLike[]
-  notifications  Notification[]
-  reportsMade    Report[]       @relation("ReportMadeBy")
-  reportsAgainst Report[]       @relation("ReportAgainst")
-
-  @@map("users")
+  subscribers     subscribers[]   @relation("UserSubscribers")
+  subscribed_to   subscribers[]   @relation("UserSubscribedTo")
+  post            posts?
+  likes           post_likes[]
+  comments        comments[]
+  comment_likes   comment_likes[]
+  notifications   notifications[]
+  reports_made    reports[]       @relation("ReportMadeBy")
+  reports_against reports[]       @relation("ReportAgainst")
 }
 
-model Subscriber {
-  id        String   @id @default(uuid()) @db.Uuid
-  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+model subscribers {
+  id         String   @id @default(uuid()) @db.Uuid
+  created_at DateTime @default(now()) @db.Timestamptz(3)
 
-  userId         String @map("user_id") @db.Uuid
-  user           User   @relation("UserSubscribers", fields: [userId], references: [id], onDelete: Cascade)
-  subscribedToId String @map("subscribed_to_id") @db.Uuid
-  subscribedTo   User   @relation("UserSubscribedTo", fields: [subscribedToId], references: [id], onDelete: Cascade)
+  user_id          String @db.Uuid
+  user             users  @relation("UserSubscribers", fields: [user_id], references: [id], onDelete: Cascade)
+  subscribed_to_id String @db.Uuid
+  subscribed_to    users  @relation("UserSubscribedTo", fields: [subscribed_to_id], references: [id], onDelete: Cascade)
 
-  @@unique([userId, subscribedToId])
-  @@map("subscribers")
+  @@unique([user_id, subscribed_to_id])
 }
 
-model Post {
-  id        String   @id @default(uuid()) @db.Uuid
-  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
-  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+model posts {
+  id         String   @id @default(uuid()) @db.Uuid
+  created_at DateTime @default(now()) @db.Timestamptz(3)
+  updated_at DateTime @updatedAt @db.Timestamptz(3)
 
-  postType     PostType   @map("post_type")
-  text         String?    @db.VarChar(4000)
-  mediaUrl     String?    @map("media_url")
+  post_type     PostType
+  text          String?    @db.VarChar(4000)
+  media_url     String?
   /// [MediaDataType]
-  mediaData    Json?      @map("media_data") @db.JsonB
-  mediaCaption String?    @map("media_caption") @db.VarChar(150)
-  commentCount Int        @default(0) @map("comment_count")
-  likeCount    Int        @default(0) @map("like_count")
-  status       PostStatus @default(PENDING)
+  media_data    Json?      @db.JsonB
+  media_caption String?    @db.VarChar(150)
+  comment_count Int        @default(0)
+  like_count    Int        @default(0)
+  status        PostStatus @default(PENDING)
 
-  userId    String     @unique @map("user_id") @db.Uuid
-  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  likes     PostLike[]
-  comments  Comment[]
-  reports   Report[]
-  postScore PostScore?
-
-  @@map("posts")
+  user_id    String       @unique @db.Uuid
+  user       users        @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  likes      post_likes[]
+  comments   comments[]
+  reports    reports[]
+  post_score post_scores?
 }
 
 enum PostType {
@@ -99,63 +94,58 @@ enum PostStatus {
   REJECTED // not approved
 }
 
-model PostLike {
-  id        String   @id @default(uuid()) @db.Uuid
-  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+model post_likes {
+  id         String   @id @default(uuid()) @db.Uuid
+  created_at DateTime @default(now()) @db.Timestamptz(3)
 
-  userId String @map("user_id") @db.Uuid
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  postId String @map("post_id") @db.Uuid
-  post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user_id String @db.Uuid
+  user    users  @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  post_id String @db.Uuid
+  post    posts  @relation(fields: [post_id], references: [id], onDelete: Cascade)
 
-  @@unique([userId, postId])
-  @@map("post_likes")
+  @@unique([user_id, post_id])
 }
 
-model Comment {
-  id        String   @id @default(uuid()) @db.Uuid
-  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
-  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+model comments {
+  id         String   @id @default(uuid()) @db.Uuid
+  created_at DateTime @default(now()) @db.Timestamptz(3)
+  updated_at DateTime @updatedAt @db.Timestamptz(3)
 
-  text      String @db.VarChar(280)
-  likeCount Int    @default(0) @map("like_count")
+  text       String @db.VarChar(280)
+  like_count Int    @default(0)
 
-  userId  String        @map("user_id") @db.Uuid
-  user    User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-  postId  String        @map("post_id") @db.Uuid
-  post    Post          @relation(fields: [postId], references: [id], onDelete: Cascade)
-  likes   CommentLike[]
-  reports Report[]
+  user_id String          @db.Uuid
+  user    users           @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  post_id String          @db.Uuid
+  post    posts           @relation(fields: [post_id], references: [id], onDelete: Cascade)
+  likes   comment_likes[]
+  reports reports[]
 
-  @@unique([userId, postId])
-  @@map("comments")
+  @@unique([user_id, post_id])
 }
 
-model CommentLike {
-  id        String   @id @default(uuid()) @db.Uuid
-  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+model comment_likes {
+  id         String   @id @default(uuid()) @db.Uuid
+  created_at DateTime @default(now()) @db.Timestamptz(3)
 
-  userId    String  @map("user_id") @db.Uuid
-  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  commentId String  @map("comment_id") @db.Uuid
-  comment   Comment @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  user_id    String   @db.Uuid
+  user       users    @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  comment_id String   @db.Uuid
+  comment    comments @relation(fields: [comment_id], references: [id], onDelete: Cascade)
 
-  @@unique([userId, commentId])
-  @@map("comment_likes")
+  @@unique([user_id, comment_id])
 }
 
-model Notification {
-  id        String   @id @default(uuid()) @db.Uuid
-  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+model notifications {
+  id         String   @id @default(uuid()) @db.Uuid
+  created_at DateTime @default(now()) @db.Timestamptz(3)
 
   type    NotificationType
-  isRead  Boolean          @default(false) @map("is_read")
+  is_read Boolean          @default(false)
   content String           @db.VarChar(280)
 
-  userId String @map("user_id") @db.Uuid
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@map("notifications")
+  user_id String @db.Uuid
+  user    users  @relation(fields: [user_id], references: [id], onDelete: Cascade)
 }
 
 enum NotificationType {
@@ -165,29 +155,27 @@ enum NotificationType {
   NEW_SUBSCRIBER
 }
 
-model Report {
-  id        String   @id @default(uuid()) @db.Uuid
-  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
-  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+model reports {
+  id         String   @id @default(uuid()) @db.Uuid
+  created_at DateTime @default(now()) @db.Timestamptz(3)
+  updated_at DateTime @updatedAt @db.Timestamptz(3)
 
   reason      ReportReason
   description String?      @db.VarChar(280)
-  reportType  ReportType   @map("report_type")
+  report_type ReportType
   status      ReportStatus @default(PENDING)
 
-  reportedById String @map("reported_by_id") @db.Uuid
-  reportedBy   User   @relation("ReportMadeBy", fields: [reportedById], references: [id], onDelete: Cascade)
+  reported_by_id String @db.Uuid
+  reported_by    users  @relation("ReportMadeBy", fields: [reported_by_id], references: [id], onDelete: Cascade)
 
-  reportedUserId String @map("reported_user_id") @db.Uuid
-  reportedUser   User   @relation("ReportAgainst", fields: [reportedUserId], references: [id], onDelete: Cascade)
+  reported_user_id String @db.Uuid
+  reported_user    users  @relation("ReportAgainst", fields: [reported_user_id], references: [id], onDelete: Cascade)
 
-  postId String? @map("post_id") @db.Uuid
-  post   Post?   @relation(fields: [postId], references: [userId], onDelete: Cascade)
+  post_id String? @db.Uuid
+  post    posts?  @relation(fields: [post_id], references: [user_id], onDelete: Cascade)
 
-  commentId String?  @map("comment_id") @db.Uuid
-  comment   Comment? @relation(fields: [commentId], references: [id], onDelete: Cascade)
-
-  @@map("reports")
+  comment_id String?   @db.Uuid
+  comment    comments? @relation(fields: [comment_id], references: [id], onDelete: Cascade)
 }
 
 enum ReportStatus {
@@ -216,15 +204,14 @@ enum ReportReason {
   OTHER // For other reasons not listed above
 }
 
-model PostScore {
-  id        String   @id @default(uuid()) @db.Uuid
-  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+model post_scores {
+  id         String   @id @default(uuid()) @db.Uuid
+  updated_at DateTime @updatedAt @db.Timestamptz(3)
 
   score Float
 
-  postId String @unique @map("post_id") @db.Uuid
-  post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+  post_id String @unique @db.Uuid
+  post    posts  @relation(fields: [post_id], references: [id], onDelete: Cascade)
 
-  @@index([postId])
-  @@map("post_scores")
+  @@index([post_id])
 }

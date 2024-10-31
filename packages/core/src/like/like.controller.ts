@@ -1,4 +1,4 @@
-import { User } from "@1post/shared";
+import { users } from "@1post/shared";
 import {
   Body,
   Controller,
@@ -22,7 +22,7 @@ export class LikeController {
   @UseGuards(JwtGuard)
   @Post("post")
   likePost(
-    @GetUser() user: User,
+    @GetUser() user: users,
     @Body() createPostLikeDto: CreatePostLikeDto,
   ) {
     return this.likeService.likePost(user, createPostLikeDto.postId);
@@ -32,7 +32,7 @@ export class LikeController {
   @UseGuards(JwtGuard)
   @Post("comment")
   likeComment(
-    @GetUser() user: User,
+    @GetUser() user: users,
     @Body() createCommentLikeDto: CreateCommentLikeDto,
   ) {
     return this.likeService.likeComment(user, createCommentLikeDto.commentId);

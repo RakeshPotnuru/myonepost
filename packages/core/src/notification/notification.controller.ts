@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Patch, UseGuards } from "@nestjs/common";
+import { Body, Controller, Patch, UseGuards } from "@nestjs/common";
 import { Cron, CronExpression } from "@nestjs/schedule";
 import { ApiOperation, ApiTags } from "@nestjs/swagger";
 import { GetUser } from "src/auth/decorator";
@@ -21,18 +21,11 @@ export class NotificationController {
   @Patch()
   markAsRead(
     @GetUser("id") userId: string,
-    @Body("id") updateNotificationDto: UpdateNotificationDto,
+    @Body() updateNotificationDto: UpdateNotificationDto,
   ) {
     return this.notificationService.markAsRead(
       updateNotificationDto.ids,
       userId,
     );
-  }
-
-  @ApiOperation({ summary: "Get current user notifications" })
-  @UseGuards(JwtGuard)
-  @Get()
-  get(@GetUser("id") userId: string) {
-    return this.notificationService.get(userId);
   }
 }

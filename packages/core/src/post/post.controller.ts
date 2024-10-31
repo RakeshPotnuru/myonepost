@@ -1,4 +1,4 @@
-import { CONSTANTS, User } from "@1post/shared";
+import { CONSTANTS, users } from "@1post/shared";
 import { HeadersLike } from "@mux/mux-node/core";
 import { UnwrapWebhookEvent } from "@mux/mux-node/resources";
 import {
@@ -46,14 +46,14 @@ export class PostController {
   @UseGuards(JwtGuard)
   @Post("text")
   createTextPost(
-    @GetUser() user: User,
+    @GetUser() user: users,
     @Body() createTextPostDto: CreateTextPostDto,
   ) {
     this.postService.canPost(user);
 
     return this.postService.create(
       {
-        postType: "TEXT",
+        post_type: "TEXT",
         text: createTextPostDto.text,
         status: "APPROVED",
       },
@@ -72,7 +72,7 @@ export class PostController {
   @UseGuards(JwtGuard)
   @Post("image")
   async createImagePost(
-    @GetUser() user: User,
+    @GetUser() user: users,
     @Body() createImagePostDto: CreateImagePostDto,
     @UploadedFile(imagePostValidators)
     file: Express.Multer.File,
@@ -89,9 +89,9 @@ export class PostController {
 
     return await this.postService.create(
       {
-        postType: "IMAGE",
-        mediaUrl,
-        mediaCaption: createImagePostDto.mediaCaption,
+        post_type: "IMAGE",
+        media_url: mediaUrl,
+        media_caption: createImagePostDto.mediaCaption,
         status: "APPROVED",
       },
       user,
@@ -102,7 +102,7 @@ export class PostController {
   @UseGuards(JwtGuard)
   @Post("video")
   async createVideoPost(
-    @GetUser() user: User,
+    @GetUser() user: users,
     @Body() createVideoPostDto: CreateVideoPostDto,
   ) {
     this.postService.canPost(user);
@@ -111,9 +111,9 @@ export class PostController {
 
     await this.postService.create(
       {
-        postType: "VIDEO",
+        post_type: "VIDEO",
         status: "PENDING",
-        mediaCaption: createVideoPostDto.mediaCaption,
+        media_caption: createVideoPostDto.mediaCaption,
       },
       user,
     );
@@ -125,7 +125,7 @@ export class PostController {
   @UseGuards(JwtGuard)
   @Post("audio")
   async createAudioPost(
-    @GetUser() user: User,
+    @GetUser() user: users,
     @Body() createAudioPostDto: CreateAudioPostDto,
   ) {
     this.postService.canPost(user);
@@ -134,9 +134,9 @@ export class PostController {
 
     await this.postService.create(
       {
-        postType: "AUDIO",
+        post_type: "AUDIO",
         status: "PENDING",
-        mediaCaption: createAudioPostDto.mediaCaption,
+        media_caption: createAudioPostDto.mediaCaption,
       },
       user,
     );
@@ -168,8 +168,8 @@ export class PostController {
     if (eventType === "video.asset.ready") {
       this.postService.update(eventData.passthrough, {
         status: "APPROVED",
-        mediaUrl: eventData.playback_ids[0].id,
-        mediaData: { asset_id: eventData.id },
+        media_url: eventData.playback_ids[0].id,
+        media_data: { asset_id: eventData.id },
       });
     }
 

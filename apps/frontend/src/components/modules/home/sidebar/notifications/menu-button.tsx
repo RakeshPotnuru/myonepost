@@ -6,7 +6,7 @@ import { cn } from "@/utils/cn";
 export default function MenuButton() {
   const { notifications } = useNotificationStore();
 
-  const containUnread = notifications.some((n) => !n.isRead);
+  const containUnread = notifications.some((n) => !n.is_read);
 
   const { state } = useSidebar();
 

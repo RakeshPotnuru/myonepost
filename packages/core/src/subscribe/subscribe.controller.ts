@@ -1,4 +1,4 @@
-import { User } from "@1post/shared";
+import { users } from "@1post/shared";
 import {
   Body,
   Controller,
@@ -24,7 +24,7 @@ export class SubscribeController {
   @UseGuards(JwtGuard)
   @Post()
   subscribe(
-    @GetUser() user: User,
+    @GetUser() user: users,
     @Body() createSubscribeDto: CreateSubscribeDto,
   ) {
     const { subscribedToId } = createSubscribeDto;

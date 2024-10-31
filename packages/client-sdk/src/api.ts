@@ -334,8 +334,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Get current user notifications */
-        get: operations["NotificationController_get"];
+        get?: never;
         put?: never;
         post?: never;
         delete?: never;
@@ -405,6 +404,9 @@ export interface components {
         };
         CreateCommentLikeDto: {
             commentId: string;
+        };
+        UpdateNotificationDto: {
+            ids: string[];
         };
         CreateReportDto: {
             description?: string;
@@ -804,23 +806,6 @@ export interface operations {
             };
         };
     };
-    NotificationController_get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
     NotificationController_markAsRead: {
         parameters: {
             query?: never;
@@ -828,7 +813,11 @@ export interface operations {
             path?: never;
             cookie?: never;
         };
-        requestBody?: never;
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateNotificationDto"];
+            };
+        };
         responses: {
             200: {
                 headers: {

@@ -1,4 +1,4 @@
-import { Prisma, User } from "@1post/shared";
+import { Prisma, users } from "@1post/shared";
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { NotificationService } from "src/notification/notification.service";
 import { PrismaService } from "src/prisma/prisma.service";
@@ -10,12 +10,12 @@ export class SubscribeService {
     private readonly notify: NotificationService,
   ) {}
 
-  async subscribe(user: User, subscribedToId: string) {
+  async subscribe(user: users, subscribedToId: string) {
     try {
       await this.prisma.$transaction([
-        this.prisma.subscriber.create({
+        this.prisma.subscribers.create({
           data: {
-            subscribedTo: {
+            subscribed_to: {
               connect: {
                 id: subscribedToId,
               },
@@ -28,14 +28,14 @@ export class SubscribeService {
           },
           select: { id: true },
         }),
-        this.prisma.user.update({
+        this.prisma.users.update({
           where: { id: subscribedToId },
-          data: { subscriberCount: { increment: 1 } },
+          data: { subscriber_count: { increment: 1 } },
           select: { id: true },
         }),
-        this.prisma.user.update({
+        this.prisma.users.update({
           where: { id: user.id },
-          data: { subscriptionCount: { increment: 1 } },
+          data: { subscription_count: { increment: 1 } },
           select: { id: true },
         }),
       ]);
@@ -64,23 +64,23 @@ export class SubscribeService {
   async unsubscribe(userId: string, subscribedToId: string) {
     try {
       await this.prisma.$transaction([
-        this.prisma.subscriber.delete({
+        this.prisma.subscribers.delete({
           where: {
-            userId_subscribedToId: {
-              userId,
-              subscribedToId,
+            user_id_subscribed_to_id: {
+              user_id: userId,
+              subscribed_to_id: subscribedToId,
             },
           },
           select: { id: true },
         }),
-        this.prisma.user.update({
+        this.prisma.users.update({
           where: { id: subscribedToId },
-          data: { subscriberCount: { decrement: 1 } },
+          data: { subscriber_count: { decrement: 1 } },
           select: { id: true },
         }),
-        this.prisma.user.update({
+        this.prisma.users.update({
           where: { id: userId },
-          data: { subscriptionCount: { decrement: 1 } },
+          data: { subscription_count: { decrement: 1 } },
           select: { id: true },
         }),
       ]);

@@ -13,14 +13,14 @@ export class FeedController {
 
     for (const post of posts) {
       const engagementScore =
-        post.likeCount * CONSTANTS.WEIGHTS.LIKE +
-        post.commentCount * CONSTANTS.WEIGHTS.COMMENT;
+        post.like_count * CONSTANTS.WEIGHTS.LIKE +
+        post.comment_count * CONSTANTS.WEIGHTS.COMMENT;
 
       const postTypeMultiplier =
-        CONSTANTS.WEIGHTS.POST_TYPE_MULTIPLIER[post.postType];
+        CONSTANTS.WEIGHTS.POST_TYPE_MULTIPLIER[post.post_type];
 
       const hoursSinceCreation = Math.floor(
-        (new Date().getTime() - post.createdAt.getTime()) / (60 * 60 * 1000),
+        (new Date().getTime() - post.created_at.getTime()) / (60 * 60 * 1000),
       );
 
       const timeScore =

@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 
+import { Center } from "@/components/ui/center";
 import {
   Sheet,
   SheetContent,
@@ -10,14 +11,17 @@ import {
 import { SidebarMenuButton } from "@/components/ui/reusables/sidebar";
 import { Skeleton } from "@/components/ui/reusables/skeleton";
 import useNotificationStore from "@/lib/store/notifications";
+import type { Tables } from "@/types/database.types";
+import { fetchClient } from "@/utils/api-client";
 import { createClient } from "@/utils/supabase/client";
 
-import { fetchNotifications, useGetNotifications } from "./api/notification";
+import { useGetNotifications } from "./api/notification";
 import MenuButton from "./menu-button";
 import NotificationCard from "./notification-card";
 
 export default function Notifications() {
-  const { notifications, setNotifications } = useNotificationStore();
+  const { notifications, setNotifications, addNotification, markAsRead } =
+    useNotificationStore();
   const { data, isFetching } = useGetNotifications();
 
   useEffect(() => {
@@ -28,7 +32,7 @@ export default function Notifications() {
     const client = createClient();
 
     const channel = client
-      .channel("*")
+      .channel("table-db-changes")
       .on(
         "postgres_changes",
         {
@@ -36,14 +40,8 @@ export default function Notifications() {
           schema: "public",
           table: "notifications",
         },
-        async () => {
-          try {
-            const res = await fetchNotifications();
-
-            setNotifications(res);
-          } catch {
-            // ignore
-          }
+        (payload) => {
+          addNotification(payload.new as Tables<"notifications">);
         },
       )
       .subscribe();
@@ -51,12 +49,51 @@ export default function Notifications() {
     return () => {
       channel.unsubscribe().catch(() => {});
     };
-  }, [data, setNotifications]);
+  }, [data, setNotifications, addNotification]);
+
+  const getUnreadNotifications = () => {
+    const unreadNotificationIds = notifications
+      .filter((n) => !n.is_read)
+      .map((n) => n.id);
+
+    return {
+      unreadNotificationIds,
+      count: unreadNotificationIds.length,
+    };
+  };
+
+  const handleMarkAsRead = async () => {
+    const { count, unreadNotificationIds } = getUnreadNotifications();
+
+    if (count > 0) {
+      await fetchClient.PATCH("/notification", {
+        body: { ids: unreadNotificationIds },
+      });
+    }
+  };
+
+  const setMarkAsRead = (open: boolean) => {
+    const { count, unreadNotificationIds } = getUnreadNotifications();
+
+    if (!open && count > 0) {
+      markAsRead(unreadNotificationIds);
+    }
+  };
+
+  const bodyView =
+    notifications.length > 0 ? (
+      notifications.map((n) => <NotificationCard key={n.id} {...n} />)
+    ) : (
+      <Center className="h-24 text-muted-foreground">
+        No new notifications
+      </Center>
+    );
 
   return (
-    <Sheet>
+    <Sheet onOpenChange={setMarkAsRead}>
       <SheetTrigger asChild>
         <SidebarMenuButton
+          onClick={handleMarkAsRead}
           size={"lg"}
           tooltip={"Notification"}
           className="relative"
@@ -64,25 +101,21 @@ export default function Notifications() {
           <MenuButton />
         </SidebarMenuButton>
       </SheetTrigger>
-      <SheetContent>
-        <SheetHeader>
+      <SheetContent
+        className="p-0"
+        onCloseAutoFocus={(e) => e.preventDefault()}
+      >
+        <SheetHeader className="p-6">
           <SheetTitle>Notifications</SheetTitle>
         </SheetHeader>
-        <div className="pt-4">
-          {isFetching ? (
-            <div className="flex flex-col gap-2">
-              {Array.from({ length: 5 }).map((_, i) => (
-                <Skeleton key={`skeleton-${i + 1}`} className="h-24 w-full" />
-              ))}
-            </div>
-          ) : (
-            <div>
-              {notifications.map((n) => (
-                <NotificationCard key={n.id} {...n} />
-              ))}
-            </div>
-          )}
-        </div>
+        {isFetching
+          ? Array.from({ length: 5 }).map((_, i) => (
+              <Skeleton
+                key={`skeleton-${i + 1}`}
+                className={"mb-0.5 h-24 w-full rounded-none"}
+              />
+            ))
+          : bodyView}
       </SheetContent>
     </Sheet>
   );

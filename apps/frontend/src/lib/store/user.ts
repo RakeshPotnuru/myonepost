@@ -1,8 +1,9 @@
-import type { User } from "@1post/shared";
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 
-export type MeResponse = Omit<User, "email">;
+import type { Tables } from "@/types/database.types";
+
+export type MeResponse = Omit<Tables<"users">, "email">;
 
 interface IUserState {
   user: MeResponse | null;

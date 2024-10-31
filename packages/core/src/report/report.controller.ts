@@ -24,7 +24,14 @@ export class ReportController {
     @GetUser("id") userId: string,
     @Body() createReportDto: CreateReportDto,
   ) {
-    const { reportedUserId, ...rest } = createReportDto;
+    const {
+      reportedUserId,
+      reason,
+      reportType,
+      commentId,
+      description,
+      postId,
+    } = createReportDto;
     if (userId === reportedUserId) {
       throw new HttpException(
         "You cannot report yourself.",
@@ -33,9 +40,13 @@ export class ReportController {
     }
 
     return this.reportService.create({
-      ...rest,
-      reportedBy: { connect: { id: userId } },
-      reportedUser: { connect: { id: reportedUserId } },
+      reason,
+      report_type: reportType,
+      description,
+      post: { connect: { id: postId } },
+      comment: { connect: { id: commentId } },
+      reported_by: { connect: { id: userId } },
+      reported_user: { connect: { id: reportedUserId } },
     });
   }
 }

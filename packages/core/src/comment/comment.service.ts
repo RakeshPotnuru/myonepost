@@ -1,4 +1,4 @@
-import { Prisma, User } from "@1post/shared";
+import { Prisma, users } from "@1post/shared";
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { NotificationService } from "src/notification/notification.service";
 import { PrismaService } from "src/prisma/prisma.service";
@@ -11,12 +11,12 @@ export class CommentService {
     private readonly notify: NotificationService,
   ) {}
 
-  async create(user: User, createCommentDto: CreateCommentDto) {
+  async create(user: users, createCommentDto: CreateCommentDto) {
     const { text, postId } = createCommentDto;
 
     try {
       const { "1": post } = await this.prisma.$transaction([
-        this.prisma.comment.create({
+        this.prisma.comments.create({
           data: {
             text,
             post: {
@@ -28,18 +28,23 @@ export class CommentService {
           },
           select: { id: true },
         }),
-        this.prisma.post.update({
+        this.prisma.posts.update({
           where: { id: postId },
-          data: { commentCount: { increment: 1 } },
-          select: { userId: true },
+          data: { comment_count: { increment: 1 } },
+          select: { user_id: true },
         }),
       ]);
 
-      if (post.userId !== user.id) {
+      if (post.user_id !== user.id) {
+        let comment = text;
+        if (comment.length > 50) {
+          comment = text.slice(0, 50) + "...";
+        }
+
         await this.notify.create(
-          post.userId,
+          post.user_id,
           "NEW_COMMENT",
-          `@${user.username} commented on your post`,
+          `@${user.username} commented on your post: "${comment}"`,
         );
       }
 
@@ -67,18 +72,18 @@ export class CommentService {
   async remove(postId: string, userId: string) {
     try {
       await this.prisma.$transaction([
-        this.prisma.comment.delete({
+        this.prisma.comments.delete({
           where: {
-            userId_postId: {
-              postId,
-              userId,
+            user_id_post_id: {
+              post_id: postId,
+              user_id: userId,
             },
           },
           select: { id: true },
         }),
-        this.prisma.post.update({
+        this.prisma.posts.update({
           where: { id: postId },
-          data: { commentCount: { decrement: 1 } },
+          data: { comment_count: { decrement: 1 } },
           select: { id: true },
         }),
       ]);

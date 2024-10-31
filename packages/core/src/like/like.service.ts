@@ -1,4 +1,4 @@
-import { Prisma, User } from "@1post/shared";
+import { Prisma, users } from "@1post/shared";
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { NotificationService } from "src/notification/notification.service";
 import { PrismaService } from "src/prisma/prisma.service";
@@ -10,10 +10,10 @@ export class LikeService {
     private readonly notify: NotificationService,
   ) {}
 
-  async likePost(user: User, postId: string) {
+  async likePost(user: users, postId: string) {
     try {
       const { "1": post } = await this.prisma.$transaction([
-        this.prisma.postLike.create({
+        this.prisma.post_likes.create({
           data: {
             post: {
               connect: {
@@ -28,9 +28,9 @@ export class LikeService {
           },
           select: { id: true },
         }),
-        this.prisma.post.update({
+        this.prisma.posts.update({
           where: { id: postId },
-          data: { likeCount: { increment: 1 } },
+          data: { like_count: { increment: 1 } },
           include: { user: { select: { id: true } } },
         }),
       ]);
@@ -59,17 +59,17 @@ export class LikeService {
   async unlikePost(userId: string, postId: string) {
     try {
       await this.prisma.$transaction([
-        this.prisma.postLike.delete({
+        this.prisma.post_likes.delete({
           where: {
-            userId_postId: {
-              userId,
-              postId,
+            user_id_post_id: {
+              user_id: userId,
+              post_id: postId,
             },
           },
         }),
-        this.prisma.post.update({
+        this.prisma.posts.update({
           where: { id: postId },
-          data: { likeCount: { decrement: 1 } },
+          data: { like_count: { decrement: 1 } },
           select: { id: true },
         }),
       ]);
@@ -89,10 +89,10 @@ export class LikeService {
     }
   }
 
-  async likeComment(user: User, commentId: string) {
+  async likeComment(user: users, commentId: string) {
     try {
       const { "1": comment } = await this.prisma.$transaction([
-        this.prisma.commentLike.create({
+        this.prisma.comment_likes.create({
           data: {
             comment: {
               connect: {
@@ -107,21 +107,26 @@ export class LikeService {
           },
           select: { id: true },
         }),
-        this.prisma.comment.update({
+        this.prisma.comments.update({
           where: { id: commentId },
-          data: { likeCount: { increment: 1 } },
+          data: { like_count: { increment: 1 } },
           select: {
             text: true,
-            userId: true,
+            user_id: true,
           },
         }),
       ]);
 
-      if (comment.userId !== user.id) {
+      if (comment.user_id !== user.id) {
+        let commentText = comment.text;
+        if (commentText.length > 50) {
+          commentText = commentText.slice(0, 50) + "...";
+        }
+
         await this.notify.create(
-          comment.userId,
+          comment.user_id,
           "NEW_COMMENT_LIKE",
-          `@${user.username} has liked your comment: ${comment.text.slice(0, 50)}`,
+          `@${user.username} has liked your comment: "${commentText}"`,
         );
       }
 
@@ -146,17 +151,17 @@ export class LikeService {
   async unlikeComment(userId: string, commentId: string) {
     try {
       await this.prisma.$transaction([
-        this.prisma.commentLike.delete({
+        this.prisma.comment_likes.delete({
           where: {
-            userId_commentId: {
-              userId,
-              commentId,
+            user_id_comment_id: {
+              user_id: userId,
+              comment_id: commentId,
             },
           },
         }),
-        this.prisma.comment.update({
+        this.prisma.comments.update({
           where: { id: commentId },
-          data: { likeCount: { decrement: 1 } },
+          data: { like_count: { decrement: 1 } },
           select: { id: true },
         }),
       ]);

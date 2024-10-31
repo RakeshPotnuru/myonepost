@@ -1,4 +1,4 @@
-import { CONSTANTS, Prisma, User } from "@1post/shared";
+import { CONSTANTS, Prisma, users } from "@1post/shared";
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { CloudinaryService } from "src/cloudinary/cloudinary.service";
@@ -16,8 +16,8 @@ export class PostService {
   ) {}
 
   async create(
-    createPostDto: Omit<Prisma.PostCreateInput, "user">,
-    user: User,
+    createPostDto: Omit<Prisma.postsCreateInput, "user">,
+    user: users,
   ) {
     const nextPostAllowedAt = new Date(
       new Date().getTime() + 24 * 60 * 60 * 1000,
@@ -28,7 +28,7 @@ export class PostService {
     try {
       return (
         await this.prisma.$transaction([
-          this.prisma.post.create({
+          this.prisma.posts.create({
             data: {
               ...createPostDto,
               user: {
@@ -37,9 +37,9 @@ export class PostService {
             },
             select: { id: true },
           }),
-          this.prisma.user.update({
+          this.prisma.users.update({
             where: { id: user.id },
-            data: { nextPostAllowedAt },
+            data: { next_post_allowed_at: nextPostAllowedAt },
             select: { id: true },
           }),
         ])
@@ -54,10 +54,10 @@ export class PostService {
     }
   }
 
-  async update(userId: string, updatePostDto: Prisma.PostUpdateInput) {
+  async update(userId: string, updatePostDto: Prisma.postsUpdateInput) {
     try {
-      await this.prisma.post.update({
-        where: { userId },
+      await this.prisma.posts.update({
+        where: { user_id: userId },
         data: updatePostDto,
       });
     } catch (error) {
@@ -76,33 +76,33 @@ export class PostService {
 
   async remove(userId: string) {
     try {
-      const post = await this.prisma.post.findUnique({
-        where: { userId },
+      const post = await this.prisma.posts.findUnique({
+        where: { user_id: userId },
       });
 
       if (!post) {
         return;
       }
 
-      if (post.postType === "IMAGE" && post.mediaUrl) {
+      if (post.post_type === "IMAGE" && post.media_url) {
         await this.cloudinary.deleteImage(
           `${CONSTANTS.ASSET_FOLDERS.POSTS}/${userId}`,
         );
       }
 
       if (
-        (post.postType === "VIDEO" || post.postType === "AUDIO") &&
-        post.mediaData?.asset_id
+        (post.post_type === "VIDEO" || post.post_type === "AUDIO") &&
+        post.media_data?.asset_id
       ) {
         await this.mux.video.assets
-          .delete(post.mediaData.asset_id)
+          .delete(post.media_data.asset_id)
           .catch(() => {
             // ignore
           });
       }
 
-      await this.prisma.post.delete({
-        where: { userId },
+      await this.prisma.posts.delete({
+        where: { user_id: userId },
         select: { id: true },
       });
 
@@ -117,8 +117,8 @@ export class PostService {
     }
   }
 
-  canPost(user: User) {
-    if (user.nextPostAllowedAt && user.nextPostAllowedAt > new Date()) {
+  canPost(user: users) {
+    if (user.next_post_allowed_at && user.next_post_allowed_at > new Date()) {
       throw new HttpException(
         "Next post is not allowed yet",
         HttpStatus.FORBIDDEN,

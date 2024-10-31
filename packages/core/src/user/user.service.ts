@@ -1,4 +1,4 @@
-import { Prisma, User } from "@1post/shared";
+import { Prisma, users } from "@1post/shared";
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
 
@@ -7,7 +7,7 @@ export class UserService {
   constructor(private readonly prisma: PrismaService) {}
 
   async me(userId: string) {
-    const user = await this.prisma.user.findUnique({
+    const user = await this.prisma.users.findUnique({
       where: {
         id: userId,
       },
@@ -22,42 +22,42 @@ export class UserService {
     return user;
   }
 
-  async getPage(username: string, user: User) {
-    const page = await this.prisma.user.findUnique({
+  async getPage(username: string, user: users) {
+    const page = await this.prisma.users.findUnique({
       where: {
         username,
       },
       select: {
         id: true,
-        createdAt: true,
-        updatedAt: true,
+        created_at: true,
+        updated_at: true,
         username: true,
-        displayName: true,
+        display_name: true,
         bio: true,
-        avatarUrl: true,
+        avatar_url: true,
         url: true,
-        subscriberCount: true,
+        subscriber_count: true,
         email: user.username === username,
-        isPrivate: true,
-        nextPostAllowedAt: user.username === username,
+        is_private: true,
+        next_post_allowed_at: user.username === username,
         post: {
           select: {
             id: true,
-            createdAt: true,
-            updatedAt: true,
-            postType: true,
+            created_at: true,
+            updated_at: true,
+            post_type: true,
             text: true,
-            mediaUrl: true,
-            mediaCaption: true,
-            commentCount: true,
-            likeCount: true,
+            media_url: true,
+            media_caption: true,
+            comment_count: true,
+            like_count: true,
             status: user.username === username,
           },
           where: {
             OR: [
               { status: "APPROVED" },
               {
-                userId: user.id,
+                user_id: user.id,
               },
             ],
           },
@@ -65,18 +65,18 @@ export class UserService {
       },
     });
 
-    if (!page || (page.isPrivate && !user)) {
+    if (!page || (page.is_private && !user)) {
       throw new HttpException("Page not found", HttpStatus.NOT_FOUND);
     }
 
-    if (user.username !== username) delete page.isPrivate;
+    if (user.username !== username) delete page.is_private;
 
     return page;
   }
 
-  async update(id: string, updateUserDto: Prisma.UserUpdateInput) {
+  async update(id: string, updateUserDto: Prisma.usersUpdateInput) {
     try {
-      return await this.prisma.user.update({
+      return await this.prisma.users.update({
         where: {
           id,
         },

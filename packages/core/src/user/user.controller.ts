@@ -1,4 +1,4 @@
-import { CONSTANTS, User } from "@1post/shared";
+import { CONSTANTS, users } from "@1post/shared";
 import {
   Body,
   Controller,
@@ -40,7 +40,7 @@ export class UserController {
   @HttpCode(HttpStatus.OK)
   @UseGuards(PageGuard)
   @Get(":username")
-  getPage(@Param("username") username: string, @GetUser() user: User) {
+  getPage(@Param("username") username: string, @GetUser() user: users) {
     return this.userService.getPage(username, user);
   }
 
@@ -84,7 +84,7 @@ export class UserController {
 
     const avatarUrl = result.secure_url;
 
-    await this.userService.update(userId, { avatarUrl });
+    await this.userService.update(userId, { avatar_url: avatarUrl });
 
     return { avatarUrl };
   }

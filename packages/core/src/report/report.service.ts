@@ -6,9 +6,9 @@ import { PrismaService } from "src/prisma/prisma.service";
 export class ReportService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(createReportDto: Prisma.ReportCreateInput) {
+  async create(createReportDto: Prisma.reportsCreateInput) {
     try {
-      await this.prisma.report.create({
+      await this.prisma.reports.create({
         data: createReportDto,
         select: { id: true },
       });

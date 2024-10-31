@@ -2,11 +2,12 @@ import { useQuery } from "@tanstack/react-query";
 
 import { queryKeys } from "@/lib/providers/react-query";
 import type { MeResponse } from "@/lib/store/user";
-import { fetchClient } from "@/utils/api-client";
+import { createClient } from "@/utils/supabase/client";
 
 const fetchMe = async (): Promise<MeResponse | null> => {
-  return (await fetchClient.GET("/user/me"))
-    .data as unknown as MeResponse | null;
+  const supabase = createClient();
+
+  return (await supabase.from("users").select().limit(1).single()).data;
 };
 
 export function useGetMe() {
