@@ -49,10 +49,11 @@ function CreatePostBlock() {
   const { user, isLoading } = useUserStore();
 
   const bodyView =
-    user?.nextPostAllowedAt && new Date(user.nextPostAllowedAt) > new Date() ? (
+    user?.next_post_allowed_at &&
+    new Date(user.next_post_allowed_at) > new Date() ? (
       <p className="text-sm text-muted-foreground">
         You can update your post{" "}
-        {formatDistanceToNow(new Date(user?.nextPostAllowedAt), {
+        {formatDistanceToNow(new Date(user?.next_post_allowed_at), {
           includeSeconds: true,
           addSuffix: true,
         })}

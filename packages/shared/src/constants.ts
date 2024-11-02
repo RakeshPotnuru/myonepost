@@ -81,3 +81,7 @@ export enum FeedType {
   FRESH = "FRESH",
   SUBSCRIBED = "SUBSCRIBED",
 }
+
+export enum Events {
+  NOTIFICATION_CREATE = "notification.create",
+}

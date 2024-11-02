@@ -1,13 +1,13 @@
-import { Prisma, users } from "@1post/shared";
+import { Events, NotificationType, Prisma, users } from "@1post/shared";
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
-import { NotificationService } from "src/notification/notification.service";
+import { EventEmitter2 } from "@nestjs/event-emitter";
 import { PrismaService } from "src/prisma/prisma.service";
 
 @Injectable()
 export class SubscribeService {
   constructor(
     private readonly prisma: PrismaService,
-    private readonly notify: NotificationService,
+    private readonly eventEmitter: EventEmitter2,
   ) {}
 
   async subscribe(user: users, subscribedToId: string) {
@@ -40,11 +40,11 @@ export class SubscribeService {
         }),
       ]);
 
-      await this.notify.create(
-        subscribedToId,
-        "NEW_SUBSCRIBER",
-        `@${user.username} has subscribed to you`,
-      );
+      this.eventEmitter.emit(Events.NOTIFICATION_CREATE, {
+        userId: subscribedToId,
+        type: NotificationType.NEW_SUBSCRIBER,
+        content: `@${user.username} has subscribed to you`,
+      });
 
       return { success: true };
     } catch (error) {

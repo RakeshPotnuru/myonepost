@@ -32,7 +32,7 @@ export default function Notifications() {
     const client = createClient();
 
     const channel = client
-      .channel("table-db-changes")
+      .channel("custom-insert-channel")
       .on(
         "postgres_changes",
         {

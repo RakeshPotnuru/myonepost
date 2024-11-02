@@ -31,4 +31,7 @@ export default function ReactQueryProvider({
 export const queryKeys = {
   me: "me",
   notifications: "notifications",
+  trendingFeed: "trendingFeed",
+  freshFeed: "freshFeed",
+  subscribedFeed: "subscribedFeed",
 } as const;

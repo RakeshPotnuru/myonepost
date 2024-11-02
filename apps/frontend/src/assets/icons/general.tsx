@@ -4,13 +4,14 @@ import { GoBell } from "react-icons/go";
 import { IoMdTrendingUp } from "react-icons/io";
 import { IoCalendar, IoText } from "react-icons/io5";
 import { MdAudiotrack } from "react-icons/md";
-import { RiUserFollowLine } from "react-icons/ri";
+import { RiUserFollowLine, RiUserUnfollowLine } from "react-icons/ri";
 import { SiCodefresh } from "react-icons/si";
-import { TbDotsVertical, TbFlag3Filled, TbLoader } from "react-icons/tb";
+import { TbDotsVertical, TbFlag3, TbLoader } from "react-icons/tb";
 
 export const GeneralIcons = {
   Trending: IoMdTrendingUp,
-  Subscribed: RiUserFollowLine,
+  Subscribe: RiUserFollowLine,
+  UnSubscribe: RiUserUnfollowLine,
   Fresh: SiCodefresh,
   Menu: TbDotsVertical,
   Notification: GoBell,
@@ -21,6 +22,6 @@ export const GeneralIcons = {
   Link: FaLink,
   Calendar: IoCalendar,
   Sun: BsFillSunFill,
-  Flag: TbFlag3Filled,
+  Flag: TbFlag3,
   Loading: TbLoader,
 };

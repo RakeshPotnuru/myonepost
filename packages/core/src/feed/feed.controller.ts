@@ -7,7 +7,7 @@ import { FeedService } from "./feed.service";
 export class FeedController {
   constructor(private readonly feedService: FeedService) {}
 
-  @Cron(CronExpression.EVERY_HOUR)
+  @Cron(CronExpression.EVERY_10_MINUTES)
   async updatePostsScore() {
     const posts = await this.feedService.getPosts();
 

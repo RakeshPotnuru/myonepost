@@ -1,6 +1,6 @@
-import { Prisma, users } from "@1post/shared";
+import { Events, NotificationType, Prisma, users } from "@1post/shared";
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
-import { NotificationService } from "src/notification/notification.service";
+import { EventEmitter2 } from "@nestjs/event-emitter";
 import { PrismaService } from "src/prisma/prisma.service";
 import { CreateCommentDto } from "./dto";
 
@@ -8,7 +8,7 @@ import { CreateCommentDto } from "./dto";
 export class CommentService {
   constructor(
     private readonly prisma: PrismaService,
-    private readonly notify: NotificationService,
+    private readonly eventEmitter: EventEmitter2,
   ) {}
 
   async create(user: users, createCommentDto: CreateCommentDto) {
@@ -41,11 +41,11 @@ export class CommentService {
           comment = text.slice(0, 50) + "...";
         }
 
-        await this.notify.create(
-          post.user_id,
-          "NEW_COMMENT",
-          `@${user.username} commented on your post: "${comment}"`,
-        );
+        this.eventEmitter.emit(Events.NOTIFICATION_CREATE, {
+          userId: post.user_id,
+          type: NotificationType.NEW_COMMENT,
+          content: `@${user.username} commented on your post: "${comment}"`,
+        });
       }
 
       return { success: true };

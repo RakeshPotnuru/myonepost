@@ -20,10 +20,7 @@ const useNotificationStore = create<
 >()(
   immer((set) => ({
     notifications: [],
-    setNotifications: (notifications) =>
-      set((state) => {
-        state.notifications = notifications;
-      }),
+    setNotifications: (notifications) => set({ notifications }),
     addNotification: (notification) =>
       set((state) => {
         state.notifications.unshift(notification);

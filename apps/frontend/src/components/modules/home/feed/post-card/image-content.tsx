@@ -1,18 +1,29 @@
 import Image from "next/image";
 
 import { AspectRatio } from "@/components/ui/reusables/aspect-ratio";
+import type { FeedResponse } from "@/lib/store/feed";
 
-export default function ImageContent() {
+type ImageContentProps = Pick<
+  FeedResponse,
+  "media_url" | "media_caption" | "author"
+>;
+
+export default function ImageContent({
+  media_url,
+  media_caption,
+  author,
+}: Readonly<ImageContentProps>) {
   return (
     <AspectRatio
       ratio={16 / 9}
+      style={{ ["--image-url" as string]: `url(${media_url})` }}
       className={
-        "rounded-t-xl bg-[url('https://images.unsplash.com/photo-1727056354046-763e34286a8a?q=80&w=3087&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')] bg-cover bg-center"
+        "rounded-t-xl bg-[image:var(--image-url)] bg-cover bg-no-repeat"
       }
     >
       <Image
-        src="https://images.unsplash.com/photo-1727056354046-763e34286a8a?q=80&w=3087&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-        alt="Photo by Drew Beamer"
+        src={media_url ?? ""}
+        alt={media_caption ?? `Photo by @${author.username}`}
         fill
         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
         className="aspect-video h-full w-full rounded-t-xl object-contain backdrop-blur-md"

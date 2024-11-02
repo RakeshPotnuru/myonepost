@@ -1,13 +1,15 @@
-import { Prisma, users } from "@1post/shared";
+import { Events, NotificationType, Prisma, users } from "@1post/shared";
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
-import { NotificationService } from "src/notification/notification.service";
+import { EventEmitter2 } from "@nestjs/event-emitter";
+import { NotificationCreateEvent } from "src/notification/notification.events";
+
 import { PrismaService } from "src/prisma/prisma.service";
 
 @Injectable()
 export class LikeService {
   constructor(
     private readonly prisma: PrismaService,
-    private readonly notify: NotificationService,
+    private readonly eventEmitter: EventEmitter2,
   ) {}
 
   async likePost(user: users, postId: string) {
@@ -35,11 +37,16 @@ export class LikeService {
         }),
       ]);
 
-      await this.notify.create(
-        post.user.id,
-        "NEW_POST_LIKE",
-        `@${user.username} has liked your post`,
-      );
+      if (post.user.id !== user.id) {
+        this.eventEmitter.emit(
+          Events.NOTIFICATION_CREATE,
+          new NotificationCreateEvent({
+            userId: post.user.id,
+            type: NotificationType.NEW_POST_LIKE,
+            content: `@${user.username} has liked your post`,
+          }),
+        );
+      }
 
       return { success: true };
     } catch (error) {
@@ -123,10 +130,13 @@ export class LikeService {
           commentText = commentText.slice(0, 50) + "...";
         }
 
-        await this.notify.create(
-          comment.user_id,
-          "NEW_COMMENT_LIKE",
-          `@${user.username} has liked your comment: "${commentText}"`,
+        this.eventEmitter.emit(
+          Events.NOTIFICATION_CREATE,
+          new NotificationCreateEvent({
+            userId: comment.user_id,
+            type: NotificationType.NEW_COMMENT_LIKE,
+            content: `@${user.username} has liked your comment: "${commentText}"`,
+          }),
         );
       }
 

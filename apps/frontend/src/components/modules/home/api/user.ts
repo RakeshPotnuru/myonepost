@@ -6,8 +6,28 @@ import { createClient } from "@/utils/supabase/client";
 
 const fetchMe = async (): Promise<MeResponse | null> => {
   const supabase = createClient();
+  const { data: me } = await supabase.auth.getUser();
 
-  return (await supabase.from("users").select().limit(1).single()).data;
+  if (!me.user) return null;
+
+  const { data } = await supabase
+    .from("users")
+    .select(
+      `
+      *,
+      subscribed_to:subscribers!subscribers_user_id_fkey (
+        subscribed_to_id
+      ),
+      likes:post_likes (
+        post_id
+      )
+    `,
+    )
+    .eq("id", me.user?.id)
+    .limit(1)
+    .single();
+
+  return data;
 };
 
 export function useGetMe() {

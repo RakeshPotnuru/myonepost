@@ -1,22 +1,19 @@
 import { FeedType } from "@1post/shared";
 
-import { Tabs, TabsContent } from "@/components/ui/reusables/tabs";
+import { Tabs } from "@/components/ui/reusables/tabs";
 
-import PostCard from "./post-card";
+import FreshFeed from "./fresh-feed";
+import SubscribedFeed from "./subscribed-feed";
 import FeedTabsList from "./tabs-list";
+import TrendingFeed from "./trending-feed";
 
 export default function Feed() {
   return (
     <Tabs defaultValue={FeedType.TRENDING}>
       <FeedTabsList />
-      <TabsContent value={FeedType.TRENDING} className="space-y-2 pb-2">
-        <PostCard postType="text" />
-        <PostCard postType="image" />
-        <PostCard postType="audio" />
-        <PostCard postType="video" />
-        <PostCard postType="text" />
-        <PostCard postType="image" />
-      </TabsContent>
+      <TrendingFeed />
+      <FreshFeed />
+      <SubscribedFeed />
     </Tabs>
   );
 }

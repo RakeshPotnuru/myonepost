@@ -23,7 +23,7 @@ export default function FeedTabsList() {
         value={FeedType.SUBSCRIBED}
         className={cn("data-[state=active]:rounded-br-xl", triggerClassName)}
       >
-        Subscribed <Icons.Subscribed className="ml-2" />
+        Subscribed <Icons.Subscribe className="ml-2" />
       </TabsTrigger>
     </TabsList>
   );

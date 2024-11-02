@@ -41,7 +41,7 @@ export default function NotificationCard({
       component = (
         <NotificationBody
           parts={parts}
-          icon={<Icons.Subscribed className="h-4 w-4 shrink-0" />}
+          icon={<Icons.Subscribe className="h-4 w-4 shrink-0" />}
         />
       );
       break;

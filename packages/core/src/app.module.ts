@@ -1,5 +1,6 @@
 import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
+import { EventEmitterModule } from "@nestjs/event-emitter";
 import { ScheduleModule } from "@nestjs/schedule";
 import { JwtStrategy } from "./auth/strategy";
 import { CloudinaryModule } from "./cloudinary/cloudinary.module";
@@ -8,13 +9,13 @@ import { validationSchema } from "./env.validation";
 import { FeedModule } from "./feed/feed.module";
 import { LikeModule } from "./like/like.module";
 import { MuxModule } from "./mux/mux.module";
+import { NotificationModule } from "./notification/notification.module";
 import { PostModule } from "./post/post.module";
 import { PrismaModule } from "./prisma/prisma.module";
+import { ReportModule } from "./report/report.module";
+import { ReportService } from "./report/report.service";
 import { SubscribeModule } from "./subscribe/subscribe.module";
 import { UserModule } from "./user/user.module";
-import { NotificationModule } from "./notification/notification.module";
-import { ReportService } from "./report/report.service";
-import { ReportModule } from "./report/report.module";
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { ReportModule } from "./report/report.module";
       validate: validationSchema.parse,
     }),
     ScheduleModule.forRoot(),
+    EventEmitterModule.forRoot(),
     PrismaModule,
     UserModule,
     CloudinaryModule,

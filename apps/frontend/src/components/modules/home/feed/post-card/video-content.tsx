@@ -1,27 +1,33 @@
 import MuxPlayer from "@mux/mux-player-react/lazy";
 
 import { siteConfig } from "@/config/site";
+import type { FeedResponse } from "@/lib/store/feed";
 import { cn } from "@/utils/cn";
 
 interface VideoContentProps extends React.HTMLAttributes<HTMLSlotElement> {}
 
 export default function VideoContent({
   className,
+  id,
+  media_caption,
+  media_url,
+  author,
   ...props
-}: VideoContentProps) {
+}: VideoContentProps &
+  Pick<FeedResponse, "media_url" | "media_caption" | "id" | "author">) {
   return (
     <slot onClick={(e) => e.stopPropagation()} {...props}>
       <MuxPlayer
-        playbackId="DS00Spx1CV902MCtPj5WknGlR102V5HFkDe"
+        playbackId={media_url ?? ""}
         metadata={{
-          video_id: "video-id-54321",
-          video_title: "Test video title",
-          viewer_user_id: "user-id-007",
+          video_id: id,
+          video_title: media_caption,
+          viewer_user_id: author.id,
         }}
         maxResolution="720p"
         muted
         accentColor={siteConfig.theme.color}
-        title="Test video title"
+        title={media_caption ?? ""}
         className={cn(
           "aspect-video rounded-t-xl overflow-hidden shadow-xl",
           className,

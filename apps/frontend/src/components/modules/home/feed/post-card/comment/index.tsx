@@ -1,4 +1,6 @@
+import { Icons } from "@/assets/icons";
 import { Center } from "@/components/ui/center";
+import { Button } from "@/components/ui/reusables/button";
 import {
   Drawer,
   DrawerContent,
@@ -7,20 +9,34 @@ import {
 import { ScrollArea } from "@/components/ui/reusables/scroll-area";
 import { Separator } from "@/components/ui/reusables/separator";
 import { Tooltip } from "@/components/ui/reusables/tooltip";
+import { getBrowserLocale } from "@/utils/get-locale";
 
-import ImageContent from "../image-content";
 import CommentCard from "./comment-card";
 import CommentInputBox from "./comment-input-box";
 import PostAuthor from "./post-author";
 
-interface CommentProps extends React.HTMLAttributes<HTMLDialogElement> {}
+interface CommentProps {
+  commentCount: number;
+}
 
-export default function Comments({ children }: CommentProps) {
+export default function Comments({ commentCount }: Readonly<CommentProps>) {
   return (
     <Drawer>
-      <Tooltip text="Comments">
-        <DrawerTrigger asChild>{children}</DrawerTrigger>
-      </Tooltip>
+      <DrawerTrigger asChild>
+        <div className="flex items-center">
+          <Tooltip text={"Comments"}>
+            <Button variant={"ghost"} size={"iconSm"}>
+              <Icons.Comment />
+            </Button>
+          </Tooltip>
+          <p className="text-xs text-muted-foreground">
+            {Intl.NumberFormat(getBrowserLocale(), {
+              notation: "compact",
+              maximumFractionDigits: 1,
+            }).format(commentCount)}
+          </p>
+        </div>
+      </DrawerTrigger>
       <DrawerContent
         className="h-[90dvh]"
         onCloseAutoFocus={(e) => e.preventDefault()}
@@ -36,7 +52,7 @@ export default function Comments({ children }: CommentProps) {
                 className="rounded-xl"
               /> */}
 
-              <ImageContent />
+              {/* <ImageContent /> */}
             </Center>
           </ScrollArea>
           <ScrollArea className="relative w-1/3 rounded-lg border text-sm">
