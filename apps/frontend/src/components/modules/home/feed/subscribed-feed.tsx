@@ -6,10 +6,18 @@ import { TabsContent } from "@/components/ui/reusables/tabs";
 import useFeedStore from "@/lib/store/feed";
 
 import { useGetSubscribedFeed } from "./api/feed";
+import EmptyState from "./empty-state";
+import Loading from "./loading";
 import PostCard from "./post-card";
 
-export default function SubscribedFeed() {
-  const { data } = useGetSubscribedFeed();
+interface SubscribedFeedProps {
+  activeTab: FeedType;
+}
+
+export default function SubscribedFeed({
+  activeTab,
+}: Readonly<SubscribedFeedProps>) {
+  const { data, isFetching } = useGetSubscribedFeed(activeTab);
   const { setSubscribedFeed, subscribedFeed } = useFeedStore();
 
   useEffect(() => {
@@ -18,11 +26,17 @@ export default function SubscribedFeed() {
     }
   }, [data, setSubscribedFeed]);
 
-  return (
+  return isFetching ? (
+    <Loading />
+  ) : (
     <TabsContent value={FeedType.SUBSCRIBED} className="space-y-2 pb-2">
-      {subscribedFeed.map((post) => (
-        <PostCard key={post.id} {...post} feedType={FeedType.SUBSCRIBED} />
-      ))}
+      {subscribedFeed.length > 0 ? (
+        subscribedFeed.map((post) => (
+          <PostCard key={post.id} {...post} feedType={FeedType.SUBSCRIBED} />
+        ))
+      ) : (
+        <EmptyState />
+      )}
     </TabsContent>
   );
 }

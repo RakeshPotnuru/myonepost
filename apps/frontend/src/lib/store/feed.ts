@@ -35,7 +35,9 @@ interface IFeedState {
 interface IFeedActions {
   addLike: (postId: string, feedType: FeedType) => void;
   removeLike: (postId: string, feedType: FeedType) => void;
+  deletePost: (postId: string) => void;
 }
+
 const updateFeedLike = (feed: FeedResponse[], postId: string) => {
   const postIndex = feed.findIndex((post) => post.id === postId);
   if (postIndex !== -1) {
@@ -55,6 +57,7 @@ const updateFeedRemoveLike = (feed: FeedResponse[], postId: string) => {
     };
   }
 };
+
 const useFeedStore = create<IFeedState & IFeedActions>()(
   immer((set) => ({
     trendingFeed: [],
@@ -96,6 +99,16 @@ const useFeedStore = create<IFeedState & IFeedActions>()(
             break;
           }
         }
+      }),
+    deletePost: (postId) =>
+      set((state) => {
+        state.trendingFeed = state.trendingFeed.filter(
+          (post) => post.id !== postId,
+        );
+        state.freshFeed = state.freshFeed.filter((post) => post.id !== postId);
+        state.subscribedFeed = state.subscribedFeed.filter(
+          (post) => post.id !== postId,
+        );
       }),
   })),
 );

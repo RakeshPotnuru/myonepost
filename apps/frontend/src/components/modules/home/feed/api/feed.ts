@@ -1,4 +1,4 @@
-import { CONSTANTS } from "@1post/shared";
+import { CONSTANTS, FeedType } from "@1post/shared";
 import { useQuery } from "@tanstack/react-query";
 
 import { queryKeys } from "@/lib/providers/react-query";
@@ -61,10 +61,11 @@ const fetchTrendingFeed = async (): Promise<FeedResponse[]> => {
   })) as FeedResponse[];
 };
 
-export function useGetTrendingFeed() {
+export function useGetTrendingFeed(activeTab: FeedType) {
   return useQuery({
     queryKey: [queryKeys.trendingFeed],
     queryFn: fetchTrendingFeed,
+    enabled: activeTab === FeedType.TRENDING,
   });
 }
 
@@ -101,10 +102,11 @@ const fetchFreshFeed = async (): Promise<FeedResponse[]> => {
   })) as FeedResponse[];
 };
 
-export function useGetFreshFeed() {
+export function useGetFreshFeed(activeTab: FeedType) {
   return useQuery({
     queryKey: [queryKeys.freshFeed],
     queryFn: fetchFreshFeed,
+    enabled: activeTab === FeedType.FRESH,
   });
 }
 
@@ -160,9 +162,10 @@ const fetchSubscribedFeed = async (): Promise<FeedResponse[]> => {
   })) as FeedResponse[];
 };
 
-export function useGetSubscribedFeed() {
+export function useGetSubscribedFeed(activeTab: FeedType) {
   return useQuery({
     queryKey: [queryKeys.subscribedFeed],
     queryFn: fetchSubscribedFeed,
+    enabled: activeTab === FeedType.SUBSCRIBED,
   });
 }

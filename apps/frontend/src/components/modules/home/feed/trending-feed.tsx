@@ -6,10 +6,18 @@ import { TabsContent } from "@/components/ui/reusables/tabs";
 import useFeedStore from "@/lib/store/feed";
 
 import { useGetTrendingFeed } from "./api/feed";
+import EmptyState from "./empty-state";
+import Loading from "./loading";
 import PostCard from "./post-card";
 
-export default function TrendingFeed() {
-  const { data } = useGetTrendingFeed();
+interface TrendingFeedProps {
+  activeTab: FeedType;
+}
+
+export default function TrendingFeed({
+  activeTab,
+}: Readonly<TrendingFeedProps>) {
+  const { data, isFetching } = useGetTrendingFeed(activeTab);
   const { setTrendingFeed, trendingFeed } = useFeedStore();
 
   useEffect(() => {
@@ -18,11 +26,17 @@ export default function TrendingFeed() {
     }
   }, [data, setTrendingFeed]);
 
-  return (
+  return isFetching ? (
+    <Loading />
+  ) : (
     <TabsContent value={FeedType.TRENDING} className="space-y-2 pb-2">
-      {trendingFeed.map((post) => (
-        <PostCard key={post.id} {...post} feedType={FeedType.TRENDING} />
-      ))}
+      {trendingFeed.length > 0 ? (
+        trendingFeed.map((post) => (
+          <PostCard key={post.id} {...post} feedType={FeedType.TRENDING} />
+        ))
+      ) : (
+        <EmptyState />
+      )}
     </TabsContent>
   );
 }

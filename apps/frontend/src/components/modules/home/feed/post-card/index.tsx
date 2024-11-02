@@ -7,7 +7,6 @@ import {
   CardHeader,
 } from "@/components/ui/reusables/card";
 import type { FeedResponse } from "@/lib/store/feed";
-import useUserStore from "@/lib/store/user";
 import { cn } from "@/utils/cn";
 
 import AudioContent from "./audio-content";
@@ -79,8 +78,6 @@ export default function PostCard({
     }
   }
 
-  const { user } = useUserStore();
-
   return (
     <Card>
       <CardContent
@@ -97,7 +94,7 @@ export default function PostCard({
         <CardFooter className="gap-1 text-muted-foreground">
           <Like likeCount={like_count} postId={id} feedType={feedType} />
           <Comments commentCount={comment_count} />
-          {user?.id !== author.id && <MoreMenu author={author} id={id} />}
+          <MoreMenu author={author} id={id} />
         </CardFooter>
       </div>
     </Card>

@@ -94,7 +94,7 @@ export default function Like({
       <Tooltip text={state.liked ? "Unlike" : "Like"}>
         <Button variant="ghost" size="iconSm" onClick={handleClick}>
           {state.liked ? (
-            <Icons.Liked className="size-4" />
+            <Icons.Liked className="size-4" color="#F44336" />
           ) : (
             <Icons.Like className="size-4" />
           )}
