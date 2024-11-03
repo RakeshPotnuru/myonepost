@@ -10,13 +10,9 @@ import EmptyState from "./empty-state";
 import Loading from "./loading";
 import PostCard from "./post-card";
 
-interface FreshFeedProps {
-  activeTab: FeedType;
-}
-
-export default function FreshFeed({ activeTab }: Readonly<FreshFeedProps>) {
-  const { data, isFetching } = useGetFreshFeed(activeTab);
-  const { setFreshFeed, freshFeed } = useFeedStore();
+export default function FreshFeed() {
+  const { setFreshFeed, freshFeed, activeFeedType } = useFeedStore();
+  const { data, isFetching } = useGetFreshFeed(activeFeedType);
 
   useEffect(() => {
     if (data) {
@@ -29,9 +25,7 @@ export default function FreshFeed({ activeTab }: Readonly<FreshFeedProps>) {
   ) : (
     <TabsContent value={FeedType.FRESH} className="space-y-2 pb-2">
       {freshFeed.length > 0 ? (
-        freshFeed.map((post) => (
-          <PostCard key={post.id} {...post} feedType={FeedType.FRESH} />
-        ))
+        freshFeed.map((post) => <PostCard key={post.id} {...post} />)
       ) : (
         <EmptyState />
       )}

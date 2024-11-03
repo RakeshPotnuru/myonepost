@@ -1,5 +1,3 @@
-import type { FeedType } from "@1post/shared";
-
 import {
   Card,
   CardContent,
@@ -7,20 +5,19 @@ import {
   CardHeader,
 } from "@/components/ui/reusables/card";
 import type { FeedResponse } from "@/lib/store/feed";
+import useFeedStore from "@/lib/store/feed";
 import { cn } from "@/utils/cn";
 
 import AudioContent from "./audio-content";
 import Author from "./author";
-import Comments from "./comment";
+import Comments from "./comments";
 import ImageContent from "./image-content";
 import Like from "./like";
 import MoreMenu from "./more-menu";
 import TextContent from "./text-content";
 import VideoContent from "./video-content";
 
-interface IPostCardProps extends FeedResponse {
-  feedType: FeedType;
-}
+interface IPostCardProps extends FeedResponse {}
 
 export default function PostCard({
   author,
@@ -32,8 +29,9 @@ export default function PostCard({
   text,
   media_url,
   media_caption,
-  feedType,
 }: Readonly<IPostCardProps>) {
+  const { setActivePost } = useFeedStore();
+
   let component = null;
 
   switch (post_type) {
@@ -78,6 +76,19 @@ export default function PostCard({
     }
   }
 
+  const handleSetActivePost = () =>
+    setActivePost({
+      author,
+      created_at,
+      id,
+      like_count,
+      post_type,
+      text,
+      media_url,
+      media_caption,
+      comment_count,
+    });
+
   return (
     <Card>
       <CardContent
@@ -92,8 +103,11 @@ export default function PostCard({
           <Author author={author} created_at={created_at} />
         </CardHeader>
         <CardFooter className="gap-1 text-muted-foreground">
-          <Like likeCount={like_count} postId={id} feedType={feedType} />
-          <Comments commentCount={comment_count} />
+          <Like likeCount={like_count} postId={id} />
+          <Comments
+            onSetActivePost={handleSetActivePost}
+            commentCount={comment_count}
+          />
           <MoreMenu author={author} id={id} />
         </CardFooter>
       </div>

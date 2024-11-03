@@ -15,7 +15,7 @@ export class CommentService {
     const { text, postId } = createCommentDto;
 
     try {
-      const { "1": post } = await this.prisma.$transaction([
+      const { "1": post, "0": comment } = await this.prisma.$transaction([
         this.prisma.comments.create({
           data: {
             text,
@@ -48,7 +48,7 @@ export class CommentService {
         });
       }
 
-      return { success: true };
+      return { id: comment.id };
     } catch (error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError) {
         if (error.code === "P2002") {

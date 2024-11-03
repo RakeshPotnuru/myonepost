@@ -10,15 +10,9 @@ import EmptyState from "./empty-state";
 import Loading from "./loading";
 import PostCard from "./post-card";
 
-interface SubscribedFeedProps {
-  activeTab: FeedType;
-}
-
-export default function SubscribedFeed({
-  activeTab,
-}: Readonly<SubscribedFeedProps>) {
-  const { data, isFetching } = useGetSubscribedFeed(activeTab);
-  const { setSubscribedFeed, subscribedFeed } = useFeedStore();
+export default function SubscribedFeed() {
+  const { setSubscribedFeed, subscribedFeed, activeFeedType } = useFeedStore();
+  const { data, isFetching } = useGetSubscribedFeed(activeFeedType);
 
   useEffect(() => {
     if (data) {
@@ -31,9 +25,7 @@ export default function SubscribedFeed({
   ) : (
     <TabsContent value={FeedType.SUBSCRIBED} className="space-y-2 pb-2">
       {subscribedFeed.length > 0 ? (
-        subscribedFeed.map((post) => (
-          <PostCard key={post.id} {...post} feedType={FeedType.SUBSCRIBED} />
-        ))
+        subscribedFeed.map((post) => <PostCard key={post.id} {...post} />)
       ) : (
         <EmptyState />
       )}

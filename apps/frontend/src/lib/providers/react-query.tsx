@@ -34,4 +34,5 @@ export const queryKeys = {
   trendingFeed: "trendingFeed",
   freshFeed: "freshFeed",
   subscribedFeed: "subscribedFeed",
+  postComments: "postComments",
 } as const;

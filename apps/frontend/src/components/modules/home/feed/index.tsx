@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
-import { FeedType } from "@1post/shared";
+import type { FeedType } from "@1post/shared";
 
 import { Tabs } from "@/components/ui/reusables/tabs";
 import useFeedStore from "@/lib/store/feed";
@@ -12,9 +12,7 @@ import FeedTabsList from "./tabs-list";
 import TrendingFeed from "./trending-feed";
 
 export default function Feed() {
-  const [activeTab, setActiveTab] = useState(FeedType.TRENDING);
-
-  const { deletePost } = useFeedStore();
+  const { deletePost, activeFeedType, setActiveFeedType } = useFeedStore();
 
   useEffect(() => {
     const client = createClient();
@@ -41,13 +39,13 @@ export default function Feed() {
 
   return (
     <Tabs
-      defaultValue={FeedType.TRENDING}
-      onValueChange={(v) => setActiveTab(v as FeedType)}
+      defaultValue={activeFeedType}
+      onValueChange={(v) => setActiveFeedType(v as FeedType)}
     >
       <FeedTabsList />
-      <TrendingFeed activeTab={activeTab} />
-      <FreshFeed activeTab={activeTab} />
-      <SubscribedFeed activeTab={activeTab} />
+      <TrendingFeed />
+      <FreshFeed />
+      <SubscribedFeed />
     </Tabs>
   );
 }

@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 
-import type { FeedType } from "@1post/shared";
 import { useDebouncedCallback } from "use-debounce";
 
 import { Icons } from "@/assets/icons";
@@ -14,14 +13,9 @@ import { getBrowserLocale } from "@/utils/get-locale";
 interface LikeProps {
   likeCount: number;
   postId: string;
-  feedType: FeedType;
 }
 
-export default function Like({
-  likeCount,
-  postId,
-  feedType,
-}: Readonly<LikeProps>) {
+export default function Like({ likeCount, postId }: Readonly<LikeProps>) {
   const intentRef = useRef<boolean | null>(null);
 
   const { user, addPostLike, removePostLike } = useUserStore();
@@ -33,7 +27,11 @@ export default function Like({
     count: likeCount,
   });
 
-  const { addLike, removeLike } = useFeedStore();
+  const {
+    incrementLikes: incrementPostLikes,
+    decrementLikes: decrementPostLikes,
+    activeFeedType,
+  } = useFeedStore();
   const { mutateAsync: like } = client.useMutation("post", "/like/post");
   const { mutateAsync: unlike } = client.useMutation(
     "delete",
@@ -57,11 +55,11 @@ export default function Like({
       try {
         if (isLiking) {
           await like({ body: { postId } });
-          addLike(postId, feedType);
+          incrementPostLikes(postId, activeFeedType);
           addPostLike(postId);
         } else {
           await unlike({ params: { path: { id: postId } } });
-          removeLike(postId, feedType);
+          decrementPostLikes(postId, activeFeedType);
           removePostLike(postId);
         }
       } catch {

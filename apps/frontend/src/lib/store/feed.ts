@@ -30,11 +30,15 @@ interface IFeedState {
   setFreshFeed: (feed: FeedResponse[]) => void;
   subscribedFeed: FeedResponse[];
   setSubscribedFeed: (feed: FeedResponse[]) => void;
+  activePost: FeedResponse | null;
+  setActivePost: (post: FeedResponse) => void;
+  activeFeedType: FeedType;
+  setActiveFeedType: (feedType: FeedType) => void;
 }
 
 interface IFeedActions {
-  addLike: (postId: string, feedType: FeedType) => void;
-  removeLike: (postId: string, feedType: FeedType) => void;
+  incrementLikes: (postId: string, feedType: FeedType) => void;
+  decrementLikes: (postId: string, feedType: FeedType) => void;
   deletePost: (postId: string) => void;
 }
 
@@ -66,7 +70,11 @@ const useFeedStore = create<IFeedState & IFeedActions>()(
     setFreshFeed: (feed) => set({ freshFeed: feed }),
     subscribedFeed: [],
     setSubscribedFeed: (feed) => set({ subscribedFeed: feed }),
-    addLike: (postId, feedType) =>
+    activePost: null,
+    setActivePost: (post) => set({ activePost: post }),
+    activeFeedType: FeedType.TRENDING,
+    setActiveFeedType: (feedType) => set({ activeFeedType: feedType }),
+    incrementLikes: (postId, feedType) =>
       set((state) => {
         switch (feedType) {
           case FeedType.TRENDING: {
@@ -83,7 +91,7 @@ const useFeedStore = create<IFeedState & IFeedActions>()(
           }
         }
       }),
-    removeLike: (postId, feedType) =>
+    decrementLikes: (postId, feedType) =>
       set((state) => {
         switch (feedType) {
           case FeedType.TRENDING: {
