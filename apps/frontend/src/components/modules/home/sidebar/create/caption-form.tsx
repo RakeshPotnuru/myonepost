@@ -1,8 +1,5 @@
-import { useState } from "react";
-
 import { CONSTANTS } from "@1post/shared";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import type { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import {
@@ -15,10 +12,16 @@ import {
 } from "@/components/ui/reusables/form";
 import { Input } from "@/components/ui/reusables/input";
 
+interface CaptionFormProps {
+  isDisabled: boolean;
+  form: ReturnType<typeof useForm>;
+}
+
 export default function CaptionForm({
   isDisabled,
-}: Readonly<{ isDisabled: boolean }>) {
-  const { form, watchCaption } = useCaptionForm();
+  form,
+}: Readonly<CaptionFormProps>) {
+  const watchCaption = form.watch("caption", "");
 
   return (
     <Form {...form}>
@@ -52,23 +55,3 @@ export const CaptionFormSchema = z.object({
     .max(CONSTANTS.POST.POST_MEDIA_CAPTION.MAX_LENGTH, "Caption is too long")
     .optional(),
 });
-
-export function useCaptionForm() {
-  const [file, setFile] = useState<File>();
-
-  const form = useForm<z.infer<typeof CaptionFormSchema>>({
-    resolver: zodResolver(CaptionFormSchema),
-    mode: "onBlur",
-    defaultValues: {
-      caption: "",
-    },
-  });
-  const watchCaption = form.watch("caption", "");
-
-  return {
-    form,
-    file,
-    setFile,
-    watchCaption,
-  };
-}

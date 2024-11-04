@@ -1,17 +1,15 @@
 import Link from "next/link";
 
-import { Icons } from "@/assets/icons";
 import {
   Avatar,
   AvatarFallback,
   AvatarImage,
 } from "@/components/ui/reusables/avatar";
-import { Button } from "@/components/ui/reusables/button";
-import { Tooltip } from "@/components/ui/reusables/tooltip";
 import type { CommentResponse } from "@/lib/store/comment";
 import { getBrowserLocale } from "@/utils/get-locale";
 import { getRelativeTime } from "@/utils/get-relative-time";
 
+import Like from "./like";
 import MoreMenu from "./more-menu";
 
 interface CommentCardProps extends CommentResponse {}
@@ -21,8 +19,10 @@ export default function CommentCard({
   created_at,
   like_count,
   text,
+  id,
 }: Readonly<CommentCardProps>) {
   const { avatar_url, username } = author;
+
   return (
     <div className="flex gap-2">
       <Link href={`@${username}`}>
@@ -59,11 +59,7 @@ export default function CommentCard({
         </div>
       </div>
       <div className="flex flex-none flex-col">
-        <Tooltip text="Dislike">
-          <Button variant={"ghost"} size={"iconXs"}>
-            <Icons.Liked />
-          </Button>
-        </Tooltip>
+        <Like likeCount={like_count} commentId={id} />
         <MoreMenu />
       </div>
     </div>

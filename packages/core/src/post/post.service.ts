@@ -1,4 +1,4 @@
-import { CONSTANTS, Prisma, users } from "@1post/shared";
+import { CONSTANTS, PostType, Prisma, users } from "@1post/shared";
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { CloudinaryService } from "src/cloudinary/cloudinary.service";
@@ -23,7 +23,7 @@ export class PostService {
       new Date().getTime() + 24 * 60 * 60 * 1000,
     ); // next post after 24 hours
 
-    await this.remove(user.id);
+    await this.remove(user.id, createPostDto.post_type);
 
     try {
       return (
@@ -74,7 +74,7 @@ export class PostService {
     }
   }
 
-  async remove(userId: string) {
+  async remove(userId: string, newPostType?: PostType) {
     try {
       const post = await this.prisma.posts.findUnique({
         where: { user_id: userId },
@@ -84,7 +84,11 @@ export class PostService {
         return;
       }
 
-      if (post.post_type === "IMAGE" && post.media_url) {
+      if (
+        newPostType !== "IMAGE" &&
+        post.post_type === "IMAGE" &&
+        post.media_url
+      ) {
         await this.cloudinary.deleteImage(
           `${CONSTANTS.ASSET_FOLDERS.POSTS}/${userId}`,
         );

@@ -2,7 +2,7 @@ import { CONSTANTS } from "@1post/shared";
 import { useQuery } from "@tanstack/react-query";
 
 import { queryKeys } from "@/lib/providers/react-query";
-import type { CommentResponse } from "@/lib/store/comment";
+import type { CommentResponse, LikedComment } from "@/lib/store/comment";
 import { createClient } from "@/utils/supabase/client";
 
 const calculateCommentScore = (likeCount: number, createdAt: Date): number => {
@@ -15,8 +15,8 @@ const calculateCommentScore = (likeCount: number, createdAt: Date): number => {
 
 const fetchPostComments = async (
   postId?: string,
-): Promise<CommentResponse[]> => {
-  if (!postId) return [];
+): Promise<{ comments: CommentResponse[]; likedComments: LikedComment[] }> => {
+  if (!postId) return { comments: [], likedComments: [] };
 
   const supabase = createClient();
 
@@ -46,14 +46,27 @@ const fetchPostComments = async (
     ),
   }));
 
-  comments?.sort((a, b) => b.score - a.score);
+  const sortedComments = comments
+    ?.map((c) => {
+      return {
+        ...c,
+        author: c.author,
+      };
+    })
+    .sort((a, b) => b.score - a.score) as CommentResponse[];
 
-  return comments?.map((c) => {
-    return {
-      ...c,
-      author: c.author,
-    };
-  }) as CommentResponse[];
+  const { data: likedComments } = await supabase
+    .from("comment_likes")
+    .select("comment_id")
+    .eq(
+      "comment_id",
+      sortedComments.map((c) => c.id),
+    );
+
+  return {
+    comments: sortedComments,
+    likedComments: likedComments as LikedComment[],
+  };
 };
 
 export function useGetPostComments(postId?: string) {

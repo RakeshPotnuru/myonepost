@@ -90,6 +90,13 @@ const useFeedStore = create<IFeedState & IFeedActions>()(
             break;
           }
         }
+
+        if (state.activePost?.id === postId) {
+          state.activePost = {
+            ...state.activePost,
+            like_count: (state.activePost?.like_count || 0) + 1,
+          };
+        }
       }),
     decrementLikes: (postId, feedType) =>
       set((state) => {
@@ -106,6 +113,13 @@ const useFeedStore = create<IFeedState & IFeedActions>()(
             updateFeedRemoveLike(state.subscribedFeed, postId);
             break;
           }
+        }
+
+        if (state.activePost?.id === postId) {
+          state.activePost = {
+            ...state.activePost,
+            like_count: Math.max((state.activePost?.like_count || 0) - 1, 0),
+          };
         }
       }),
     deletePost: (postId) =>

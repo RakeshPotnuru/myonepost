@@ -4,9 +4,11 @@ import { useCallback, useState } from "react";
 import Image from "next/image";
 
 import { CONSTANTS } from "@1post/shared";
+import { zodResolver } from "@hookform/resolvers/zod";
 import type { Options } from "browser-image-compression";
 import imageCompression from "browser-image-compression";
 import { useDropzone } from "react-dropzone";
+import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import type { z } from "zod";
 
@@ -17,18 +19,26 @@ import { mimeToExtensions } from "@/utils/mime-to-extensions";
 import { shortenText } from "@/utils/text-shortener";
 
 import { useCreateImagePost } from "./api/create";
-import type { CaptionFormSchema } from "./caption-form";
-import CaptionForm, { useCaptionForm } from "./caption-form";
+import CaptionForm, { CaptionFormSchema } from "./caption-form";
 import CreateDialog from "./create-dialog";
 import Dropzone from "./dropzone";
 
 export default function CreateImagePost() {
   const [isOpen, setIsOpen] = useState(false);
   const [isCompressing, setIsCompressing] = useState(false);
+  const [file, setFile] = useState<File>();
 
   const { mutateAsync, isPending } = useCreateImagePost();
 
-  const { form, watchCaption, file, setFile } = useCaptionForm();
+  const form = useForm<z.infer<typeof CaptionFormSchema>>({
+    resolver: zodResolver(CaptionFormSchema),
+    mode: "onBlur",
+    defaultValues: {
+      caption: "",
+    },
+  });
+
+  const watchCaption = form.watch("caption", "");
 
   const onSubmit = async (values: z.infer<typeof CaptionFormSchema>) => {
     if (!file) {
@@ -42,11 +52,9 @@ export default function CreateImagePost() {
         useWebWorker: true,
         initialQuality: 0.8,
       };
-      console.log("Size before compression:", file.size);
 
       // Compress the image
       const compressedFile = await imageCompression(file, options);
-      console.log("Size after compression:", compressedFile.size);
       // Double-check final size
       if (compressedFile.size > CONSTANTS.POST.IMAGE_POST.MAX_SIZE) {
         toast.error(
@@ -68,13 +76,12 @@ export default function CreateImagePost() {
 
       await mutateAsync(data);
 
+      toast.success("You will be notified when posted.");
       setIsOpen(false);
-      form.reset({
-        caption: "",
-      });
+      form.reset();
       await queryClient.invalidateQueries({ queryKey: [queryKeys.me] });
     } catch {
-      // ignore
+      toast.error("Failed to create post");
     }
   };
 
@@ -148,7 +155,7 @@ export default function CreateImagePost() {
         )}
       </Dropzone>
 
-      <CaptionForm isDisabled={isDisabled} />
+      <CaptionForm isDisabled={isDisabled} form={form} />
     </CreateDialog>
   );
 }

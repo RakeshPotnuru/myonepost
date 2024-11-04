@@ -50,6 +50,8 @@ export default function CreateTextPost() {
   const onSubmit = async (data: z.infer<typeof FormSchema>) => {
     try {
       await mutateAsync({ body: { text: data.text } });
+
+      toast.success("Posted successfully.");
       setIsOpen(false);
       form.reset({
         text: "",

@@ -10,9 +10,13 @@ export type CommentResponse = Pick<
   author: Pick<Tables<"users">, "id" | "username" | "avatar_url">;
 };
 
+export type LikedComment = Pick<Tables<"comment_likes">, "comment_id">;
+
 interface ICommentState {
   comments: CommentResponse[];
   setComments: (comments: CommentResponse[]) => void;
+  likedComments: LikedComment[];
+  setLikedComments: (likedComments: LikedComment[]) => void;
 }
 
 interface ICommentActions {
@@ -20,12 +24,16 @@ interface ICommentActions {
   deleteComment: (commentId: string) => void;
   incrementLikes: (commentId: string) => void;
   decrementLikes: (commentId: string) => void;
+  addCommentLike: (commentId: string) => void;
+  removeCommentLike: (commentId: string) => void;
 }
 
 const useCommentStore = create<ICommentState & ICommentActions>()(
   immer((set) => ({
     comments: [],
     setComments: (comments) => set({ comments }),
+    likedComments: [],
+    setLikedComments: (likedComments) => set({ likedComments }),
     addComment: (comment) =>
       set((state) => ({ comments: [comment, ...state.comments] })),
     deleteComment: (commentId) =>
@@ -42,6 +50,16 @@ const useCommentStore = create<ICommentState & ICommentActions>()(
       set((state) => ({
         comments: state.comments.map((c) =>
           c.id === commentId ? { ...c, like_count: c.like_count - 1 } : c,
+        ),
+      })),
+    addCommentLike: (commentId) =>
+      set((state) => ({
+        likedComments: [...state.likedComments, { comment_id: commentId }],
+      })),
+    removeCommentLike: (commentId) =>
+      set((state) => ({
+        likedComments: state.likedComments.filter(
+          (like) => like.comment_id !== commentId,
         ),
       })),
   })),

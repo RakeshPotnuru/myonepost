@@ -3,9 +3,11 @@
 import { memo, useCallback, useState } from "react";
 
 import { CONSTANTS } from "@1post/shared";
+import { zodResolver } from "@hookform/resolvers/zod";
 import MuxPlayer from "@mux/mux-player-react/lazy";
 import * as UpChunk from "@mux/upchunk";
 import { useDropzone } from "react-dropzone";
+import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import type { z } from "zod";
 
@@ -18,8 +20,7 @@ import client from "@/utils/api-client";
 import { mimeToExtensions } from "@/utils/mime-to-extensions";
 import { shortenText } from "@/utils/text-shortener";
 
-import type { CaptionFormSchema } from "./caption-form";
-import CaptionForm, { useCaptionForm } from "./caption-form";
+import CaptionForm, { CaptionFormSchema } from "./caption-form";
 import CreateDialog from "./create-dialog";
 import Dropzone from "./dropzone";
 
@@ -75,14 +76,21 @@ export default function CreateAudioPost() {
   const [isOpen, setIsOpen] = useState(false);
   const [progress, setProgress] = useState(0);
   const [isUploading, setIsUploading] = useState(false);
+  const [file, setFile] = useState<File>();
+
+  const form = useForm<z.infer<typeof CaptionFormSchema>>({
+    resolver: zodResolver(CaptionFormSchema),
+    mode: "onBlur",
+    defaultValues: {
+      caption: "",
+    },
+  });
 
   const { mutateAsync, isPending } = client.useMutation("post", "/post/audio", {
     onError: () => {
       toast.error("Something went wrong. Please try again later.");
     },
   });
-
-  const { form, file, setFile } = useCaptionForm();
 
   const onSubmit = useCallback(
     async (values: z.infer<typeof CaptionFormSchema>) => {
@@ -201,7 +209,7 @@ export default function CreateAudioPost() {
         />
       </Dropzone>
 
-      <CaptionForm isDisabled={isDisabled} />
+      <CaptionForm isDisabled={isDisabled} form={form} />
     </CreateDialog>
   );
 }

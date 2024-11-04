@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import Image from "next/image";
 
 import { Center } from "@/components/ui/center";
 import { DrawerContent } from "@/components/ui/reusables/drawer";
@@ -10,7 +11,6 @@ import useFeedStore from "@/lib/store/feed";
 import useUserStore from "@/lib/store/user";
 
 import AudioContent from "../audio-content";
-import ImageContent from "../image-content";
 import TextContent from "../text-content";
 import VideoContent from "../video-content";
 import { useGetPostComments } from "./api/comments";
@@ -21,14 +21,15 @@ import PostAuthor from "./post-author";
 export default function CommentContent() {
   const { activePost } = useFeedStore();
   const { data, isFetching } = useGetPostComments(activePost?.id);
-  const { comments, setComments } = useCommentStore();
+  const { comments, setComments, setLikedComments } = useCommentStore();
   const { user } = useUserStore();
 
   useEffect(() => {
     if (data) {
-      setComments(data);
+      setComments(data.comments);
+      setLikedComments(data.likedComments);
     }
-  }, [data, setComments]);
+  }, [data, setComments, setLikedComments]);
 
   if (!activePost) return null;
 
@@ -54,10 +55,12 @@ export default function CommentContent() {
     }
     case "IMAGE": {
       component = (
-        <ImageContent
-          author={author}
-          media_url={media_url}
-          media_caption={media_caption}
+        <Image
+          src={media_url ?? ""}
+          alt={media_caption ?? `Photo by @${author.username}`}
+          fill
+          className="h-full w-full object-contain"
+          priority={false}
         />
       );
       break;
@@ -107,13 +110,13 @@ export default function CommentContent() {
       onCloseAutoFocus={(e) => e.preventDefault()}
       onOpenAutoFocus={(e) => e.preventDefault()}
     >
-      <div className="flex w-full flex-row gap-10 px-20 pt-5 *:h-[85dvh]">
-        <ScrollArea className="w-2/3 p-4">
+      <div className="flex w-full flex-row gap-10 pt-5 *:h-[85dvh] sm:px-10 md:px-20">
+        <ScrollArea className="hidden w-2/3 p-4 lg:block">
           <Center className="pointer-events-auto h-[80dvh] w-full">
             {component}
           </Center>
         </ScrollArea>
-        <ScrollArea className="relative w-1/3 rounded-lg border text-sm">
+        <ScrollArea className="relative w-full rounded-none rounded-t-lg border text-sm sm:rounded-lg lg:w-1/3">
           <PostAuthor />
           <Separator />
           {isFetching ? (

@@ -9,6 +9,7 @@ export function getRelativeTime(date: Date) {
     .replace("about ", "")
     .replace("less than ", "")
     .replace(" minutes", "m")
+    .replace("half a minute", "30s")
     .replace("a minute", "1m")
     .replace(" minute", "m")
     .replace(" hours", "h")
