@@ -60,7 +60,7 @@ export default function CommentCard({
       </div>
       <div className="flex flex-none flex-col">
         <Like likeCount={like_count} commentId={id} />
-        <MoreMenu />
+        <MoreMenu id={id} author={author} />
       </div>
     </div>
   );

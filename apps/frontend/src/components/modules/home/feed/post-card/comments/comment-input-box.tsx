@@ -94,7 +94,11 @@ export default function CommentInputBox({
             </FormItem>
           )}
         />
-        <Button type="submit" size={"sm"} disabled={isLoading}>
+        <Button
+          type="submit"
+          size={"sm"}
+          disabled={isLoading || !form.formState.isDirty}
+        >
           <ButtonLoader isLoading={isPending} /> Submit
         </Button>
       </form>

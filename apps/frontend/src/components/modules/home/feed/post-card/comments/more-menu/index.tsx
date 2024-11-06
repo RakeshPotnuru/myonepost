@@ -6,8 +6,17 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/reusables/dropdown-menu";
 import { Tooltip } from "@/components/ui/reusables/tooltip";
+import type { CommentResponse } from "@/lib/store/comment";
+import useUserStore from "@/lib/store/user";
 
-export default function MoreMenu() {
+import Report from "../../report";
+import DeleteComment from "./delete-comment";
+
+interface MoreMenuProps extends Pick<CommentResponse, "author" | "id"> {}
+
+export default function MoreMenu({ author, id }: MoreMenuProps) {
+  const { user } = useUserStore();
+
   return (
     <DropdownMenu>
       <Tooltip text="More">
@@ -20,7 +29,12 @@ export default function MoreMenu() {
       <DropdownMenuContent
         onCloseAutoFocus={(e) => e.preventDefault()}
         align="end"
-      ></DropdownMenuContent>
+      >
+        {author.id === user?.id && <DeleteComment commentId={id} />}
+        {author.id !== user?.id && (
+          <Report reportedUserId={author.id} commentId={id} />
+        )}
+      </DropdownMenuContent>
     </DropdownMenu>
   );
 }

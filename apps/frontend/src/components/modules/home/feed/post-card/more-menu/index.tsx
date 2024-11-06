@@ -16,11 +16,12 @@ import { siteConfig } from "@/config/site";
 import type { FeedResponse } from "@/lib/store/feed";
 import useUserStore from "@/lib/store/user";
 
+import Report from "../report";
 import Subscribe from "./subscribe";
 
 interface MoreMenuProps extends Pick<FeedResponse, "author" | "id"> {}
 
-export default function MoreMenu({ author }: Readonly<MoreMenuProps>) {
+export default function MoreMenu({ author, id }: Readonly<MoreMenuProps>) {
   const { user } = useUserStore();
   const postLink = `${siteConfig.url}/@${author.username}`;
 
@@ -62,9 +63,7 @@ export default function MoreMenu({ author }: Readonly<MoreMenuProps>) {
         {user?.id !== author.id && (
           <>
             <Subscribe author={author} />
-            <DropdownMenuItem>
-              <Icons.Flag /> Report post
-            </DropdownMenuItem>
+            <Report reportedUserId={author.id} postId={id} />
           </>
         )}
       </DropdownMenuContent>

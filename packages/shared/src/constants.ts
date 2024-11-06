@@ -62,7 +62,6 @@ const NOTIFICATION_TTL = 7 * 24 * 60 * 60 * 1000; // 7 days
 
 const REPORT = {
   DESCRIPTION: {
-    MIN_LENGTH: 3,
     MAX_LENGTH: 280,
   },
 };

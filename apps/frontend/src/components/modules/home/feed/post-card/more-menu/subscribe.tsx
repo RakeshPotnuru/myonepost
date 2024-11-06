@@ -1,3 +1,5 @@
+import { toast } from "sonner";
+
 import { Icons } from "@/assets/icons";
 import { ButtonLoader } from "@/components/ui/loaders/button-loader";
 import { DropdownMenuItem } from "@/components/ui/reusables/dropdown-menu";
@@ -13,7 +15,11 @@ export default function Subscribe({
   const { user, addSubscriber, removeSubscriber } = useUserStore();
 
   const { mutateAsync: subscribe, isPending: isSubscribing } =
-    client.useMutation("post", "/subscribe");
+    client.useMutation("post", "/subscribe", {
+      onError: () => {
+        toast.error("Something went wrong. Please try again.");
+      },
+    });
 
   const handleSubscribe = async (
     e: React.MouseEvent<HTMLDivElement, MouseEvent>,
@@ -28,7 +34,11 @@ export default function Subscribe({
   };
 
   const { mutateAsync: unsubscribe, isPending: isUnSubscribing } =
-    client.useMutation("delete", "/subscribe/{id}");
+    client.useMutation("delete", "/subscribe/{id}", {
+      onError: () => {
+        toast.error("Something went wrong. Please try again.");
+      },
+    });
 
   const handleUnSubscribe = async (
     e: React.MouseEvent<HTMLDivElement, MouseEvent>,

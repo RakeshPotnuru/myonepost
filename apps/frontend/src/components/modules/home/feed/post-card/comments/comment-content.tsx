@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import Image from "next/image";
 
 import { Center } from "@/components/ui/center";
-import { DrawerContent } from "@/components/ui/reusables/drawer";
+import { DrawerContent, DrawerTitle } from "@/components/ui/reusables/drawer";
 import { ScrollArea } from "@/components/ui/reusables/scroll-area";
 import { Separator } from "@/components/ui/reusables/separator";
 import { Skeleton } from "@/components/ui/reusables/skeleton";
@@ -106,10 +106,11 @@ export default function CommentContent() {
 
   return (
     <DrawerContent
-      className="h-[90dvh]"
+      className="h-[90dvh] !select-text"
       onCloseAutoFocus={(e) => e.preventDefault()}
       onOpenAutoFocus={(e) => e.preventDefault()}
     >
+      <DrawerTitle className="sr-only">Comments</DrawerTitle>
       <div className="flex w-full flex-row gap-10 pt-5 *:h-[85dvh] sm:px-10 md:px-20">
         <ScrollArea className="hidden w-2/3 p-4 lg:block">
           <Center className="pointer-events-auto h-[80dvh] w-full">

@@ -23,7 +23,7 @@ export default function Like({ likeCount, commentId }: Readonly<LikeProps>) {
     removeCommentLike,
     likedComments,
   } = useCommentStore();
-  const isInitiallyLiked = likedComments.some(
+  const isInitiallyLiked = likedComments?.some(
     (like) => like.comment_id === commentId,
   );
 
@@ -71,7 +71,7 @@ export default function Like({ likeCount, commentId }: Readonly<LikeProps>) {
         }
       }
     },
-    500,
+    1000,
     { leading: true, maxWait: 2000 },
   );
 

@@ -411,7 +411,6 @@ export interface components {
         CreateReportDto: {
             description?: string;
             reason: string;
-            reportType: string;
             reportedUserId: string;
             postId?: string;
             commentId?: string;

@@ -11,6 +11,7 @@ import { GetUser } from "src/auth/decorator";
 import { JwtGuard } from "src/auth/guard";
 import { CreateReportDto } from "./dto";
 import { ReportService } from "./report.service";
+import { ReportType } from "@1post/shared";
 
 @ApiTags("Report")
 @Controller("report")
@@ -24,14 +25,8 @@ export class ReportController {
     @GetUser("id") userId: string,
     @Body() createReportDto: CreateReportDto,
   ) {
-    const {
-      reportedUserId,
-      reason,
-      reportType,
-      commentId,
-      description,
-      postId,
-    } = createReportDto;
+    const { reportedUserId, reason, commentId, description, postId } =
+      createReportDto;
     if (userId === reportedUserId) {
       throw new HttpException(
         "You cannot report yourself.",
@@ -39,12 +34,24 @@ export class ReportController {
       );
     }
 
+    let reportType: ReportType = "USER";
+
+    if (postId) {
+      reportType = "POST";
+    } else if (commentId) {
+      reportType = "COMMENT";
+    }
+
     return this.reportService.create({
       reason,
       report_type: reportType,
       description,
-      post: { connect: { id: postId } },
-      comment: { connect: { id: commentId } },
+      ...(postId && {
+        post: { connect: { id: postId } },
+      }),
+      ...(commentId && {
+        comment: { connect: { id: commentId } },
+      }),
       reported_by: { connect: { id: userId } },
       reported_user: { connect: { id: reportedUserId } },
     });
