@@ -1,10 +1,10 @@
 import { notFound } from "next/navigation";
 
 import Footer from "@/components/common/layouts/footer";
-import ProfilePage from "@/components/modules/profile";
+import ProfilePage from "@/components/modules/your-page";
 import { Center } from "@/components/ui/center";
 
-export default function Profile({
+export default function YourPage({
   params,
 }: Readonly<{
   params: { username: `@${string}` };
