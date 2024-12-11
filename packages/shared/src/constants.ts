@@ -36,7 +36,13 @@ const USER = {
     MIN_LENGTH: 1,
     MAX_LENGTH: 30,
   },
-  AVATAR_MAX_SIZE: 2 * 1024 * 1024, // 2MB
+  URL: {
+    MAX_LENGTH: 100,
+  },
+  AVATAR: {
+    MAX_SIZE: 2 * 1024 * 1024, // 2MB
+    ACCEPTED_MIME_TYPES: ["image/jpeg", "image/jpg", "image/png"],
+  },
 };
 
 const WEIGHTS = {

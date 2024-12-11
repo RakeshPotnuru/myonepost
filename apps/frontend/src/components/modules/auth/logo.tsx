@@ -21,6 +21,7 @@ export default function Logo() {
         alt="My One Post logo"
         width={450}
         height={350}
+        className="px-5 sm:px-0"
       />
     )
   );

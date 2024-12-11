@@ -16,8 +16,8 @@ export default function Subscribe({
 
   const { mutateAsync: subscribe, isPending: isSubscribing } =
     client.useMutation("post", "/subscribe", {
-      onError: () => {
-        toast.error("Something went wrong. Please try again.");
+      onError: (error: { message: string }) => {
+        toast.error(error.message);
       },
     });
 
@@ -35,8 +35,8 @@ export default function Subscribe({
 
   const { mutateAsync: unsubscribe, isPending: isUnSubscribing } =
     client.useMutation("delete", "/subscribe/{id}", {
-      onError: () => {
-        toast.error("Something went wrong. Please try again.");
+      onError: (error: { message: string }) => {
+        toast.error(error.message);
       },
     });
 

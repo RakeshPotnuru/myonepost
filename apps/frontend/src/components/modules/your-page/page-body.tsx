@@ -19,6 +19,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/reusables/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogTrigger,
+} from "@/components/ui/reusables/dialog";
 import usePageStore from "@/lib/store/page";
 import useUserStore from "@/lib/store/user";
 
@@ -26,14 +31,14 @@ import AudioContent from "../home/feed/post-card/audio-content";
 import ImageContent from "../home/feed/post-card/image-content";
 import TextContent from "../home/feed/post-card/text-content";
 import VideoContent from "../home/feed/post-card/video-content";
+import { CreatePostBlock } from "../home/sidebar/create";
+import DeletePost from "./delete-post";
+import EditProfile from "./edit-profile";
+import Subscribe from "./subscribe";
 
 export default function PageBody() {
   const { page } = usePageStore();
   const { user } = useUserStore();
-
-  if (!page) {
-    return <div>User not found</div>;
-  }
 
   if (!page?.post && !user) {
     return (
@@ -50,6 +55,10 @@ export default function PageBody() {
     );
   }
 
+  if (!page) {
+    return <div>User not found</div>;
+  }
+
   let postComponent;
 
   const { post, ...author } = page;
@@ -59,11 +68,16 @@ export default function PageBody() {
       user?.username === page.username ? (
         <Center className="flex flex-col gap-2 p-4">
           <p>You haven&apos;t created your post yet.</p>
-          <Link href={"/"} passHref>
-            <Button variant={"outline"} className="w-max">
-              Create your post
-            </Button>
-          </Link>
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button variant={"outline"} className="w-max">
+                Create your post
+              </Button>
+            </DialogTrigger>
+            <DialogContent onOpenAutoFocus={(e) => e.preventDefault()}>
+              <CreatePostBlock />
+            </DialogContent>
+          </Dialog>
         </Center>
       ) : (
         <Center className="p-4">
@@ -83,6 +97,7 @@ export default function PageBody() {
           author={author}
           media_url={post.media_url}
           media_caption={post.media_caption}
+          className="rounded-xl"
         />
       );
       break;
@@ -113,16 +128,15 @@ export default function PageBody() {
       break;
     }
   }
-  console.log(user, page);
 
   return (
     <Card className="border-none text-start shadow-none">
       {postComponent}
       <p className="mt-2">{post?.media_caption}</p>
-      <CardHeader className="flex flex-row justify-between px-0">
+      <CardHeader className="flex justify-between gap-2 px-0 sm:flex-row sm:gap-0">
         <div className="flex flex-row items-center gap-2">
           <Avatar className="h-8 w-8">
-            <AvatarImage src={page.avatar_url} />
+            <AvatarImage src={page.avatar_url ?? ""} />
             <AvatarFallback>{page.username[0].toUpperCase()}</AvatarFallback>
           </Avatar>
           <div>
@@ -131,11 +145,11 @@ export default function PageBody() {
           </div>
         </div>
         {user?.username === page.username && (
-          <div>
-            <Button variant={"secondary"}>Edit profile</Button>{" "}
-            <Button variant={"destructive"}>Delete Post</Button>
+          <div className="grid grid-cols-2 gap-2">
+            <EditProfile /> <DeletePost />
           </div>
         )}
+        <Subscribe />
       </CardHeader>
       {page.bio && (
         <CardContent className="px-0">
@@ -143,7 +157,7 @@ export default function PageBody() {
         </CardContent>
       )}
       <CardFooter className="px-0">
-        <div className="flex flex-row items-center gap-4">
+        <div className="flex flex-row items-center gap-2 sm:gap-4">
           <div className="flex flex-row items-center gap-2 text-sm text-muted-foreground">
             <Icons.Calendar />
             <time dateTime={page.created_at.toString()}>
@@ -165,7 +179,9 @@ export default function PageBody() {
 }
 
 function getDomain(url: string): string | null {
+  // eslint-disable-next-line security/detect-unsafe-regex
   const match = new RegExp(
+    // eslint-disable-next-line security/detect-unsafe-regex
     /^(?:https?:\/\/)?(?:[^\n@]+@)?(?:www\.)?([^\n/:?]+)/im,
   ).exec(url);
   return match ? match[1] : null;

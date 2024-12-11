@@ -49,7 +49,7 @@ export class UserController {
   @UseGuards(JwtGuard)
   @Patch()
   update(@GetUser("id") id: string, @Body() updateUserDto: UpdateUserDto) {
-    this.userService.update(id, updateUserDto);
+    return this.userService.update(id, updateUserDto);
   }
 
   @ApiOperation({ summary: "Update current user username" })
@@ -60,7 +60,7 @@ export class UserController {
     @GetUser("id") id: string,
     @Body() updateUsernameDto: UpdateUsernameDto,
   ) {
-    this.userService.update(id, updateUsernameDto);
+    return this.userService.update(id, updateUsernameDto);
   }
 
   @ApiOperation({ summary: "Upload and update current user avatar" })

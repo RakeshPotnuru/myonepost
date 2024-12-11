@@ -367,8 +367,8 @@ export interface components {
     schemas: {
         UpdateUserDto: {
             bio?: string;
-            displayName?: string;
-            isPrivate?: boolean;
+            display_name?: string;
+            is_private?: boolean;
             url?: string;
         };
         UpdateUsernameDto: {

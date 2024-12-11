@@ -1,5 +1,6 @@
 import { CONSTANTS } from "@1post/shared";
 import { ApiProperty } from "@nestjs/swagger";
+import { Transform } from "class-transformer";
 import {
   IsBoolean,
   IsOptional,
@@ -22,15 +23,17 @@ export class UpdateUserDto {
     CONSTANTS.USER.DISPLAY_NAME.MIN_LENGTH,
     CONSTANTS.USER.DISPLAY_NAME.MAX_LENGTH,
   )
-  displayName?: string;
+  display_name?: string;
 
   @ApiProperty({ required: false })
   @IsOptional()
   @IsBoolean()
-  isPrivate?: boolean;
+  is_private?: boolean;
 
   @ApiProperty({ required: false })
   @IsOptional()
+  @Transform(({ value }) => value || undefined)
   @IsUrl()
+  @Length(0, CONSTANTS.USER.URL.MAX_LENGTH)
   url?: string;
 }

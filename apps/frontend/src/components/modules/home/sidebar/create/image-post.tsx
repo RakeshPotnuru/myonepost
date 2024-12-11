@@ -15,6 +15,7 @@ import type { z } from "zod";
 import { Icons } from "@/assets/icons";
 import { Button } from "@/components/ui/reusables/button";
 import { queryClient, queryKeys } from "@/lib/providers/react-query";
+import useUserStore from "@/lib/store/user";
 import { mimeToExtensions } from "@/utils/mime-to-extensions";
 import { shortenText } from "@/utils/text-shortener";
 
@@ -40,11 +41,14 @@ export default function CreateImagePost() {
 
   const watchCaption = form.watch("caption", "");
 
+  const { user } = useUserStore();
+
   const onSubmit = async (values: z.infer<typeof CaptionFormSchema>) => {
     if (!file) {
       return;
     }
 
+    let compressedFile;
     try {
       setIsCompressing(true);
       const options: Options = {
@@ -54,11 +58,11 @@ export default function CreateImagePost() {
       };
 
       // Compress the image
-      const compressedFile = await imageCompression(file, options);
+      compressedFile = await imageCompression(file, options);
       // Double-check final size
       if (compressedFile.size > CONSTANTS.POST.IMAGE_POST.MAX_SIZE) {
         toast.error(
-          `Your image size is too large. Max size is ${CONSTANTS.POST.IMAGE_POST.MAX_SIZE / 1024}MB`,
+          `Your image size is too large. Max size is ${CONSTANTS.POST.IMAGE_POST.MAX_SIZE / (1024 * 1024)}MB`,
         );
         return;
       }
@@ -71,7 +75,7 @@ export default function CreateImagePost() {
 
     try {
       const data = new FormData();
-      data.append("file", file);
+      data.append("file", compressedFile);
       if (values.caption) data.append("mediaCaption", values.caption);
 
       await mutateAsync(data);
@@ -80,6 +84,9 @@ export default function CreateImagePost() {
       setIsOpen(false);
       form.reset();
       await queryClient.invalidateQueries({ queryKey: [queryKeys.me] });
+      await queryClient.invalidateQueries({
+        queryKey: [`@${user?.username}`],
+      });
     } catch {
       toast.error("Failed to create post");
     }

@@ -10,8 +10,7 @@ const createImagePost = async (data: FormData) => {
         "Content-Type": "multipart/form-data",
       },
     });
-  } catch (error) {
-    console.trace(error);
+  } catch {
     throw new Error("Something went wrong");
   }
 };

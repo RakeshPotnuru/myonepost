@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/reusables/form";
 import { Textarea } from "@/components/ui/reusables/textarea";
 import { queryClient, queryKeys } from "@/lib/providers/react-query";
+import useUserStore from "@/lib/store/user";
 import client from "@/utils/api-client";
 
 import CreateDialog from "./create-dialog";
@@ -47,6 +48,8 @@ export default function CreateTextPost() {
     },
   });
 
+  const { user } = useUserStore();
+
   const onSubmit = async (data: z.infer<typeof FormSchema>) => {
     try {
       await mutateAsync({ body: { text: data.text } });
@@ -56,7 +59,12 @@ export default function CreateTextPost() {
       form.reset({
         text: "",
       });
-      await queryClient.invalidateQueries({ queryKey: [queryKeys.me] });
+      await queryClient.invalidateQueries({
+        queryKey: [queryKeys.me],
+      });
+      await queryClient.invalidateQueries({
+        queryKey: [`@${user?.username}`],
+      });
     } catch {
       // ignore
     }

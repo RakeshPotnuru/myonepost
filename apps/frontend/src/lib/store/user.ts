@@ -18,7 +18,7 @@ interface IUserState {
 }
 
 interface IUserActions {
-  updateUser: (user: MeResponse) => void;
+  updateUser: (user: Partial<MeResponse>) => void;
   addSubscriber: (targetId: string) => void;
   removeSubscriber: (targetId: string) => void;
   addPostLike: (postId: string) => void;
@@ -36,7 +36,12 @@ const useUserStore = create<IUserState & IUserActions>()(
       }),
     updateUser: (user) =>
       set((state) => {
-        state.user = user;
+        if (state.user) {
+          state.user = {
+            ...state.user,
+            ...user,
+          };
+        }
       }),
     addSubscriber: (targetId) =>
       set((state) => {

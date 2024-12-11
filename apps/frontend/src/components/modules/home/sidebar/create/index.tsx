@@ -45,7 +45,7 @@ export default function Create() {
   );
 }
 
-function CreatePostBlock() {
+export function CreatePostBlock() {
   const { user, isLoading } = useUserStore();
 
   const bodyView =

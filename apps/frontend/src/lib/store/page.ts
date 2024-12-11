@@ -6,10 +6,10 @@ export type PageResponse = {
   created_at: Date;
   updated_at: Date;
   username: string;
-  display_name: string;
-  bio: null;
-  avatar_url: string;
-  url: null;
+  display_name: string | null;
+  bio: string | null;
+  avatar_url: string | null;
+  url: string | null;
   subscriber_count: number;
   email?: string;
   is_private?: boolean;
@@ -22,9 +22,9 @@ export interface Post {
   created_at: Date;
   updated_at: Date;
   post_type: string;
-  text: null;
-  media_url: string;
-  media_caption: string;
+  text: string | null;
+  media_url: string | null;
+  media_caption: string | null;
   comment_count: number;
   like_count: number;
   status?: string;
@@ -38,7 +38,7 @@ interface IPageState {
 }
 
 interface IPageActions {
-  updatePage: (page: PageResponse) => void;
+  updatePage: (page: Partial<PageResponse>) => void;
 }
 
 const usePageStore = create<IPageState & IPageActions>()(
@@ -52,7 +52,12 @@ const usePageStore = create<IPageState & IPageActions>()(
       }),
     updatePage: (page) =>
       set((state) => {
-        state.page = page;
+        if (state.page) {
+          state.page = {
+            ...state.page,
+            ...page,
+          };
+        }
       }),
   })),
 );

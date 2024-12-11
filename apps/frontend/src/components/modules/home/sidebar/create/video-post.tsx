@@ -16,6 +16,7 @@ import { Button } from "@/components/ui/reusables/button";
 import { Progress } from "@/components/ui/reusables/progress";
 import { siteConfig } from "@/config/site";
 import { queryClient, queryKeys } from "@/lib/providers/react-query";
+import useUserStore from "@/lib/store/user";
 import client from "@/utils/api-client";
 import { mimeToExtensions } from "@/utils/mime-to-extensions";
 import { shortenText } from "@/utils/text-shortener";
@@ -92,6 +93,8 @@ export default function CreateVideoPost() {
     },
   });
 
+  const { user } = useUserStore();
+
   const onSubmit = useCallback(
     async (values: z.infer<typeof CaptionFormSchema>) => {
       if (!file) return;
@@ -126,12 +129,15 @@ export default function CreateVideoPost() {
           setProgress(0);
           form.reset({ caption: "" });
           await queryClient.invalidateQueries({ queryKey: [queryKeys.me] });
+          await queryClient.invalidateQueries({
+            queryKey: [`@${user?.username}`],
+          });
         });
       } catch {
         // ignore
       }
     },
-    [file, form, mutateAsync, setFile],
+    [file, form, mutateAsync, setFile, user?.username],
   );
 
   const onDrop = useCallback(
