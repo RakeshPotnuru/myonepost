@@ -37,13 +37,16 @@ export default function DeletePost() {
   };
 
   if (!page?.post) {
-    return;
+    return null;
   }
 
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button variant={"destructive"}>Delete post</Button>
+        <Button variant={"destructive"} disabled={isPending}>
+          <ButtonLoader isLoading={isPending} />
+          Delete post
+        </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
@@ -63,7 +66,6 @@ export default function DeletePost() {
         <AlertDialogFooter>
           <AlertDialogCancel disabled={isPending}>Cancel</AlertDialogCancel>
           <AlertDialogAction onClick={onConfirm} disabled={isPending}>
-            <ButtonLoader isLoading={isPending} />
             Delete
           </AlertDialogAction>
         </AlertDialogFooter>

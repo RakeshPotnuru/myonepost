@@ -12,23 +12,23 @@ const fetchTrendingFeed = async (): Promise<FeedResponse[]> => {
     .from("post_scores")
     .select(
       `
-        score,
-        post:posts (
-        id,
-        created_at,
-        post_type,
-        text,
-        media_url,
-        media_caption,
-        comment_count,
-        like_count,
-        author:users (
-            id,
-            username,
-            display_name,
-            avatar_url
-        )
-        )
+      score,
+      post:posts (
+      id,
+      created_at,
+      post_type,
+      text,
+      media_url,
+      media_caption,
+      comment_count,
+      like_count,
+      author:users (
+          id,
+          username,
+          display_name,
+          avatar_url
+      )
+      )
     `,
     )
     .order("score", {
@@ -76,21 +76,21 @@ const fetchFreshFeed = async (): Promise<FeedResponse[]> => {
     .from("posts")
     .select(
       `
-        id,
-        created_at,
-        post_type,
-        text,
-        media_url,
-        media_caption,
-        comment_count,
-        like_count,
-        status,
-        author:users (
-            id,
-            username,
-            display_name,
-            avatar_url
-        )
+      id,
+      created_at,
+      post_type,
+      text,
+      media_url,
+      media_caption,
+      comment_count,
+      like_count,
+      status,
+      author:users (
+          id,
+          username,
+          display_name,
+          avatar_url
+      )
     `,
     )
     .eq("status", "APPROVED")
@@ -120,26 +120,26 @@ const fetchSubscribedFeed = async (): Promise<FeedResponse[]> => {
     .from("posts")
     .select(
       `
-    id,
-    created_at,
-    post_type,
-    text,
-    media_url,
-    media_caption,
-    comment_count,
-    like_count,
-    status,
-    user_id,
-    user:users (
       id,
-      username,
-      display_name,
-      avatar_url
-    ),
-    post_score:post_scores (
-      score
-    )
-  `,
+      created_at,
+      post_type,
+      text,
+      media_url,
+      media_caption,
+      comment_count,
+      like_count,
+      status,
+      user_id,
+      user:users (
+        id,
+        username,
+        display_name,
+        avatar_url
+      ),
+      post_score:post_scores (
+        score
+      )
+    `,
     )
     .in(
       "user_id",

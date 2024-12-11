@@ -15,10 +15,10 @@ export default function Feed() {
   const { deletePost, activeFeedType, setActiveFeedType } = useFeedStore();
 
   useEffect(() => {
-    const client = createClient();
+    const supabase = createClient();
 
-    const channel = client
-      .channel("custom-delete-channel")
+    const channel = supabase
+      .channel("delete-post")
       .on(
         "postgres_changes",
         {
@@ -33,7 +33,7 @@ export default function Feed() {
       .subscribe();
 
     return () => {
-      channel.unsubscribe().catch(() => {});
+      void supabase.removeChannel(channel);
     };
   }, [deletePost]);
 

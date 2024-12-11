@@ -11,11 +11,11 @@ export default function Subscribe() {
   const { page } = usePageStore();
 
   if (!page) {
-    return;
+    return null;
   }
 
   if (user?.username === page.username) {
-    return;
+    return null;
   }
 
   const { mutateAsync: subscribe, isPending: isSubscribing } =
