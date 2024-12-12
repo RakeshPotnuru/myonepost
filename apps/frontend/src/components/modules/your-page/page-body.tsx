@@ -34,6 +34,7 @@ import VideoContent from "../home/feed/post-card/video-content";
 import { CreatePostBlock } from "../home/sidebar/create";
 import DeletePost from "./delete-post";
 import EditProfile from "./edit-profile";
+import PostStatusAlert from "./post-status-alert";
 import Subscribe from "./subscribe";
 
 export default function PageBody() {
@@ -131,6 +132,7 @@ export default function PageBody() {
 
   return (
     <Card className="border-none text-start shadow-none">
+      <PostStatusAlert />
       {postComponent}
       <p className="mt-2">{post?.media_caption}</p>
       <CardHeader className="flex justify-between gap-2 px-0 sm:flex-row sm:gap-0">

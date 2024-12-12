@@ -18,10 +18,11 @@ export class PostService {
   async create(
     createPostDto: Omit<Prisma.postsCreateInput, "user">,
     user: users,
+    isPostSafe: boolean,
   ) {
-    const nextPostAllowedAt = new Date(
-      new Date().getTime() + 24 * 60 * 60 * 1000,
-    ); // next post after 24 hours
+    const nextPostAllowedAt = isPostSafe
+      ? new Date(new Date().getTime() + 24 * 60 * 60 * 1000)
+      : null; // next post after 24 hours
 
     await this.remove(user.id, createPostDto.post_type);
 

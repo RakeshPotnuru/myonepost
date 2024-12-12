@@ -1,5 +1,7 @@
 import { BsFillSunFill } from "react-icons/bs";
 import { FaImage, FaLink, FaVideo } from "react-icons/fa6";
+import { FaBan } from "react-icons/fa6";
+import { FaRegClock } from "react-icons/fa6";
 import { GoBell } from "react-icons/go";
 import { IoMdTrendingUp } from "react-icons/io";
 import { IoCalendar, IoText } from "react-icons/io5";
@@ -24,4 +26,6 @@ export const GeneralIcons = {
   Sun: BsFillSunFill,
   Flag: TbFlag3,
   Loading: TbLoader,
+  Reject: FaBan,
+  Clock: FaRegClock,
 };

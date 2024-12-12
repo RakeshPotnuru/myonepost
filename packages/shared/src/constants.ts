@@ -24,6 +24,7 @@ const POST = {
   POST_MEDIA_CAPTION: {
     MAX_LENGTH: 150,
   },
+  MODERATION_THRESHOLD: 0.8,
 };
 
 const USER = {

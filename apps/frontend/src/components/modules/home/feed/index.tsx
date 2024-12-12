@@ -6,9 +6,9 @@ import { Tabs } from "@/components/ui/reusables/tabs";
 import useFeedStore from "@/lib/store/feed";
 import { createClient } from "@/utils/supabase/client";
 
+import FeedTabsList from "./common/tabs-list";
 import FreshFeed from "./fresh-feed";
 import SubscribedFeed from "./subscribed-feed";
-import FeedTabsList from "./tabs-list";
 import TrendingFeed from "./trending-feed";
 
 export default function Feed() {

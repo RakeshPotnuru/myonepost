@@ -29,11 +29,14 @@ export default function ProfilePage({ username }: Readonly<ProfilePageProps>) {
       setPage(data);
       setIsLoading(false);
     }
+  }, [data, setPage, setIsLoading]);
+
+  useEffect(() => {
     if (user) {
       setUser(user);
       setIsUserLoading(false);
     }
-  }, [data, setPage, setIsLoading, setIsUserLoading, user, setUser]);
+  }, [user, setUser, setIsUserLoading]);
 
   return (
     <Center className="flex flex-col space-y-8">

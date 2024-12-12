@@ -16,6 +16,7 @@ import { ReportModule } from "./report/report.module";
 import { ReportService } from "./report/report.service";
 import { SubscribeModule } from "./subscribe/subscribe.module";
 import { UserModule } from "./user/user.module";
+import { GoogleNlpModule } from "./google-nlp/google-nlp.module";
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { UserModule } from "./user/user.module";
     LikeModule,
     NotificationModule,
     ReportModule,
+    GoogleNlpModule,
   ],
   providers: [JwtStrategy, ReportService],
 })

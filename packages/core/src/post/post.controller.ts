@@ -21,6 +21,7 @@ import { JwtGuard } from "src/auth/guard";
 import { CloudinaryService } from "src/cloudinary/cloudinary.service";
 import { ApiFileUpload } from "src/common/decorator";
 import { Env } from "src/env.validation";
+import { GoogleNlpService } from "src/google-nlp/google-nlp.service";
 import { MuxService } from "src/mux/mux.service";
 import {
   CreateAudioPostDto,
@@ -39,25 +40,29 @@ export class PostController {
     private readonly cloudinary: CloudinaryService,
     private readonly mux: MuxService,
     private readonly config: ConfigService<Env>,
+    private readonly googleNlp: GoogleNlpService,
   ) {}
 
   @ApiOperation({ summary: "Create a text post" })
   @HttpCode(HttpStatus.CREATED)
   @UseGuards(JwtGuard)
   @Post("text")
-  createTextPost(
+  async createTextPost(
     @GetUser() user: users,
     @Body() createTextPostDto: CreateTextPostDto,
   ) {
     this.postService.canPost(user);
 
+    const isTextSafe = await this.googleNlp.isTextSafe(createTextPostDto.text);
+
     return this.postService.create(
       {
         post_type: "TEXT",
         text: createTextPostDto.text,
-        status: "APPROVED",
+        status: isTextSafe ? "APPROVED" : "FLAGGED",
       },
       user,
+      isTextSafe,
     );
   }
 
@@ -95,6 +100,7 @@ export class PostController {
         status: "APPROVED",
       },
       user,
+      true,
     );
   }
 
@@ -116,6 +122,7 @@ export class PostController {
         media_caption: createVideoPostDto.mediaCaption,
       },
       user,
+      true,
     );
 
     return { url };
@@ -139,6 +146,7 @@ export class PostController {
         media_caption: createAudioPostDto.mediaCaption,
       },
       user,
+      true,
     );
 
     return { url };

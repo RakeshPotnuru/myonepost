@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "@1post/shared": "workspace:*",
+    "@google-cloud/language": "^6.5.0",
     "@mux/mux-node": "^8.8.0",
     "@nestjs/common": "^10.0.0",
     "@nestjs/config": "^3.2.3",
