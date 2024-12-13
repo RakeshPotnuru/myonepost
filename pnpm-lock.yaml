@@ -228,6 +228,9 @@ importers:
       '@google-cloud/language':
         specifier: ^6.5.0
         version: 6.5.0
+      '@google-cloud/vision':
+        specifier: ^4.3.2
+        version: 4.3.2
       '@mux/mux-node':
         specifier: ^8.8.0
         version: 8.8.0
@@ -911,6 +914,23 @@ packages:
     engines: {node: '>=14.0.0'}
     dependencies:
       google-gax: 4.4.1
+    transitivePeerDependencies:
+      - encoding
+      - supports-color
+    dev: false
+
+  /@google-cloud/promisify@4.0.0:
+    resolution: {integrity: sha512-Orxzlfb9c67A15cq2JQEyVc7wEsmFBmHjZWZYQMUyJ1qivXyMwdyNOs9odi79hze+2zqdTtu1E19IM/FtqZ10g==}
+    engines: {node: '>=14'}
+    dev: false
+
+  /@google-cloud/vision@4.3.2:
+    resolution: {integrity: sha512-JZBM1yW3jspMeYpbtB/HpFbGSwUmQsVXhb+3kwXlkliZJIJ7nomTZC8lFG9obJP1t27tWLMURlmz5EU/H7e7Ow==}
+    engines: {node: '>=14.0.0'}
+    dependencies:
+      '@google-cloud/promisify': 4.0.0
+      google-gax: 4.4.1
+      is: 3.3.0
     transitivePeerDependencies:
       - encoding
       - supports-color
@@ -6676,6 +6696,10 @@ packages:
       call-bind: 1.0.7
       get-intrinsic: 1.2.4
     dev: true
+
+  /is@3.3.0:
+    resolution: {integrity: sha512-nW24QBoPcFGGHJGUwnfpI7Yc5CdqWNdsyHQszVE/z2pKHXzh7FZ5GWhJqSyaQ9wMkQnsTx+kAI8bHlCX4tKdbg==}
+    dev: false
 
   /isarray@1.0.0:
     resolution: {integrity: sha512-VLghIWNM6ELQzo7zwmcg0NmTVyWKYjvIeM83yjp0wRDTmUnrM678fQbcKBo6n2CJEF0szoG//ytg+TKla89ALQ==}

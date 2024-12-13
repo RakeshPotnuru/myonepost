@@ -54,7 +54,9 @@ export default function CreateTextPost() {
     try {
       await mutateAsync({ body: { text: data.text } });
 
-      toast.success("Posted successfully.");
+      toast.success(
+        "Submitted successfully. You will be notified when published.",
+      );
       setIsOpen(false);
       form.reset({
         text: "",

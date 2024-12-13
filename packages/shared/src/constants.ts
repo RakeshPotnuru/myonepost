@@ -24,7 +24,10 @@ const POST = {
   POST_MEDIA_CAPTION: {
     MAX_LENGTH: 150,
   },
-  MODERATION_THRESHOLD: 0.8,
+  MODERATION_THRESHOLD: {
+    TEXT: 0.8,
+    IMAGE: ["LIKELY", "VERY_UNLIKELY"],
+  },
 };
 
 const USER = {

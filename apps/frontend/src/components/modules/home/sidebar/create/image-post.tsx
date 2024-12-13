@@ -80,7 +80,9 @@ export default function CreateImagePost() {
 
       await mutateAsync(data);
 
-      toast.success("You will be notified when posted.");
+      toast.success(
+        "Submitted successfully. You will be notified when posted.",
+      );
       setIsOpen(false);
       form.reset();
       await queryClient.invalidateQueries({ queryKey: [queryKeys.me] });

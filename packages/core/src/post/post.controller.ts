@@ -21,7 +21,7 @@ import { JwtGuard } from "src/auth/guard";
 import { CloudinaryService } from "src/cloudinary/cloudinary.service";
 import { ApiFileUpload } from "src/common/decorator";
 import { Env } from "src/env.validation";
-import { GoogleNlpService } from "src/google-nlp/google-nlp.service";
+import { GoogleService } from "src/google/google.service";
 import { MuxService } from "src/mux/mux.service";
 import {
   CreateAudioPostDto,
@@ -40,7 +40,7 @@ export class PostController {
     private readonly cloudinary: CloudinaryService,
     private readonly mux: MuxService,
     private readonly config: ConfigService<Env>,
-    private readonly googleNlp: GoogleNlpService,
+    private readonly google: GoogleService,
   ) {}
 
   @ApiOperation({ summary: "Create a text post" })
@@ -53,7 +53,7 @@ export class PostController {
   ) {
     this.postService.canPost(user);
 
-    const isTextSafe = await this.googleNlp.isTextSafe(createTextPostDto.text);
+    const isTextSafe = await this.google.isTextSafe(createTextPostDto.text);
 
     return this.postService.create(
       {
@@ -62,7 +62,6 @@ export class PostController {
         status: isTextSafe ? "APPROVED" : "FLAGGED",
       },
       user,
-      isTextSafe,
     );
   }
 
@@ -92,15 +91,19 @@ export class PostController {
 
     const mediaUrl = result.secure_url;
 
+    const isImageSafe = await this.google.isImageSafe(mediaUrl);
+    const isCaptionSafe = await this.google.isTextSafe(
+      createImagePostDto.mediaCaption,
+    );
+
     return await this.postService.create(
       {
         post_type: "IMAGE",
         media_url: mediaUrl,
         media_caption: createImagePostDto.mediaCaption,
-        status: "APPROVED",
+        status: isImageSafe && isCaptionSafe ? "APPROVED" : "FLAGGED",
       },
       user,
-      true,
     );
   }
 
@@ -122,7 +125,6 @@ export class PostController {
         media_caption: createVideoPostDto.mediaCaption,
       },
       user,
-      true,
     );
 
     return { url };
@@ -146,7 +148,6 @@ export class PostController {
         media_caption: createAudioPostDto.mediaCaption,
       },
       user,
-      true,
     );
 
     return { url };

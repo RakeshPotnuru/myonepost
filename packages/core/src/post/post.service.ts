@@ -1,9 +1,18 @@
-import { CONSTANTS, PostType, Prisma, users } from "@1post/shared";
+import {
+  CONSTANTS,
+  Events,
+  NotificationType,
+  PostType,
+  Prisma,
+  users,
+} from "@1post/shared";
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
+import { EventEmitter2 } from "@nestjs/event-emitter";
 import { CloudinaryService } from "src/cloudinary/cloudinary.service";
 import { Env } from "src/env.validation";
 import { MuxService } from "src/mux/mux.service";
+import { NotificationCreateEvent } from "src/notification/notification.events";
 import { PrismaService } from "src/prisma/prisma.service";
 
 @Injectable()
@@ -13,21 +22,23 @@ export class PostService {
     private readonly cloudinary: CloudinaryService,
     private readonly mux: MuxService,
     private readonly config: ConfigService<Env>,
+    private readonly eventEmitter: EventEmitter2,
   ) {}
 
   async create(
     createPostDto: Omit<Prisma.postsCreateInput, "user">,
     user: users,
-    isPostSafe: boolean,
   ) {
+    const isPostSafe = createPostDto.status !== "FLAGGED";
+
     const nextPostAllowedAt = isPostSafe
-      ? new Date(new Date().getTime() + 24 * 60 * 60 * 1000)
+      ? new Date(new Date().getTime() + CONSTANTS.POST.NEXT_POST_ALLOWED_AT)
       : null; // next post after 24 hours
 
     await this.remove(user.id, createPostDto.post_type);
 
     try {
-      return (
+      const { id } = (
         await this.prisma.$transaction([
           this.prisma.posts.create({
             data: {
@@ -45,6 +56,19 @@ export class PostService {
           }),
         ])
       )[1];
+
+      this.eventEmitter.emit(
+        Events.NOTIFICATION_CREATE,
+        new NotificationCreateEvent({
+          userId: user.id,
+          type: NotificationType.ALERT,
+          content: isPostSafe
+            ? "Your post has been published."
+            : `Your post has been flagged by our system. It's currently in review.`,
+        }),
+      );
+
+      return id;
     } catch (error) {
       console.log(error);
 

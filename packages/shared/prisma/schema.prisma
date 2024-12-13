@@ -153,6 +153,7 @@ enum NotificationType {
   NEW_COMMENT_LIKE
   NEW_COMMENT
   NEW_SUBSCRIBER
+  ALERT
 }
 
 model reports {
