@@ -36,7 +36,7 @@ export default function DeletePost() {
     }
   };
 
-  if (!page?.post) {
+  if (!page?.post || page.post.status === "PENDING") {
     return null;
   }
 

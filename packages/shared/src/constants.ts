@@ -27,6 +27,7 @@ const POST = {
   MODERATION_THRESHOLD: {
     TEXT: 0.8,
     IMAGE: ["LIKELY", "VERY_UNLIKELY"],
+    VIDEO: 4,
   },
 };
 
@@ -93,4 +94,5 @@ export enum FeedType {
 
 export enum Events {
   NOTIFICATION_CREATE = "notification.create",
+  VIDEO_CHECK = "video.check",
 }

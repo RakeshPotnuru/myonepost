@@ -5,7 +5,7 @@ import { memo, useCallback, useState } from "react";
 import { CONSTANTS } from "@1post/shared";
 import { zodResolver } from "@hookform/resolvers/zod";
 import MuxPlayer from "@mux/mux-player-react/lazy";
-import * as UpChunk from "@mux/upchunk";
+import axios from "axios";
 import { useDropzone } from "react-dropzone";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -13,7 +13,6 @@ import type { z } from "zod";
 
 import { Icons } from "@/assets/icons";
 import { Button } from "@/components/ui/reusables/button";
-import { Progress } from "@/components/ui/reusables/progress";
 import { siteConfig } from "@/config/site";
 import { queryClient, queryKeys } from "@/lib/providers/react-query";
 import useUserStore from "@/lib/store/user";
@@ -28,12 +27,10 @@ import Dropzone from "./dropzone";
 const MemoizedDropzoneContent = memo(
   ({
     file,
-    progress,
     setFile,
     isDisabled,
   }: {
     file: File | undefined;
-    progress: number;
     setFile: (file: File | undefined) => void;
     isDisabled: boolean;
   }) =>
@@ -56,18 +53,10 @@ const MemoizedDropzoneContent = memo(
             <Icons.Close className="size-4" />
           </Button>
         </div>
-        {progress > 0 && (
-          <div className="flex w-full flex-row items-center">
-            <Progress value={progress} />
-            <p className="ml-2 text-sm font-medium text-muted-foreground">
-              {progress === 100 ? "Processing..." : `${progress}%`}
-            </p>
-          </div>
-        )}
       </div>
     ) : (
       <p className="text-muted-foreground">
-        Drag & drop the video here or click to choose (60 seconds or less)
+        Drag & drop the video (mp4) here or click to choose (60 seconds or less)
       </p>
     ),
 );
@@ -75,7 +64,6 @@ MemoizedDropzoneContent.displayName = "DropzoneContent";
 
 export default function CreateVideoPost() {
   const [isOpen, setIsOpen] = useState(false);
-  const [progress, setProgress] = useState(0);
   const [isUploading, setIsUploading] = useState(false);
   const [file, setFile] = useState<File>();
 
@@ -87,11 +75,26 @@ export default function CreateVideoPost() {
     },
   });
 
-  const { mutateAsync, isPending } = client.useMutation("post", "/post/video", {
-    onError: () => {
-      toast.error("Something went wrong. Please try again later.");
+  const { mutateAsync, isPending } = client.useMutation(
+    "post",
+    "/post/upload",
+    {
+      onError: () => {
+        toast.error("Something went wrong. Please try again later.");
+        setIsUploading(false);
+      },
     },
-  });
+  );
+
+  const { mutateAsync: createPost, isPending: isPostPending } =
+    client.useMutation("post", "/post/video", {
+      onError: (error) => {
+        console.log({ error });
+
+        toast.error("Something went wrong. Please try again later.");
+        setIsUploading(false);
+      },
+    });
 
   const { user } = useUserStore();
 
@@ -99,45 +102,37 @@ export default function CreateVideoPost() {
     async (values: z.infer<typeof CaptionFormSchema>) => {
       if (!file) return;
 
-      setIsUploading(true);
-
       try {
-        const response = (await mutateAsync({
+        setIsUploading(true);
+        const response = (await mutateAsync({})) as { url: string };
+
+        await axios.put(response.url, file, {
+          headers: {
+            "Content-Type": "application/octet-stream",
+          },
+        });
+        setIsUploading(false);
+
+        await createPost({
           body: { mediaCaption: values.caption },
-        })) as { url: string };
-
-        const upload = UpChunk.createUpload({
-          endpoint: response.url,
-          file,
         });
 
-        upload.on("error", (error) => {
-          toast.error(error.detail as string);
+        toast.success(
+          "Submitted successfully. You will be notified when posted.",
+        );
+        setIsOpen(false);
+        setFile(undefined);
+        form.reset({ caption: "" });
+        await queryClient.invalidateQueries({ queryKey: [queryKeys.me] });
+        await queryClient.invalidateQueries({
+          queryKey: [`@${user?.username}`],
         });
-
-        upload.on("progress", (progress) => {
-          setProgress(Math.round(progress.detail as number));
-        });
-
-        upload.on("success", async () => {
-          toast.success(
-            "Video uploaded successfully. You will be notified when posted.",
-          );
-          setIsOpen(false);
-          setIsUploading(false);
-          setFile(undefined);
-          setProgress(0);
-          form.reset({ caption: "" });
-          await queryClient.invalidateQueries({ queryKey: [queryKeys.me] });
-          await queryClient.invalidateQueries({
-            queryKey: [`@${user?.username}`],
-          });
-        });
+        // });
       } catch {
         // ignore
       }
     },
-    [file, form, mutateAsync, setFile, user?.username],
+    [file, form, mutateAsync, setFile, user?.username, createPost],
   );
 
   const onDrop = useCallback(
@@ -173,7 +168,8 @@ export default function CreateVideoPost() {
     [setFile],
   );
 
-  const isDisabled = isPending || form.formState.isSubmitting || isUploading;
+  const isDisabled =
+    isPending || form.formState.isSubmitting || isUploading || isPostPending;
 
   const {
     getRootProps,
@@ -208,7 +204,6 @@ export default function CreateVideoPost() {
       >
         <MemoizedDropzoneContent
           file={file}
-          progress={progress}
           setFile={setFile}
           isDisabled={isDisabled}
         />

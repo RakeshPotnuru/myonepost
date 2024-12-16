@@ -75,8 +75,11 @@ export default function PageBody() {
                 Create your post
               </Button>
             </DialogTrigger>
-            <DialogContent onOpenAutoFocus={(e) => e.preventDefault()}>
-              <CreatePostBlock />
+            <DialogContent
+              onOpenAutoFocus={(e) => e.preventDefault()}
+              aria-describedby="undefined"
+            >
+              <CreatePostBlock className="border-none" />
             </DialogContent>
           </Dialog>
         </Center>

@@ -11,6 +11,7 @@ import { ConfigService } from "@nestjs/config";
 import { EventEmitter2 } from "@nestjs/event-emitter";
 import { CloudinaryService } from "src/cloudinary/cloudinary.service";
 import { Env } from "src/env.validation";
+import { GoogleService } from "src/google/google.service";
 import { MuxService } from "src/mux/mux.service";
 import { NotificationCreateEvent } from "src/notification/notification.events";
 import { PrismaService } from "src/prisma/prisma.service";
@@ -23,6 +24,7 @@ export class PostService {
     private readonly mux: MuxService,
     private readonly config: ConfigService<Env>,
     private readonly eventEmitter: EventEmitter2,
+    private readonly google: GoogleService,
   ) {}
 
   async create(
@@ -57,18 +59,20 @@ export class PostService {
         ])
       )[1];
 
-      this.eventEmitter.emit(
-        Events.NOTIFICATION_CREATE,
-        new NotificationCreateEvent({
-          userId: user.id,
-          type: NotificationType.ALERT,
-          content: isPostSafe
-            ? "Your post has been published."
-            : `Your post has been flagged by our system. It's currently in review.`,
-        }),
-      );
+      if (createPostDto.status !== "PENDING") {
+        this.eventEmitter.emit(
+          Events.NOTIFICATION_CREATE,
+          new NotificationCreateEvent({
+            userId: user.id,
+            type: NotificationType.ALERT,
+            content: isPostSafe
+              ? "Your post has been published."
+              : `Your post has been flagged by our system. It's currently in review.`,
+          }),
+        );
+      }
 
-      return id;
+      return { id };
     } catch (error) {
       console.log(error);
 
@@ -107,6 +111,13 @@ export class PostService {
 
       if (!post) {
         return;
+      }
+
+      if (post.status === "PENDING") {
+        throw new HttpException(
+          "Cannot delete a post when it's in pending status.",
+          HttpStatus.FORBIDDEN,
+        );
       }
 
       if (
@@ -157,18 +168,13 @@ export class PostService {
     return true;
   }
 
-  async createUploadUrl(userId: string) {
-    return await this.mux.video.uploads
+  async createAsset(userId: string, url: string) {
+    return await this.mux.video.assets
       .create({
-        cors_origin:
-          this.config.get<Env["NODE_ENV"]>("NODE_ENV") === "development"
-            ? "*"
-            : this.config.get<string>("CLIENT_URL"),
-        new_asset_settings: {
-          playback_policy: ["public"],
-          encoding_tier: "baseline",
-          passthrough: userId,
-        },
+        input: [{ url }],
+        playback_policy: ["public"],
+        encoding_tier: "baseline",
+        passthrough: userId,
       })
       .catch((error) => {
         console.error("Mux upload creation failed:", error);
@@ -178,5 +184,60 @@ export class PostService {
           HttpStatus.INTERNAL_SERVER_ERROR,
         );
       });
+  }
+
+  async checkVideo(userId: string, playbackId: string, assetId: string) {
+    try {
+      const isVideoSafe = await this.google.isVideoSafe(
+        `gs://${this.config.get("GCS_BUCKET_NAME")}/${userId}.mp4`,
+        `${userId}.mp4`,
+      );
+
+      const caption = (
+        await this.prisma.posts.findUnique({
+          where: { user_id: userId, post_type: "VIDEO" },
+          select: { media_caption: true },
+        })
+      ).media_caption;
+
+      const isCaptionSafe = caption
+        ? await this.google.isTextSafe(caption)
+        : true;
+
+      await this.prisma.$transaction(async (tx) => {
+        await tx.posts.update({
+          where: { user_id: userId },
+          data: {
+            status: isVideoSafe && isCaptionSafe ? "APPROVED" : "FLAGGED",
+            media_url: playbackId,
+            media_data: { asset_id: assetId },
+          },
+          select: { id: true },
+        });
+
+        if (!isVideoSafe || !isCaptionSafe) {
+          await tx.users.update({
+            where: { id: userId },
+            data: {
+              next_post_allowed_at: null,
+            },
+            select: { id: true },
+          });
+        }
+      });
+
+      this.eventEmitter.emit(
+        Events.NOTIFICATION_CREATE,
+        new NotificationCreateEvent({
+          userId: userId,
+          type: NotificationType.ALERT,
+          content: isVideoSafe
+            ? "Your post has been published."
+            : "Your post has been flagged by our system. It's currently in review.",
+        }),
+      );
+    } catch (error) {
+      console.log("Error checking video:", error);
+    }
   }
 }

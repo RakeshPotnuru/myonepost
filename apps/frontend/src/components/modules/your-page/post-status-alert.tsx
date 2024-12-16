@@ -48,7 +48,7 @@ export default function PostStatusAlert() {
           <Icons.Clock className="h-4 w-4" />
           <AlertTitle>Post pending</AlertTitle>
           <AlertDescription>
-            We are running a moderation process to review your post. You will be
+            Your post is going through a moderation process. You will be
             notified when it&apos;s published.
           </AlertDescription>
         </Alert>

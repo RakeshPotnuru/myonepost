@@ -5,6 +5,7 @@ import { FaRegClock } from "react-icons/fa6";
 import { GoBell } from "react-icons/go";
 import { IoMdTrendingUp } from "react-icons/io";
 import { IoCalendar, IoText } from "react-icons/io5";
+import { IoAlertCircleOutline } from "react-icons/io5";
 import { MdAudiotrack } from "react-icons/md";
 import { RiUserFollowLine, RiUserUnfollowLine } from "react-icons/ri";
 import { SiCodefresh } from "react-icons/si";
@@ -28,4 +29,5 @@ export const GeneralIcons = {
   Loading: TbLoader,
   Reject: FaBan,
   Clock: FaRegClock,
+  Alert: IoAlertCircleOutline,
 };

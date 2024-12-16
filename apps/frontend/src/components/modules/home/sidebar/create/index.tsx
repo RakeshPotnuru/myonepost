@@ -1,6 +1,8 @@
+import { PostStatus } from "@prisma/client";
 import { formatDistanceToNow } from "date-fns";
 
 import { Icons } from "@/assets/icons";
+import { Button } from "@/components/ui/reusables/button";
 import {
   Popover,
   PopoverContent,
@@ -12,9 +14,10 @@ import {
   useSidebar,
 } from "@/components/ui/reusables/sidebar";
 import { Skeleton } from "@/components/ui/reusables/skeleton";
+import { Tooltip } from "@/components/ui/reusables/tooltip";
 import useUserStore from "@/lib/store/user";
+import { cn } from "@/utils/cn";
 
-import CreateAudioPost from "./audio-post";
 import CreateImagePost from "./image-post";
 import CreateTextPost from "./text-post";
 import CreateVideoPost from "./video-post";
@@ -45,7 +48,9 @@ export default function Create() {
   );
 }
 
-export function CreatePostBlock() {
+interface CreatePostBlockProps extends React.HTMLAttributes<HTMLDivElement> {}
+
+export function CreatePostBlock({ className }: CreatePostBlockProps) {
   const { user, isLoading } = useUserStore();
 
   const bodyView =
@@ -58,6 +63,10 @@ export function CreatePostBlock() {
           addSuffix: true,
         })}
       </p>
+    ) : (user?.post_status === PostStatus.PENDING ? (
+      <p className="text-sm text-muted-foreground">
+        Your previous post is still pending. Please wait for it to be approved.
+      </p>
     ) : (
       <>
         <div className="text-sm font-medium">Create your post</div>
@@ -65,13 +74,20 @@ export function CreatePostBlock() {
           <CreateTextPost />
           <CreateImagePost />
           <CreateVideoPost />
-          <CreateAudioPost />
+          {/* <CreateAudioPost /> */}
+          <Tooltip text="Audio Post (coming soon)">
+            <Button className={"rounded-sm bg-chart-4 p-3"}>
+              <Icons.AudioPost />
+            </Button>
+          </Tooltip>
         </div>
       </>
-    );
+    ));
 
   return (
-    <div className="space-y-2 rounded-lg border bg-background p-4">
+    <div
+      className={cn("space-y-2 rounded-lg border bg-background p-4", className)}
+    >
       {isLoading ? <Skeleton className="h-20" /> : bodyView}
     </div>
   );

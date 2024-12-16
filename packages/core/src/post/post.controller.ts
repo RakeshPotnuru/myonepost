@@ -1,4 +1,4 @@
-import { CONSTANTS, users } from "@1post/shared";
+import { CONSTANTS, Events, users } from "@1post/shared";
 import { HeadersLike } from "@mux/mux-node/core";
 import { UnwrapWebhookEvent } from "@mux/mux-node/resources";
 import {
@@ -15,6 +15,7 @@ import {
   UseGuards,
 } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
+import { EventEmitter2 } from "@nestjs/event-emitter";
 import { ApiBody, ApiOperation, ApiTags } from "@nestjs/swagger";
 import { GetUser } from "src/auth/decorator";
 import { JwtGuard } from "src/auth/guard";
@@ -30,6 +31,7 @@ import {
   CreateVideoPostDto,
 } from "./dto";
 import { imagePostValidators } from "./imagePostValidators";
+import { PostCheckEvent } from "./post.events";
 import { PostService } from "./post.service";
 
 @ApiTags("Post")
@@ -41,6 +43,7 @@ export class PostController {
     private readonly mux: MuxService,
     private readonly config: ConfigService<Env>,
     private readonly google: GoogleService,
+    private readonly eventEmitter: EventEmitter2,
   ) {}
 
   @ApiOperation({ summary: "Create a text post" })
@@ -92,22 +95,33 @@ export class PostController {
     const mediaUrl = result.secure_url;
 
     const isImageSafe = await this.google.isImageSafe(mediaUrl);
-    const isCaptionSafe = await this.google.isTextSafe(
-      createImagePostDto.mediaCaption,
-    );
+    const caption = createImagePostDto.mediaCaption;
+
+    const isCaptionSafe = caption
+      ? await this.google.isTextSafe(caption)
+      : true;
 
     return await this.postService.create(
       {
         post_type: "IMAGE",
         media_url: mediaUrl,
-        media_caption: createImagePostDto.mediaCaption,
+        media_caption: caption,
         status: isImageSafe && isCaptionSafe ? "APPROVED" : "FLAGGED",
       },
       user,
     );
   }
 
-  @ApiOperation({ summary: "Create mux video upload url" })
+  @ApiOperation({ summary: "Create upload url" })
+  @UseGuards(JwtGuard)
+  @Post("upload")
+  async createUploadUrl(@GetUser() user: users) {
+    const url = await this.google.getUploadSignedUrl(`${user.id}.mp4`);
+
+    return { url };
+  }
+
+  @ApiOperation({ summary: "Create a video post" })
   @UseGuards(JwtGuard)
   @Post("video")
   async createVideoPost(
@@ -116,9 +130,12 @@ export class PostController {
   ) {
     this.postService.canPost(user);
 
-    const { url } = await this.postService.createUploadUrl(user.id);
+    await this.postService.createAsset(
+      user.id,
+      `https://storage.googleapis.com/${this.config.get("GCS_BUCKET_NAME")}/${user.id}.mp4`,
+    );
 
-    await this.postService.create(
+    return await this.postService.create(
       {
         post_type: "VIDEO",
         status: "PENDING",
@@ -126,11 +143,10 @@ export class PostController {
       },
       user,
     );
-
-    return { url };
   }
 
-  @ApiOperation({ summary: "Create mux audio upload url" })
+  // TODO: moderate
+  @ApiOperation({ summary: "Create a audio post" })
   @UseGuards(JwtGuard)
   @Post("audio")
   async createAudioPost(
@@ -139,9 +155,12 @@ export class PostController {
   ) {
     this.postService.canPost(user);
 
-    const { url } = await this.postService.createUploadUrl(user.id);
+    await this.postService.createAsset(
+      user.id,
+      `https://storage.googleapis.com/${this.config.get("GCS_BUCKET_NAME")}/${user.id}.mp4`,
+    );
 
-    await this.postService.create(
+    return await this.postService.create(
       {
         post_type: "AUDIO",
         status: "PENDING",
@@ -149,14 +168,12 @@ export class PostController {
       },
       user,
     );
-
-    return { url };
   }
 
   @ApiOperation({ summary: "Mux webhook" })
   @HttpCode(HttpStatus.OK)
   @Post("mux-webhook")
-  muxWebhook(
+  async muxWebhook(
     @RawBody() rawBody: string,
     @Body() body: string,
     @Headers() headers: HeadersLike,
@@ -175,11 +192,14 @@ export class PostController {
       body as unknown as UnwrapWebhookEvent;
 
     if (eventType === "video.asset.ready") {
-      this.postService.update(eventData.passthrough, {
-        status: "APPROVED",
-        media_url: eventData.playback_ids[0].id,
-        media_data: { asset_id: eventData.id },
-      });
+      this.eventEmitter.emit(
+        Events.VIDEO_CHECK,
+        new PostCheckEvent({
+          userId: eventData.passthrough,
+          playbackId: eventData.playback_ids[0].id,
+          assetId: eventData.id,
+        }),
+      );
     }
 
     return { success: true };

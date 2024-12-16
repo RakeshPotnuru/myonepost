@@ -1,5 +1,7 @@
 import Link from "next/link";
 
+import { NotificationType } from "@1post/shared";
+
 import { Icons } from "@/assets/icons";
 import { Button } from "@/components/ui/reusables/button";
 import type { Tables } from "@/types/database.types";
@@ -46,6 +48,15 @@ export default function NotificationCard({
       );
       break;
     }
+    case NotificationType.ALERT: {
+      component = (
+        <NotificationBody
+          parts={["", "", content]}
+          icon={<Icons.Alert className="h-4 w-4 shrink-0" />}
+        />
+      );
+      break;
+    }
   }
 
   return (
@@ -75,11 +86,13 @@ function NotificationBody({ icon, parts }: Readonly<NotificationBodyProps>) {
     <div className="flex gap-2">
       {icon}
       <div className="-mt-1">
-        <Link href={parts[1]}>
-          <Button variant={"link"} size={"link"}>
-            @{parts[1]}
-          </Button>
-        </Link>
+        {parts[1] && (
+          <Link href={parts[1]}>
+            <Button variant={"link"} size={"link"}>
+              @{parts[1]}
+            </Button>
+          </Link>
+        )}
         {parts[2]}
       </div>
     </div>

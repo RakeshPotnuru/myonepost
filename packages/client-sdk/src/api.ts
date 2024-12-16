@@ -123,6 +123,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/post/upload": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Create upload url */
+        post: operations["PostController_createUploadUrl"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/post/video": {
         parameters: {
             query?: never;
@@ -132,7 +149,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Create mux video upload url */
+        /** Create a video post */
         post: operations["PostController_createVideoPost"];
         delete?: never;
         options?: never;
@@ -149,7 +166,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Create mux audio upload url */
+        /** Create a audio post */
         post: operations["PostController_createAudioPost"];
         delete?: never;
         options?: never;
@@ -556,6 +573,23 @@ export interface operations {
                 "multipart/form-data": components["schemas"]["CreateImagePostDto"];
             };
         };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    PostController_createUploadUrl: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
         responses: {
             201: {
                 headers: {

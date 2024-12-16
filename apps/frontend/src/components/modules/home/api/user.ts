@@ -27,7 +27,19 @@ const fetchMe = async (): Promise<MeResponse | null> => {
     .limit(1)
     .single();
 
-  return data;
+  if (!data) return null;
+
+  const { data: postStatus } = await supabase
+    .from("posts")
+    .select("status")
+    .eq("user_id", me.user?.id)
+    .limit(1)
+    .single();
+
+  return {
+    ...data,
+    post_status: postStatus?.status,
+  };
 };
 
 export function useGetMe() {

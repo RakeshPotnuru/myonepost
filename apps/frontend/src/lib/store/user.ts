@@ -1,3 +1,4 @@
+import type { PostStatus } from "@prisma/client";
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 
@@ -7,6 +8,7 @@ export type MeResponse =
   | (Omit<Tables<"users">, "email"> & {
       subscribed_to: Pick<Tables<"subscribers">, "subscribed_to_id">[];
       likes: Pick<Tables<"post_likes">, "post_id">[];
+      post_status?: PostStatus;
     })
   | null;
 

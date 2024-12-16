@@ -1,3 +1,4 @@
+import type { PostStatus } from "@prisma/client";
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 
@@ -27,7 +28,7 @@ export interface Post {
   media_caption: string | null;
   comment_count: number;
   like_count: number;
-  status?: string;
+  status?: PostStatus;
 }
 
 interface IPageState {

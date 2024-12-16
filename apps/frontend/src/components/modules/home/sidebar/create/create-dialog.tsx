@@ -45,7 +45,6 @@ export default function CreateDialog({
           e.preventDefault();
         }}
         hideClose
-        aria-describedby="undefined"
       >
         <DialogHeader>
           <DialogTitle className={cn("p-2 rounded-sm w-max", className)}>
