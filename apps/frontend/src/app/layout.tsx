@@ -1,3 +1,4 @@
+import dynamic from "next/dynamic";
 import { Inter } from "next/font/google";
 
 import type { Metadata, Viewport } from "next";
@@ -9,6 +10,10 @@ import { Toaster } from "@/components/ui/reusables/sonner";
 import { siteConfig } from "@/config/site";
 import Providers from "@/lib/providers";
 import { cn } from "@/utils/cn";
+
+const PostHogPageView = dynamic(() => import("@/lib/posthog-page-view"), {
+  ssr: false,
+});
 
 const inter = Inter({
   display: "swap",
@@ -76,6 +81,7 @@ export default function RootLayout({
       </head>
       <body className={cn("antialiased", inter.className)}>
         <Providers>
+          <PostHogPageView />
           {children}
           <Toaster />
           {process.env.NODE_ENV === "development" && (

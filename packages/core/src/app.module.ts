@@ -17,6 +17,7 @@ import { ReportModule } from "./report/report.module";
 import { ReportService } from "./report/report.service";
 import { SubscribeModule } from "./subscribe/subscribe.module";
 import { UserModule } from "./user/user.module";
+import { HealthModule } from "./health/health.module";
 
 @Module({
   imports: [
@@ -39,6 +40,7 @@ import { UserModule } from "./user/user.module";
     NotificationModule,
     ReportModule,
     GoogleModule,
+    HealthModule,
   ],
   providers: [JwtStrategy, ReportService],
 })

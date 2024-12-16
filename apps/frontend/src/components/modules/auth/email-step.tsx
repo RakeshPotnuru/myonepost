@@ -38,7 +38,6 @@ export default function EmailStep({
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
-    mode: "onBlur",
     defaultValues: {
       email: "",
     },

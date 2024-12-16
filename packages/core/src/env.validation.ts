@@ -15,6 +15,7 @@ export const validationSchema = z.object({
   MUX_TOKEN_SECRET: z.string(),
   MUX_WEBHOOK_SECRET: z.string(),
   CLIENT_URL: z.string(),
+  BASE_URL: z.string(),
   GCS_BUCKET_NAME: z.string(),
   GC_PROJECT_ID: z.string(),
   GC_PRIVATE_KEY_ID: z.string(),

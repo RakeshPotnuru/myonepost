@@ -2,21 +2,31 @@ import { ValidationPipe } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { NestFactory } from "@nestjs/core";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
+import helmet from "helmet";
 import { AppModule } from "./app.module";
 import { Env } from "./env.validation";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { rawBody: true });
 
-  app.enableCors();
+  const configService = app.get(ConfigService<Env>);
+
+  app.enableCors({
+    origin:
+      configService.get<Env["NODE_ENV"]>("NODE_ENV") === "production"
+        ? configService.get("CLIENT_URL")
+        : "*",
+    credentials:
+      configService.get<Env["NODE_ENV"]>("NODE_ENV") === "production",
+  });
+
+  app.use(helmet());
 
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
     }),
   );
-
-  const configService = app.get(ConfigService<Env>);
 
   if (configService.get<Env["NODE_ENV"]>("NODE_ENV") !== "production") {
     const config = new DocumentBuilder()
