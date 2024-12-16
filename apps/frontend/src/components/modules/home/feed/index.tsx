@@ -6,7 +6,6 @@ import { Tabs } from "@/components/ui/reusables/tabs";
 import useFeedStore from "@/lib/store/feed";
 import { createClient } from "@/utils/supabase/client";
 
-import { CreatePostBlock } from "../sidebar/create";
 import FeedTabsList from "./common/tabs-list";
 import FreshFeed from "./fresh-feed";
 import SubscribedFeed from "./subscribed-feed";
@@ -44,7 +43,6 @@ export default function Feed() {
       onValueChange={(v) => setActiveFeedType(v as FeedType)}
     >
       <FeedTabsList />
-      <CreatePostBlock className="mt-2 md:hidden" />
       <TrendingFeed />
       <FreshFeed />
       <SubscribedFeed />

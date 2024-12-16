@@ -40,6 +40,7 @@ interface IPageState {
 
 interface IPageActions {
   updatePage: (page: Partial<PageResponse>) => void;
+  updatePost: (post: Partial<Post>) => void;
 }
 
 const usePageStore = create<IPageState & IPageActions>()(
@@ -57,6 +58,15 @@ const usePageStore = create<IPageState & IPageActions>()(
           state.page = {
             ...state.page,
             ...page,
+          };
+        }
+      }),
+    updatePost: (post) =>
+      set((state) => {
+        if (state.page?.post) {
+          state.page.post = {
+            ...state.page.post,
+            ...post,
           };
         }
       }),

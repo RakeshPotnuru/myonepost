@@ -113,6 +113,7 @@ export default function PageBody() {
           id={post.id}
           media_url={post.media_url}
           media_caption={post.media_caption}
+          className="rounded-xl"
         />
       );
       break;
@@ -124,6 +125,7 @@ export default function PageBody() {
           id={post.id}
           media_url={post.media_url}
           media_caption={post.media_caption}
+          className="rounded-xl"
         />
       );
       break;
@@ -170,7 +172,12 @@ export default function PageBody() {
             </time>
           </div>
           {page.url && (
-            <Link href={page.url} target="_blank" passHref>
+            <Link
+              href={page.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              passHref
+            >
               <Button variant={"link"} size={"link"}>
                 <Icons.Link className="mr-2" />
                 {getDomain(page.url)}

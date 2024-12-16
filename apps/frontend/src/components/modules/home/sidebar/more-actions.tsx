@@ -27,8 +27,6 @@ const handleSignOut = async () => {
 };
 
 export default function MoreActions() {
-  const { theme, setTheme } = useTheme();
-
   return (
     <SidebarMenuItem>
       <DropdownMenu>
@@ -42,24 +40,32 @@ export default function MoreActions() {
             <span>More</span>
           </SidebarMenuButton>
         </DropdownMenuTrigger>
-        <DropdownMenuContent
-          className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
-          side="bottom"
-          align="end"
-          sideOffset={4}
-        >
-          <DropdownMenuItem
-            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-          >
-            <Icons.Sun />
-            Toggle Appearance
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={handleSignOut}>
-            <Icons.Logout />
-            Log out
-          </DropdownMenuItem>
-        </DropdownMenuContent>
+        <MoreActionsContent />
       </DropdownMenu>
     </SidebarMenuItem>
+  );
+}
+
+export function MoreActionsContent() {
+  const { theme, setTheme } = useTheme();
+
+  return (
+    <DropdownMenuContent
+      className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
+      side="bottom"
+      align="end"
+      sideOffset={4}
+    >
+      <DropdownMenuItem
+        onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+      >
+        <Icons.Sun />
+        Toggle Appearance
+      </DropdownMenuItem>
+      <DropdownMenuItem onClick={handleSignOut}>
+        <Icons.Logout />
+        Log out
+      </DropdownMenuItem>
+    </DropdownMenuContent>
   );
 }

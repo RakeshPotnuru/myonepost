@@ -6,8 +6,11 @@ import Link from "next/link";
 import { Center } from "@/components/ui/center";
 import { Button } from "@/components/ui/reusables/button";
 import { Skeleton } from "@/components/ui/reusables/skeleton";
+import { siteConfig } from "@/config/site";
+import type { Post } from "@/lib/store/page";
 import usePageStore from "@/lib/store/page";
 import useUserStore from "@/lib/store/user";
+import { createClient } from "@/utils/supabase/client";
 
 import Logo from "../auth/logo";
 import { useGetMe } from "../home/api/user";
@@ -21,8 +24,12 @@ interface ProfilePageProps {
 export default function ProfilePage({ username }: Readonly<ProfilePageProps>) {
   const { data, isFetching } = useGetPage(username);
   const { data: user, isFetching: isUserFetching } = useGetMe();
-  const { setPage, setIsLoading } = usePageStore();
+  const { setPage, setIsLoading, updatePost } = usePageStore();
   const { setUser, setIsLoading: setIsUserLoading } = useUserStore();
+
+  useEffect(() => {
+    document.title = `${(!isFetching && data?.display_name) || ""} (@${username}) | ${siteConfig.title}`;
+  }, [username, data?.display_name, isFetching]);
 
   useEffect(() => {
     if (data) {
@@ -37,6 +44,37 @@ export default function ProfilePage({ username }: Readonly<ProfilePageProps>) {
       setIsUserLoading(false);
     }
   }, [user, setUser, setIsUserLoading]);
+
+  useEffect(() => {
+    if (data?.username !== username) {
+      return;
+    }
+
+    const supabase = createClient();
+
+    const channel = supabase
+      .channel("update-post")
+      .on(
+        "postgres_changes",
+        {
+          event: "UPDATE",
+          schema: "public",
+          table: "posts",
+          filter: `user_id=eq.${user?.id}`,
+        },
+        (payload: { new: Post }) => {
+          updatePost({
+            status: payload.new.status,
+            media_url: payload.new.media_url,
+          });
+        },
+      )
+      .subscribe();
+
+    return () => {
+      void supabase.removeChannel(channel);
+    };
+  }, [updatePost, user, data?.username, username]);
 
   return (
     <Center className="flex flex-col space-y-8">

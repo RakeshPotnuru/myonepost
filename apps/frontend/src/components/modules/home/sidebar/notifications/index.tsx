@@ -22,7 +22,7 @@ import NotificationCard from "./notification-card";
 export default function Notifications() {
   const { notifications, setNotifications, addNotification, markAsRead } =
     useNotificationStore();
-  const { data, isFetching } = useGetNotifications();
+  const { data } = useGetNotifications();
 
   useEffect(() => {
     if (!data) return;
@@ -80,15 +80,6 @@ export default function Notifications() {
     }
   };
 
-  const bodyView =
-    notifications.length > 0 ? (
-      notifications.map((n) => <NotificationCard key={n.id} {...n} />)
-    ) : (
-      <Center className="h-24 text-muted-foreground">
-        No new notifications
-      </Center>
-    );
-
   return (
     <Sheet onOpenChange={setMarkAsRead}>
       <SheetTrigger asChild>
@@ -101,22 +92,37 @@ export default function Notifications() {
           <MenuButton />
         </SidebarMenuButton>
       </SheetTrigger>
-      <SheetContent
-        className="p-0"
-        onCloseAutoFocus={(e) => e.preventDefault()}
-      >
-        <SheetHeader className="p-6">
-          <SheetTitle>Notifications</SheetTitle>
-        </SheetHeader>
-        {isFetching
-          ? Array.from({ length: 5 }).map((_, i) => (
-              <Skeleton
-                key={`skeleton-${i + 1}`}
-                className={"mb-0.5 h-24 w-full rounded-none"}
-              />
-            ))
-          : bodyView}
-      </SheetContent>
+      <NotificationContent />
     </Sheet>
+  );
+}
+
+export function NotificationContent() {
+  const { notifications } = useNotificationStore();
+  const { isFetching } = useGetNotifications();
+
+  const bodyView =
+    notifications.length > 0 ? (
+      notifications.map((n) => <NotificationCard key={n.id} {...n} />)
+    ) : (
+      <Center className="h-24 text-muted-foreground">
+        No new notifications
+      </Center>
+    );
+
+  return (
+    <SheetContent className="p-0" onCloseAutoFocus={(e) => e.preventDefault()}>
+      <SheetHeader className="p-6">
+        <SheetTitle>Notifications</SheetTitle>
+      </SheetHeader>
+      {isFetching
+        ? Array.from({ length: 5 }).map((_, i) => (
+            <Skeleton
+              key={`skeleton-${i + 1}`}
+              className={"mb-0.5 h-24 w-full rounded-none"}
+            />
+          ))
+        : bodyView}
+    </SheetContent>
   );
 }

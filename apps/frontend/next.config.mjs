@@ -1,7 +1,7 @@
 const cspHeader = `
   default-src 'self';
   media-src 'self' blob: data: *.mux.com;
-  connect-src 'self' ${process.env.NEXT_PUBLIC_API_URL} ${process.env.NEXT_PUBLIC_SUPABASE_URL} ${process.env.NEXT_PUBLIC_SUPABASE_WSS} ${process.env.NEXT_PUBLIC_POSTHOG_HOST} https://inferred.litix.io https://disposable.debounce.io *.mux.com;
+  connect-src 'self' ${process.env.NEXT_PUBLIC_API_URL} ${process.env.NEXT_PUBLIC_SUPABASE_URL} ${process.env.NEXT_PUBLIC_SUPABASE_WSS} ${process.env.NEXT_PUBLIC_POSTHOG_HOST} https://disposable.debounce.io *.mux.com https://storage.googleapis.com;
   script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.gstatic.com https://challenges.cloudflare.com https://us-assets.i.posthog.com;
   frame-src 'self' https://challenges.cloudflare.com;
   style-src 'self' 'unsafe-inline';
