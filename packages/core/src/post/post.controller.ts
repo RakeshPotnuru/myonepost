@@ -139,7 +139,7 @@ export class PostController {
       {
         post_type: "VIDEO",
         status: "PENDING",
-        media_caption: createVideoPostDto.mediaCaption,
+        media_caption: createVideoPostDto.mediaCaption ?? null,
       },
       user,
     );
