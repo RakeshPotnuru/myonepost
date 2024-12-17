@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { FeedType } from "@1post/shared";
-import { PostStatus } from "@prisma/client";
+import { FeedType, PostStatus } from "@1post/shared";
 
 import { TabsContent } from "@/components/ui/reusables/tabs";
 import type { FeedResponse } from "@/lib/store/feed";

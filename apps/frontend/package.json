@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@1post/client-sdk": "workspace:*",
-    "@1post/shared": "workspace:^",
+    "@1post/shared": "workspace:*",
     "@hookform/resolvers": "^3.9.0",
     "@marsidev/react-turnstile": "^1.0.2",
     "@mux/mux-player-react": "^3.0.0",
