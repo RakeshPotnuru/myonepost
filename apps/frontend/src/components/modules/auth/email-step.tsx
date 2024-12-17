@@ -47,7 +47,7 @@ export default function EmailStep({
 
   const onSubmit = async (data: z.infer<typeof FormSchema>) => {
     if (!captchaToken) {
-      toast.error("Please complete the captcha.");
+      toast.error("Please wait for captcha verification.");
       return;
     }
 

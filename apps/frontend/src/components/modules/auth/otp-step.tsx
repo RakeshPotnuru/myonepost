@@ -68,7 +68,12 @@ export default function OtpStep({ email }: Readonly<OtpStepProps>) {
   const { mutateAsync: resend, isPending: isResending } = useSignIn();
 
   const handleResend = async () => {
-    if (coolDown > 0 || !captchaToken) return;
+    if (coolDown > 0) return;
+
+    if (!captchaToken) {
+      toast.error("Please wait for captcha verification.");
+      return;
+    }
 
     try {
       await resend({ email, captchaToken });
