@@ -47,7 +47,7 @@ export default function CommentInputBox({
     try {
       const res = (await mutateAsync({
         body: { postId, text: data.comment },
-      })) as { id: string };
+      })) as unknown as { id: string };
 
       if (!user) return;
 

@@ -5,7 +5,8 @@
   "author": "Rakesh Potnuru",
   "main": "dist/index.js",
   "scripts": {
-    "build": "tsc --build"
+    "build": "prisma generate && tsc --build",
+    "clean": "rm -rf node_modules && rm -rf dist"
   },
   "devDependencies": {
     "prisma": "^5.20.0",

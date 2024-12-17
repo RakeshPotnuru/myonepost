@@ -104,7 +104,7 @@ export default function CreateVideoPost() {
 
       try {
         setIsUploading(true);
-        const response = (await mutateAsync({})) as { url: string };
+        const response = (await mutateAsync({})) as unknown as { url: string };
 
         await axios.put(response.url, file, {
           headers: {

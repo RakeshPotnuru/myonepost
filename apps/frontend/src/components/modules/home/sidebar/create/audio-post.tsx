@@ -104,7 +104,7 @@ export default function CreateAudioPost() {
       try {
         const response = (await mutateAsync({
           body: { mediaCaption: values.caption },
-        })) as { url: string };
+        })) as unknown as { url: string };
 
         const upload = UpChunk.createUpload({
           endpoint: response.url,
