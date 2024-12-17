@@ -64,7 +64,8 @@ export default function BasicDetails() {
     try {
       await mutateAsync({
         body: {
-          ...data,
+          bio: data.bio,
+          url: data.url,
           display_name: data.displayName,
           is_private: data.isPrivate === "true",
         },

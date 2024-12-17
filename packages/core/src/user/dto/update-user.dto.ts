@@ -19,10 +19,7 @@ export class UpdateUserDto {
   @ApiProperty({ required: false })
   @IsOptional()
   @IsString()
-  @Length(
-    CONSTANTS.USER.DISPLAY_NAME.MIN_LENGTH,
-    CONSTANTS.USER.DISPLAY_NAME.MAX_LENGTH,
-  )
+  @Length(0, CONSTANTS.USER.DISPLAY_NAME.MAX_LENGTH)
   display_name?: string;
 
   @ApiProperty({ required: false })

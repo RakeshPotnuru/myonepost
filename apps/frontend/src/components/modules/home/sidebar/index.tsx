@@ -70,7 +70,7 @@ export default function AppSidebar() {
           </SidebarMenu>
         </SidebarFooter>
       </Sidebar>
-      <div className="absolute bottom-0 flex w-full flex-row justify-between border-t bg-background p-1.5 px-4 md:hidden z-40">
+      <div className="absolute bottom-0 z-40 flex w-full flex-row justify-between border-t bg-background p-1.5 px-4 md:hidden">
         <Link href={user ? `@${user?.username}` : ""} passHref>
           <Button variant={"ghost"} size={"icon"}>
             <Avatar className="size-6">
