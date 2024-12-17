@@ -15,18 +15,23 @@ export class GoogleService {
   private readonly storage: Storage;
 
   constructor(private readonly config: ConfigService<Env>) {
-    this.languageServiceClient = new LanguageServiceClient();
-    this.imageAnnotatorClient = new ImageAnnotatorClient();
-    this.videoIntelligenceServiceClient =
-      new v1.VideoIntelligenceServiceClient();
+    const credentials = {
+      project_id: config.get("GC_PROJECT_ID"),
+      private_key_id: config.get("GC_PRIVATE_KEY_ID"),
+      private_key: config.get("GC_PRIVATE_KEY"),
+      client_email: config.get("GC_CLIENT_EMAIL"),
+      client_id: config.get("GC_CLIENT_ID"),
+    };
+
+    this.languageServiceClient = new LanguageServiceClient({
+      credentials,
+    });
+    this.imageAnnotatorClient = new ImageAnnotatorClient({ credentials });
+    this.videoIntelligenceServiceClient = new v1.VideoIntelligenceServiceClient(
+      { credentials },
+    );
     this.storage = new Storage({
-      credentials: {
-        project_id: config.get("GC_PROJECT_ID"),
-        private_key_id: config.get("GC_PRIVATE_KEY_ID"),
-        private_key: config.get("GC_PRIVATE_KEY"),
-        client_email: config.get("GC_CLIENT_EMAIL"),
-        client_id: config.get("GC_CLIENT_ID"),
-      },
+      credentials,
     });
   }
 

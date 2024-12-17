@@ -190,11 +190,11 @@ export default function PageBody() {
   );
 }
 
-function getDomain(url: string): string | null {
-  // eslint-disable-next-line security/detect-unsafe-regex
-  const match = new RegExp(
-    // eslint-disable-next-line security/detect-unsafe-regex
-    /^(?:https?:\/\/)?(?:[^\n@]+@)?(?:www\.)?([^\n/:?]+)/im,
-  ).exec(url);
-  return match ? match[1] : null;
+function getDomain(url: string) {
+  try {
+    const parsedUrl = new URL(url);
+    return parsedUrl.hostname;
+  } catch {
+    return null;
+  }
 }

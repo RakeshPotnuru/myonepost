@@ -7,7 +7,7 @@ export default function Footer() {
     <footer className="sticky top-0 flex flex-wrap gap-4 p-6 text-sm text-muted-foreground">
       <p>&copy; {new Date().getFullYear()} My One Post</p>
       <Link
-        href={"#"}
+        href={siteConfig.pages.privacy.link}
         target="_blank"
         rel="noopener noreferrer"
         className="hover:underline"
@@ -15,21 +15,21 @@ export default function Footer() {
         Privacy Policy
       </Link>
       <Link
-        href={"#"}
+        href={siteConfig.pages.tos.link}
         target="_blank"
         rel="noopener noreferrer"
         className="hover:underline"
       >
         Terms of Service
       </Link>
-      <Link
+      {/* <Link
         href={"#"}
         target="_blank"
         rel="noopener noreferrer"
         className="hover:underline"
       >
         Cookie Policy
-      </Link>
+      </Link> */}
       <Link
         href={siteConfig.links.contact}
         target="_blank"

@@ -21,9 +21,7 @@ export default function YourPage({
     <>
       <ProfilePage username={decodedUsername.slice(1)} />
       <Center>
-        <div className="fixed bottom-0">
-          <Footer />
-        </div>
+        <Footer />
       </Center>
     </>
   );

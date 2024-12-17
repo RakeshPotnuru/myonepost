@@ -17,5 +17,21 @@ export const siteConfig = {
     site: "@myonepost",
     creator: "@rakesh_at_tweet",
   },
-  pages: {},
+  pages: {
+    privacy: {
+      title: "Privacy Policy",
+      description: "My One Post's privacy policy",
+      link: "/privacy",
+    },
+    tos: {
+      title: "Terms of Service",
+      description: "My One Post's terms of service",
+      link: "/tos",
+    },
+    cookie: {
+      title: "Cookie Policy",
+      description: "My One Post's cookie policy",
+      link: "/cookie",
+    },
+  },
 };
