@@ -87,7 +87,7 @@ function NotificationBody({ icon, parts }: Readonly<NotificationBodyProps>) {
       {icon}
       <div className="-mt-1">
         {parts[1] && (
-          <Link href={parts[1]}>
+          <Link href={`@${parts[1]}`}>
             <Button variant={"link"} size={"link"}>
               @{parts[1]}
             </Button>
