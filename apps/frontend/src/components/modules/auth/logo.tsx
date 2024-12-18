@@ -17,7 +17,7 @@ export default function Logo() {
   return (
     mounted && (
       <Image
-        src={theme === "light" ? Images.logoFullLight : Images.logoFullDark}
+        src={theme === "dark" ? Images.logoFullDark : Images.logoFullLight}
         alt="My One Post logo"
         width={450}
         height={350}

@@ -18,7 +18,6 @@ import {
   DropdownMenu,
   DropdownMenuTrigger,
 } from "@/components/ui/reusables/dropdown-menu";
-import { Sheet, SheetTrigger } from "@/components/ui/reusables/sheet";
 import {
   Sidebar,
   SidebarContent,
@@ -33,7 +32,7 @@ import { cn } from "@/utils/cn";
 import Create, { CreatePostBlock } from "./create";
 import Logo from "./logo";
 import MoreActions, { MoreActionsContent } from "./more-actions";
-import Notifications, { NotificationContent } from "./notifications";
+import Notifications from "./notifications";
 import YourPage from "./your-page";
 
 export default function AppSidebar() {
@@ -82,14 +81,7 @@ export default function AppSidebar() {
             <span className="hidden md:block">Your Page</span>
           </Button>
         </Link>
-        <Sheet>
-          <SheetTrigger asChild>
-            <Button variant={"ghost"} size={"icon"}>
-              <Icons.Notification className="size-6" />
-            </Button>
-          </SheetTrigger>
-          <NotificationContent />
-        </Sheet>
+        <Notifications isMobile />
         <Dialog>
           <DialogTrigger asChild>
             <Button variant={"ghost"} size={"icon"}>

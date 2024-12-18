@@ -1,6 +1,8 @@
 import { useEffect } from "react";
 
+import { Icons } from "@/assets/icons";
 import { Center } from "@/components/ui/center";
+import { Button } from "@/components/ui/reusables/button";
 import {
   Sheet,
   SheetContent,
@@ -19,7 +21,7 @@ import { useGetNotifications } from "./api/notification";
 import MenuButton from "./menu-button";
 import NotificationCard from "./notification-card";
 
-export default function Notifications() {
+export default function Notifications({ isMobile }: { isMobile?: boolean }) {
   const { notifications, setNotifications, addNotification, markAsRead } =
     useNotificationStore();
   const { data } = useGetNotifications();
@@ -83,14 +85,20 @@ export default function Notifications() {
   return (
     <Sheet onOpenChange={setMarkAsRead}>
       <SheetTrigger asChild>
-        <SidebarMenuButton
-          onClick={handleMarkAsRead}
-          size={"lg"}
-          tooltip={"Notification"}
-          className="relative"
-        >
-          <MenuButton />
-        </SidebarMenuButton>
+        {isMobile ? (
+          <Button onClick={handleMarkAsRead} variant={"ghost"} size={"icon"}>
+            <Icons.Notification className="size-6" />
+          </Button>
+        ) : (
+          <SidebarMenuButton
+            onClick={handleMarkAsRead}
+            size={"lg"}
+            tooltip={"Notification"}
+            className="relative"
+          >
+            <MenuButton />
+          </SidebarMenuButton>
+        )}
       </SheetTrigger>
       <NotificationContent />
     </Sheet>

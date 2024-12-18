@@ -7,7 +7,7 @@ import Logo from "./logo";
 export function AuthPage() {
   return (
     <div className="flex h-dvh flex-col">
-      <Center className="mx-10 my-20 flex h-full flex-col gap-0 md:my-0 md:flex-row md:gap-2 *:md:w-full xl:mx-28 xl:gap-8 2xl:mx-60">
+      <Center className="mx-10 my-20 flex h-full flex-col gap-4 md:my-0 md:flex-row md:gap-2 *:md:w-full xl:mx-28 xl:gap-8 2xl:mx-60">
         <Center className="flex basis-2/3 flex-col space-y-8">
           <Logo />
           <div className="px-6 text-center">
