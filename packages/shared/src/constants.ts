@@ -26,7 +26,7 @@ const POST = {
   },
   MODERATION_THRESHOLD: {
     TEXT: 0.8,
-    IMAGE: ["LIKELY", "VERY_UNLIKELY"],
+    IMAGE: ["LIKELY", "VERY_LIKELY"],
     VIDEO: 4,
   },
 };

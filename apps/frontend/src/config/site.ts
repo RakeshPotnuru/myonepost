@@ -4,7 +4,7 @@ export const siteConfig = {
   title: "My One Post - Share what matters, without the noise.",
   shortTitle: "My One Post",
   description:
-    "My One Post is a unique social media platform where users can share a single post and can be updated daily. Simplify your online presence by focusing on what truly matters.",
+    "My One Post is a unique social media platform where users can share a single post and can be updated daily. With My One Post, it's just you, your thoughts, and the world. No spam, no drama—just one post that really matters.",
   url: defaultUrl,
   theme: {
     color: "#2563EB",
