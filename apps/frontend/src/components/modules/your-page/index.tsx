@@ -45,7 +45,7 @@ export default function ProfilePage({ username }: Readonly<ProfilePageProps>) {
     if (user) {
       setUser(user);
       setIsUserLoading(false);
-      posthog.identify(user.username, {
+      posthog.identify(user.id, {
         username: user.username,
       });
     }

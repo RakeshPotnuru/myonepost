@@ -16,17 +16,17 @@ export default function HomePage() {
   const posthog = usePostHog();
   const { setUser, setIsLoading } = useUserStore();
 
-  const { data } = useGetMe();
+  const { data: user } = useGetMe();
 
   useEffect(() => {
-    if (data) {
-      setUser(data);
+    if (user) {
+      setUser(user);
       setIsLoading(false);
-      posthog.identify(data.username, {
-        username: data.username,
+      posthog.identify(user.id, {
+        username: user.username,
       });
     }
-  }, [data, setUser, setIsLoading, posthog]);
+  }, [user, setUser, setIsLoading, posthog]);
 
   return (
     <SidebarProvider>
