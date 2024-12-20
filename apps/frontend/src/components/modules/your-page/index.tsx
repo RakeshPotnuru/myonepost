@@ -3,6 +3,8 @@
 import { useEffect } from "react";
 import Link from "next/link";
 
+import { usePostHog } from "posthog-js/react";
+
 import { Center } from "@/components/ui/center";
 import { Button } from "@/components/ui/reusables/button";
 import { Skeleton } from "@/components/ui/reusables/skeleton";
@@ -26,6 +28,7 @@ export default function ProfilePage({ username }: Readonly<ProfilePageProps>) {
   const { data: user, isFetching: isUserFetching } = useGetMe();
   const { setPage, setIsLoading, updatePost } = usePageStore();
   const { setUser, setIsLoading: setIsUserLoading } = useUserStore();
+  const posthog = usePostHog();
 
   useEffect(() => {
     document.title = `${(!isFetching && data?.display_name) || ""} (@${username}) | ${siteConfig.title}`;
@@ -42,8 +45,9 @@ export default function ProfilePage({ username }: Readonly<ProfilePageProps>) {
     if (user) {
       setUser(user);
       setIsUserLoading(false);
+      posthog.identify(user.username);
     }
-  }, [user, setUser, setIsUserLoading]);
+  }, [user, setUser, setIsUserLoading, posthog]);
 
   useEffect(() => {
     if (data?.username !== username) {

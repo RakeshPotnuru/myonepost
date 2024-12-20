@@ -2,6 +2,8 @@
 
 import { useEffect } from "react";
 
+import { usePostHog } from "posthog-js/react";
+
 import Footer from "@/components/common/layouts/footer";
 import { SidebarProvider } from "@/components/ui/reusables/sidebar";
 import useUserStore from "@/lib/store/user";
@@ -11,6 +13,7 @@ import Feed from "./feed";
 import AppSidebar from "./sidebar";
 
 export default function HomePage() {
+  const posthog = usePostHog();
   const { setUser, setIsLoading } = useUserStore();
 
   const { data } = useGetMe();
@@ -19,8 +22,9 @@ export default function HomePage() {
     if (data) {
       setUser(data);
       setIsLoading(false);
+      posthog.identify(data.username);
     }
-  }, [data, setUser, setIsLoading]);
+  }, [data, setUser, setIsLoading, posthog]);
 
   return (
     <SidebarProvider>
