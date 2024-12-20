@@ -22,7 +22,9 @@ export default function HomePage() {
     if (data) {
       setUser(data);
       setIsLoading(false);
-      posthog.identify(data.username);
+      posthog.identify(data.username, {
+        username: data.username,
+      });
     }
   }, [data, setUser, setIsLoading, posthog]);
 
