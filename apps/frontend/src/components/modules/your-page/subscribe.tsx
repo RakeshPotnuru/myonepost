@@ -8,15 +8,7 @@ import client from "@/utils/api-client";
 
 export default function Subscribe() {
   const { user, addSubscriber, removeSubscriber } = useUserStore();
-  const { page } = usePageStore();
-
-  if (!page) {
-    return null;
-  }
-
-  if (user?.username === page.username) {
-    return null;
-  }
+  const { page, updatePage } = usePageStore();
 
   const { mutateAsync: subscribe, isPending: isSubscribing } =
     client.useMutation("post", "/subscribe", {
@@ -25,10 +17,15 @@ export default function Subscribe() {
       },
     });
 
+  if (!page) {
+    return null;
+  }
+
   const handleSubscribe = async () => {
     try {
       await subscribe({ body: { subscribedToId: page.id } });
       addSubscriber(page.id);
+      updatePage({ subscriber_count: page.subscriber_count + 1 });
     } catch {
       // ignore
     }
@@ -45,10 +42,15 @@ export default function Subscribe() {
     try {
       await unsubscribe({ params: { path: { id: page.id } } });
       removeSubscriber(page.id);
+      updatePage({ subscriber_count: page.subscriber_count - 1 });
     } catch {
       // ignore
     }
   };
+
+  if (user?.username === page.username) {
+    return null;
+  }
 
   return user?.subscribed_to.find((s) => s.subscribed_to_id === page.id) ? (
     <Button

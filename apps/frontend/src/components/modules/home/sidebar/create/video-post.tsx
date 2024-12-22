@@ -35,7 +35,7 @@ const MemoizedDropzoneContent = memo(
     isDisabled: boolean;
   }) =>
     file ? (
-      <div className="flex w-full flex-col items-center space-y-4">
+      <div className="flex h-96 w-full flex-col items-center space-y-4 overflow-auto">
         <MuxPlayer
           src={URL.createObjectURL(file)}
           accentColor={siteConfig.theme.color}

@@ -26,6 +26,8 @@ import {
 } from "@/components/ui/reusables/dialog";
 import usePageStore from "@/lib/store/page";
 import useUserStore from "@/lib/store/user";
+import { getBrowserLocale } from "@/utils/get-locale";
+import { pluralize } from "@/utils/plural";
 
 import AudioContent from "../home/feed/post-card/audio-content";
 import ImageContent from "../home/feed/post-card/image-content";
@@ -171,6 +173,13 @@ export default function PageBody() {
               Joined {format(page.created_at, "MMM, yyyy")}
             </time>
           </div>
+          <p className="text-sm text-muted-foreground">
+            {Intl.NumberFormat(getBrowserLocale(), {
+              notation: "compact",
+              maximumFractionDigits: 1,
+            }).format(page.subscriber_count)}{" "}
+            {pluralize("Subscriber", page.subscriber_count)}
+          </p>
           {page.url && (
             <Link
               href={page.url}

@@ -8,6 +8,7 @@ import {
 import type { CommentResponse } from "@/lib/store/comment";
 import { getBrowserLocale } from "@/utils/get-locale";
 import { getRelativeTime } from "@/utils/get-relative-time";
+import { pluralize } from "@/utils/plural";
 
 import Like from "./like";
 import MoreMenu from "./more-menu";
@@ -41,9 +42,8 @@ export default function CommentCard({
           </Link>{" "}
           {text}
         </p>
-        <div className="flex flex-row gap-2 text-xs text-muted-foreground">
+        <div className="flex flex-row gap-1 text-xs text-muted-foreground">
           <span>
-            ·{" "}
             <time dateTime={created_at.toString()}>
               {getRelativeTime(new Date(created_at))}
             </time>
@@ -54,7 +54,7 @@ export default function CommentCard({
               notation: "compact",
               maximumFractionDigits: 1,
             }).format(like_count)}{" "}
-            likes
+            {pluralize("like", like_count)}
           </span>
         </div>
       </div>

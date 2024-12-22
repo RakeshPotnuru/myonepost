@@ -23,14 +23,14 @@ export default function Like({ likeCount, commentId }: Readonly<LikeProps>) {
     removeCommentLike,
     likedComments,
   } = useCommentStore();
-  const isInitiallyLiked = likedComments?.some(
-    (like) => like.comment_id === commentId,
-  );
+  const isInitiallyLiked =
+    likedComments?.some((like) => like.comment_id === commentId) ?? false;
 
   const [state, setState] = useState({
     liked: isInitiallyLiked,
     count: likeCount,
   });
+  console.log({ isInitiallyLiked });
 
   const { mutateAsync: like } = client.useMutation("post", "/like/comment");
   const { mutateAsync: unlike } = client.useMutation(

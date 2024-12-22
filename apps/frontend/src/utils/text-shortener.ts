@@ -1,8 +1,8 @@
-export const shortenText = (
+export function shortenText(
   text: string,
   length: number,
   splitAt: "middle" | "end" = "end",
-): string => {
+): string {
   if (text.length <= length) {
     return text;
   } else {
@@ -14,4 +14,4 @@ export const shortenText = (
       ? `${leftHalf}...${rightHalf}`
       : text.slice(0, length - ellipsesLength) + "...";
   }
-};
+}
