@@ -12,12 +12,16 @@ export default function Logo() {
 
   useEffect(() => setMounted(true), []);
 
-  const { theme } = useTheme();
+  const { theme, systemTheme } = useTheme();
 
   return (
     mounted && (
       <Image
-        src={theme === "dark" ? Images.logoFullDark : Images.logoFullLight}
+        src={
+          (theme === "system" && systemTheme === "dark") || theme === "dark"
+            ? Images.logoFullDark
+            : Images.logoFullLight
+        }
         alt="My One Post logo"
         width={450}
         height={350}
