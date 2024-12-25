@@ -21,7 +21,9 @@ import { useGetNotifications } from "./api/notification";
 import MenuButton from "./menu-button";
 import NotificationCard from "./notification-card";
 
-export default function Notifications({ isMobile }: { isMobile?: boolean }) {
+export default function Notifications({
+  isMobile,
+}: Readonly<{ isMobile?: boolean }>) {
   const { notifications, setNotifications, addNotification, markAsRead } =
     useNotificationStore();
   const { data } = useGetNotifications();
