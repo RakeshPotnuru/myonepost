@@ -35,6 +35,7 @@ export class NotificationService {
           created_at: {
             lte: cutoffDate,
           },
+          is_read: false,
         },
       });
     } catch (error) {
