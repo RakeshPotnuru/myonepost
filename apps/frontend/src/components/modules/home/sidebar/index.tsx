@@ -32,8 +32,8 @@ import { cn } from "@/utils/cn";
 import Create, { CreatePostBlock } from "./create";
 import Logo from "./logo";
 import MoreActions, { MoreActionsContent } from "./more-actions";
+import MyPage from "./my-page";
 import Notifications from "./notifications";
-import YourPage from "./your-page";
 
 export default function AppSidebar() {
   const { state } = useSidebar();
@@ -58,7 +58,7 @@ export default function AppSidebar() {
               <Notifications />
             </SidebarMenuItem>
             <SidebarMenuItem>
-              <YourPage />
+              <MyPage />
             </SidebarMenuItem>
           </SidebarMenu>
         </SidebarContent>

@@ -19,11 +19,11 @@ import { useGetMe } from "../home/api/user";
 import { useGetPage } from "./api/page";
 import PageBody from "./page-body";
 
-interface ProfilePageProps {
+interface MyPageProps {
   username: string;
 }
 
-export default function ProfilePage({ username }: Readonly<ProfilePageProps>) {
+export default function MyPage({ username }: Readonly<MyPageProps>) {
   const { data, isFetching } = useGetPage(username);
   const { data: user, isFetching: isUserFetching } = useGetMe();
   const { setPage, setIsLoading, updatePost } = usePageStore();

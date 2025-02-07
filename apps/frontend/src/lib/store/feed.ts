@@ -87,7 +87,7 @@ const useFeedStore = create<IFeedState & IFeedActions>()(
       }),
     activePost: null,
     setActivePost: (post) => set({ activePost: post }),
-    activeFeedType: FeedType.TRENDING,
+    activeFeedType: FeedType.FRESH,
     setActiveFeedType: (feedType) => set({ activeFeedType: feedType }),
     incrementLikes: (postId, feedType) =>
       set((state) => {

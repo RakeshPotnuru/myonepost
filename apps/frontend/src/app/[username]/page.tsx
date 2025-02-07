@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 
 import Footer from "@/components/common/layouts/footer";
-import ProfilePage from "@/components/modules/your-page";
+import MyPage from "@/components/modules/my-page";
 import { Center } from "@/components/ui/center";
 
 export default function YourPage({
@@ -19,7 +19,7 @@ export default function YourPage({
 
   return (
     <>
-      <ProfilePage username={decodedUsername.slice(1)} />
+      <MyPage username={decodedUsername.slice(1)} />
       <Center>
         <Footer />
       </Center>

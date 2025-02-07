@@ -8,7 +8,7 @@ import {
 import { SidebarMenuButton } from "@/components/ui/reusables/sidebar";
 import useUserStore from "@/lib/store/user";
 
-export default function YourPage() {
+export default function MyPage() {
   const { user } = useUserStore();
 
   return (
@@ -20,7 +20,7 @@ export default function YourPage() {
             {user?.username[0]?.toUpperCase()}
           </AvatarFallback>
         </Avatar>
-        <span>Your Page</span>
+        <span>My Page</span>
       </SidebarMenuButton>
     </Link>
   );
