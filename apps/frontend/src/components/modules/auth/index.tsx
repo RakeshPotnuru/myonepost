@@ -3,6 +3,7 @@ import { Center } from "@/components/ui/center";
 
 import AuthForm from "./auth-form";
 import Logo from "./logo";
+import { Words } from "./words";
 
 export function AuthPage() {
   return (
@@ -12,11 +13,7 @@ export function AuthPage() {
           <Logo />
           <div className="px-6 text-center">
             <h1 className="text-4xl font-black sm:text-6xl">
-              Share what matters, <br /> without the{" "}
-              <span className="text-destructive line-through decoration-foreground">
-                noise
-              </span>
-              {""}.
+              Share what matters, <br /> without the <Words />
             </h1>
             <p className="mt-4 text-lg text-muted-foreground">
               On My One Post, you get one post to share with the world. Keep it
