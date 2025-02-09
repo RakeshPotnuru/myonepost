@@ -6,7 +6,7 @@ export class FeedService {
   constructor(private readonly prisma: PrismaService) {}
 
   async getPosts() {
-    const cutoffDate = new Date(new Date().getTime() - 48 * 60 * 60 * 1000); // Last 48 hours
+    const cutoffDate = new Date(new Date().getTime() - 24 * 60 * 60 * 1000); // Last 24 hours
 
     try {
       return await this.prisma.posts.findMany({
