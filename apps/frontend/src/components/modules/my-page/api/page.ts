@@ -27,10 +27,10 @@ const fetchArchive = async (username: string) => {
   const { data, error } = await client
     .from("archives")
     .select("*, users!inner(username)")
+    .order("created_at", { ascending: false })
     .eq("users.username", username);
 
   if (error) {
-    console.log(error);
     return null;
   }
 
