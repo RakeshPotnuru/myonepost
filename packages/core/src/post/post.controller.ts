@@ -17,6 +17,7 @@ import {
 import { ConfigService } from "@nestjs/config";
 import { EventEmitter2 } from "@nestjs/event-emitter";
 import { ApiBody, ApiOperation, ApiTags } from "@nestjs/swagger";
+import { randomUUID } from "crypto";
 import { GetUser } from "src/auth/decorator";
 import { JwtGuard } from "src/auth/guard";
 import { CloudinaryService } from "src/cloudinary/cloudinary.service";
@@ -89,7 +90,7 @@ export class PostController {
     const result = await this.cloudinary.uploadImage(
       file,
       CONSTANTS.ASSET_FOLDERS.POSTS,
-      user.id,
+      randomUUID(),
     );
 
     const mediaUrl = result.secure_url;

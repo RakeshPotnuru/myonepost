@@ -43,6 +43,7 @@ model users {
   notifications   notifications[]
   reports_made    reports[]       @relation("ReportMadeBy")
   reports_against reports[]       @relation("ReportAgainst")
+  archives        archives[]
 }
 
 model subscribers {
@@ -78,6 +79,22 @@ model posts {
   comments   comments[]
   reports    reports[]
   post_score post_scores?
+}
+
+model archives {
+  id         String   @id @default(uuid()) @db.Uuid
+  created_at DateTime @db.Timestamptz(3)
+
+  post_type     PostType @default(TEXT)
+  text          String?  @db.VarChar(4000)
+  media_url     String?
+  /// [MediaDataType]
+  media_data    Json?    @db.JsonB
+  media_caption String?  @db.VarChar(150)
+  like_count    Int      @default(0)
+
+  user_id String @db.Uuid
+  user    users  @relation(fields: [user_id], references: [id], onDelete: Cascade)
 }
 
 enum PostType {

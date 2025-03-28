@@ -42,6 +42,50 @@ export type Database = {
         }
         Relationships: []
       }
+      archives: {
+        Row: {
+          created_at: string
+          id: string
+          like_count: number
+          media_caption: string | null
+          media_data: Json | null
+          media_url: string | null
+          post_type: Database["public"]["Enums"]["PostType"]
+          text: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at: string
+          id: string
+          like_count?: number
+          media_caption?: string | null
+          media_data?: Json | null
+          media_url?: string | null
+          post_type?: Database["public"]["Enums"]["PostType"]
+          text?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          like_count?: number
+          media_caption?: string | null
+          media_data?: Json | null
+          media_url?: string | null
+          post_type?: Database["public"]["Enums"]["PostType"]
+          text?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "archives_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       comment_likes: {
         Row: {
           comment_id: string
@@ -436,7 +480,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      delete_unconfirmed_users: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
     }
     Enums: {
       NotificationType:

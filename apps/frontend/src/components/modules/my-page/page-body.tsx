@@ -24,6 +24,7 @@ import {
   DialogContent,
   DialogTrigger,
 } from "@/components/ui/reusables/dialog";
+import { Separator } from "@/components/ui/reusables/separator";
 import usePageStore from "@/lib/store/page";
 import useUserStore from "@/lib/store/user";
 import { getBrowserLocale } from "@/utils/get-locale";
@@ -34,6 +35,7 @@ import ImageContent from "../home/feed/post-card/image-content";
 import TextContent from "../home/feed/post-card/text-content";
 import VideoContent from "../home/feed/post-card/video-content";
 import { CreatePostBlock } from "../home/sidebar/create";
+import Archive from "./archive";
 import DeletePost from "./delete-post";
 import EditProfile from "./edit-profile";
 import PostStatusAlert from "./post-status-alert";
@@ -195,6 +197,8 @@ export default function PageBody() {
           )}
         </div>
       </CardFooter>
+      <Separator className="mb-6" />
+      <Archive username={page.username} author={author} />
     </Card>
   );
 }

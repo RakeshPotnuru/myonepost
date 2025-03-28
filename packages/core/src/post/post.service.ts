@@ -37,7 +37,7 @@ export class PostService {
       ? new Date(new Date().getTime() + CONSTANTS.POST.NEXT_POST_ALLOWED_AT)
       : null; // next post after 24 hours
 
-    await this.remove(user.id, createPostDto.post_type);
+    await this.remove(user.id, createPostDto.post_type, true);
 
     try {
       const { id } = (
@@ -103,7 +103,11 @@ export class PostService {
     }
   }
 
-  async remove(userId: string, newPostType?: PostType) {
+  async remove(
+    userId: string,
+    newPostType?: PostType,
+    shouldArchive: boolean = false,
+  ) {
     try {
       const post = await this.prisma.posts.findUnique({
         where: { user_id: userId },
@@ -121,16 +125,18 @@ export class PostService {
       }
 
       if (
+        !shouldArchive &&
         newPostType !== "IMAGE" &&
         post.post_type === "IMAGE" &&
         post.media_url
       ) {
         await this.cloudinary.deleteImage(
-          `${CONSTANTS.ASSET_FOLDERS.POSTS}/${userId}`,
+          `${CONSTANTS.ASSET_FOLDERS.POSTS}/${post.media_url.split("/").pop().split(".")[0]}`,
         );
       }
 
       if (
+        !shouldArchive &&
         (post.post_type === "VIDEO" || post.post_type === "AUDIO") &&
         post.media_data?.asset_id
       ) {
@@ -146,7 +152,38 @@ export class PostService {
         select: { id: true },
       });
 
+      if (shouldArchive) {
+        await this.archive({
+          post_type: post.post_type,
+          text: post.text,
+          media_url: post.media_url,
+          media_data: post.media_data,
+          media_caption: post.media_caption,
+          created_at: post.created_at,
+          like_count: post.like_count,
+          user: {
+            connect: { id: userId },
+          },
+        });
+      }
+
       return { success: true };
+    } catch (error) {
+      console.log(error);
+
+      throw new HttpException(
+        "Something went wrong. Please try again later.",
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
+  private async archive(post: Prisma.archivesCreateInput) {
+    try {
+      await this.prisma.archives.create({
+        data: post,
+        select: { id: true },
+      });
     } catch (error) {
       console.log(error);
 
