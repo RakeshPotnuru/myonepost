@@ -78,7 +78,7 @@ export default function Archive({ username, author }: Readonly<ArchiveProps>) {
               return (
                 <div
                   key={post.id}
-                  className="flex h-full flex-col rounded-lg border p-2"
+                  className="flex h-full flex-col rounded-lg border p-2 gap-2"
                 >
                   {postComponent}
                   <div className="mt-auto flex justify-between font-semibold text-muted-foreground">
