@@ -22,8 +22,8 @@ export default function Archive({ username, author }: Readonly<ArchiveProps>) {
 
   return (
     <div className="space-y-4">
-      <Heading level={3}>Archive</Heading>
-      <div className="grid grid-cols-3 gap-2">
+      <Heading level={3}>My Archive</Heading>
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
         {isFetching
           ? Array.from({ length: 6 }).map((_, i) => (
               <Skeleton key={`skeleton-${i + 1}`} className="h-36" />
