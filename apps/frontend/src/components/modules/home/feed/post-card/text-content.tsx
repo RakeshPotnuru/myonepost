@@ -42,7 +42,7 @@ export default function TextContent({ text }: Readonly<TextContentProps>) {
   const processedContent = detectLinks(content);
 
   return (
-    <p>
+    <p className="whitespace-pre-wrap">
       {processedContent}
       {text.length > 280 && (
         <Button
