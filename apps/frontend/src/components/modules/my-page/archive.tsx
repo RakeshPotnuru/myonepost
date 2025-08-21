@@ -23,7 +23,7 @@ export default function Archive({ username, author }: Readonly<ArchiveProps>) {
   return (
     <div className="space-y-4">
       <Heading level={3}>My Archive</Heading>
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+      <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
         {isFetching
           ? Array.from({ length: 6 }).map((_, i) => (
               <Skeleton key={`skeleton-${i + 1}`} className="h-36" />
@@ -78,7 +78,7 @@ export default function Archive({ username, author }: Readonly<ArchiveProps>) {
               return (
                 <div
                   key={post.id}
-                  className="flex h-full flex-col rounded-lg border p-2 gap-2"
+                  className="flex h-full flex-col gap-2 rounded-lg border p-2"
                 >
                   {postComponent}
                   <div className="mt-auto flex justify-between font-semibold text-muted-foreground">

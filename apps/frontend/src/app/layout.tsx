@@ -95,6 +95,10 @@ export default function RootLayout({
         <link rel="manifest" href="/site.webmanifest" />
       </head>
       <body className={cn("antialiased", inter.className)}>
+        <div className="fixed top-0 z-50 w-full bg-red-500 py-4 text-center text-white">
+          myonepost will be shutting down. Thank you for being part of our
+          journey ❤️.{" "}
+        </div>
         <Providers>
           <PostHogPageView />
           {children}
